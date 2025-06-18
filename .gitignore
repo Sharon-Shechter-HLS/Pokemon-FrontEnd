@@ -22,3 +22,17 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+*storybook.log
+storybook-static
+
+# dependencies
+/node_modules/
+
+# build output
+/dist/
+/storybook-static/
+
+# Storybook cache
+/.storybook/cache/
+.vite/
