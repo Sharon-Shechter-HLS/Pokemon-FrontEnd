@@ -1,19 +1,14 @@
-import { useState } from "react"
-import { Filter } from "@/components/filter/filter"
+import { ProgressBarRow } from "./components/progressBar/progressBarRow"
 
 function App() {
-  const [type, setType] = useState<string | undefined>()
-
-  const pokemonTypes = ["Fire", "Water", "Grass", "Electric", ]
-
   return (
-    <div className="flex h-screen items-center justify-center gap-4 bg-[#f5f7fa]">
-      <Filter
-        value={type}
-        onChange={setType}
-        placeholder="Filter type"
-        options={pokemonTypes}
-      />
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-8">
+      <div className="w-[250px] space-y-2 bg-white p-4 rounded-lg shadow">
+        <ProgressBarRow value={100} color="green" />
+        <ProgressBarRow value={60} color="yellow" />
+        <ProgressBarRow value={20} color="red" />
+        <ProgressBarRow value={100} color="gray" />
+      </div>
     </div>
   )
 }
