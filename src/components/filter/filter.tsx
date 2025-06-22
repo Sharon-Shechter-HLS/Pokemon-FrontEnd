@@ -11,61 +11,73 @@ import { cn } from "@/lib/utils"
 interface FilterProps {
   disabled?: boolean
   value?: string
-  onClear?: () => void
   onChange?: (value: string) => void
+  onClear?: () => void
+  placeholder?: string
+  options: string[]
 }
 
 export function Filter({
   disabled = false,
   value,
-  onClear,
   onChange,
+  placeholder = "Filter type",
+  options,
 }: FilterProps) {
   const isFilled = !!value
 
   return (
     <div
-      className={cn(
-        "w-[140px] h-[38px] px-3 py-2 rounded-[8px] border text-sm flex items-center gap-4",
-        disabled
-          ? "border-[#d1d5db] bg-[#f9fafb] text-[#9ca3af] cursor-not-allowed"
-          : isFilled
-          ? "bg-[#EBEFF6] border-[#3B5AA6] text-[#3B5AA6]"
-          : "border-[#9ca3af] hover:border-[#6b7280]"
-      )}
-    >
+  className={cn(
+            // Fixed height, padding, border
+            "h-[38px] px-3 py-2 rounded-[8px] border text-sm flex items-center gap-4",
+            // Default width, but flexible with long content
+            "min-w-[140px] w-fit max-w-full",
+            disabled
+            ? "border-[#d1d5db] bg-[#f9fafb] text-[#9ca3af] cursor-not-allowed"
+            : isFilled
+            ? "bg-[#EBEFF6] border-[#3B5AA6] text-[#3B5AA6]"
+            : "border-[#9ca3af] hover:border-[#6b7280]"
+        )}
+        >
+
       <Calendar
         className={cn(
-          "size-4",
-          disabled ? "text-[#d1d5db]" : isFilled ? "text-[#3B5AA6]" : "text-[#6b7280]"
+            "w-4 h-4 shrink-0",
+            disabled ? "text-[#d1d5db]" : isFilled ? "text-[#3B5AA6]" : "text-[#6b7280]"
         )}
-      />
+        />
 
-      <Select
-        disabled={disabled}
-        value={value}
-        onValueChange={(val) => onChange?.(val)}
-      >
-        <SelectTrigger
-          className={cn(
-            "h-full border-none p-0 bg-transparent text-sm text-left flex-1",
-            "focus:ring-0 focus:ring-offset-0",
-            disabled ? "cursor-not-allowed text-[#9ca3af]" : ""
-          )}
+        <div className="flex-1 min-w-[0]">
+        <Select
+            disabled={disabled}
+            value={value}
+            onValueChange={(val) => onChange?.(val)}
         >
-          <SelectValue placeholder="Filter type" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="date">Date</SelectItem>
-          <SelectItem value="type">Type</SelectItem>
-          <SelectItem value="status">Status</SelectItem>
-        </SelectContent>
-      </Select>
+            <SelectTrigger
+            className={cn(
+                "w-full border-none p-0 bg-transparent text-sm text-left",
+                "focus:outline-none focus:ring-0 focus:ring-offset-0",
+                disabled ? "cursor-not-allowed text-[#9ca3af]" : ""
+            )}
+            >
+            <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+            {options.map((opt) => (
+                <SelectItem key={opt} value={opt}>
+                {opt}
+                </SelectItem>
+            ))}
+            </SelectContent>
+        </Select>
+        </div>
+
 
       {isFilled && !disabled && (
-        <button
-          onClick={onClear}
-          className="text-[#3B5AA6] hover:text-[#324d91] transition-colors"
+        <button 
+        onClick={() => onChange?.("")}         
+        className="text-[#3B5AA6] hover:text-[#324d91] transition-colors"
         >
           <X className="size-4" />
         </button>
