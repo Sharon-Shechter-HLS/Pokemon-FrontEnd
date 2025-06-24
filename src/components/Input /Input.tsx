@@ -6,7 +6,7 @@ type InputProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   placeholder?: string
   disabled?: boolean
-  className?: string
+  className?: string // already declared
 }
 
 function Input({
@@ -14,16 +14,18 @@ function Input({
   onChange,
   placeholder = "Search",
   disabled,
+  className, // ✅ include it
 }: InputProps) {
   return (
-    <div className="relative w-[293px] h-[38px]">
+    <div className={cn("relative", className)}> {/* ✅ now className affects the wrapper */}
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#929AA3] size-4 pointer-events-none" />
 
-      {value  && (
+      {value && (
         <button
           type="button"
           onClick={() =>
-            onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>)}
+            onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>)
+          }
           className="absolute right-3 top-1/2 -translate-y-1/2 text-[#929AA3] hover:text-[#6b7280] transition-colors"
         >
           <X className="size-4" />
@@ -45,4 +47,5 @@ function Input({
     </div>
   )
 }
+
 export default Input
