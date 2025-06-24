@@ -6,7 +6,7 @@ type InputProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   placeholder?: string
   disabled?: boolean
-  className?: string // already declared
+  className?: string
 }
 
 function Input({
@@ -14,10 +14,10 @@ function Input({
   onChange,
   placeholder = "Search",
   disabled,
-  className, // ✅ include it
+  className,
 }: InputProps) {
   return (
-    <div className={cn("relative", className)}> {/* ✅ now className affects the wrapper */}
+    <div className={cn("relative", className)}>
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#929AA3] size-4 pointer-events-none" />
 
       {value && (
@@ -38,9 +38,10 @@ function Input({
         placeholder={placeholder}
         disabled={disabled}
         className={cn(
-          "w-full h-full pl-10 pr-10 py-2 text-sm text-[#1c1e21] rounded-[8px] border border-[#929AA3] outline-none transition-all",
+          "w-full h-full text-sm text-[#1c1e21] rounded-[8px] border border-[#929AA3] bg-white",
+          "pl-[32px] pr-[32px] py-[8px]",
           "hover:border-[#6b7280]",
-          "focus:border-[#3B5AA6]",
+          "focus:border-[#3B5AA6] focus:outline-none",
           "disabled:text-[#cbd5e1] disabled:bg-[#f9fafb] disabled:border-[#e5e7eb]",
         )}
       />
