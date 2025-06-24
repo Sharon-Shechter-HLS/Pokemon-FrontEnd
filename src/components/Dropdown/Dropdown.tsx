@@ -9,21 +9,23 @@ type Option = {
 
 type Props = {
   options: Option[]
+  selectedOption: Option | null
+  onSelect: (option: Option) => void
 }
 
-export default function Dropdown({ options }: Props) {
+
+export default function Dropdown({ options, selectedOption, onSelect }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const [search, setSearch] = useState("")
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null)
 
   const filteredOptions = options.filter((option) =>
     option.name.toLowerCase().includes(search.toLowerCase())
   )
 
   const handleSelect = (option: Option) => {
-    setSelectedOption(option)
-    setSearch("")         // Clear search
-    setIsOpen(false)      // Close dropdown
+    onSelect(option)    
+    setSearch("")        
+    setIsOpen(false)
   }
 
   return (
