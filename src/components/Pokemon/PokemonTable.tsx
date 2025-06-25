@@ -11,12 +11,13 @@ import {
 } from "@/components/ui/table"
 
 type PokemonTableProps = {
-  pokemons: Pokemon[]               // sliced paginated list
-  totalItems: number               // total length of all pokemons
+  pokemons: Pokemon[]
   currentPage: number
   rowsPerPage: number
+  totalItems: number
   onPageChange: (page: number) => void
   onRowsPerPageChange: (rows: number) => void
+  onRowClick?: (pokemon: Pokemon) => void 
 }
 
 
@@ -27,6 +28,7 @@ export function PokemonTable({
   totalItems,
   onPageChange,
   onRowsPerPageChange,
+  onRowClick
 }: PokemonTableProps) {
   const totalPages = Math.ceil(totalItems / rowsPerPage)
   const from = (currentPage - 1) * rowsPerPage + 1
@@ -50,7 +52,11 @@ export function PokemonTable({
 
           <TableBody>
             {pokemons.map((p) => (
-              <TableRow key={p.id} className="h-[72px] border-b bg-white">
+              <TableRow
+                key={p.id}
+                onClick={() => onRowClick?.(p)} // <- trigger the callback if provided
+                className="h-[72px] border-b bg-white cursor-pointer hover:bg-gray-50 transition-colors"
+              >
                 <TableCell className="w-[300px] px-6 py-4 flex items-center gap-3">
                   <div className="w-[54px] h-[54px] rounded-full bg-[#EBEFF6] flex items-center justify-center">
                     <img
