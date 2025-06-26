@@ -1,4 +1,5 @@
 import { useState } from "react"
+import DescriptionTooltip from "@/components/ToolTip/ToolTip"
 import type { Pokemon } from "@/typs/Pokemon"
 import {
   Table,
@@ -72,9 +73,11 @@ export function PokemonTable({ pokemons, onRowClick }: PokemonTableProps) {
                   </TableCell>
 
                   <TableCell className="w-[450px] px-4 py-4">
-                    <p className="text-sm text-muted-foreground truncate max-w-[420px]">
-                      {p.description}
-                    </p>
+                    <DescriptionTooltip content={p.description}>
+                      <p className="text-sm text-muted-foreground truncate max-w-[420px] cursor-help">
+                        {p.description}
+                      </p>
+                    </DescriptionTooltip>
                   </TableCell>
 
                   <TableCell className="w-[120px] px-4 py-4">
