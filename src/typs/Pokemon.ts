@@ -1,4 +1,3 @@
-// src/types.ts
 export type Pokemon = {
   id: number
   name: {

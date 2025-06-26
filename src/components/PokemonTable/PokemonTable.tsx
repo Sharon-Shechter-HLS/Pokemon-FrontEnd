@@ -1,3 +1,4 @@
+import { useState } from "react"
 import type { Pokemon } from "@/typs/Pokemon"
 import {
   Table,
@@ -12,27 +13,18 @@ import {
 
 type PokemonTableProps = {
   pokemons: Pokemon[]
-  currentPage: number
-  rowsPerPage: number
-  totalItems: number
-  onPageChange: (page: number) => void
-  onRowsPerPageChange: (rows: number) => void
-  onRowClick?: (pokemon: Pokemon) => void 
+  onRowClick?: (pokemon: Pokemon) => void
 }
 
+export function PokemonTable({ pokemons, onRowClick }: PokemonTableProps) {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
 
-export function PokemonTable({
-  pokemons,
-  currentPage,
-  rowsPerPage,
-  totalItems,
-  onPageChange,
-  onRowsPerPageChange,
-  onRowClick
-}: PokemonTableProps) {
+  const totalItems = pokemons.length
   const totalPages = Math.ceil(totalItems / rowsPerPage)
   const from = (currentPage - 1) * rowsPerPage + 1
   const to = Math.min(currentPage * rowsPerPage, totalItems)
+  const paginatedPokemons = pokemons.slice(from - 1, to)
 
   return (
     <div className="w-full max-w-[1376px] border rounded-[8px] overflow-hidden bg-white">
@@ -51,42 +43,50 @@ export function PokemonTable({
           </TableHeader>
 
           <TableBody>
-            {pokemons.map((p) => (
-              <TableRow
-                key={p.id}
-                onClick={() => onRowClick?.(p)} // <- trigger the callback if provided
-                className="h-[72px] border-b bg-white cursor-pointer hover:bg-gray-50 transition-colors"
-              >
-                <TableCell className="w-[300px] px-6 py-4 flex items-center gap-3">
-                  <div className="w-[54px] h-[54px] rounded-full bg-[#EBEFF6] flex items-center justify-center">
-                    <img
-                      src={p.image.thumbnail}
-                      alt={p.name.english}
-                      className="w-[32px] h-[32px] object-contain"
-                    />
-                  </div>
-                  <span className="text-base font-medium">{p.name.english}</span>
-                </TableCell>
-
-                <TableCell className="w-[100px] px-4 py-4">
-                  #{p.id.toString().padStart(3, "0")}
-                </TableCell>
-
-                <TableCell className="w-[450px] px-4 py-4">
-                  <p className="text-sm text-muted-foreground truncate max-w-[420px]">
-                    {p.description}
-                  </p>
-                </TableCell>
-
-                <TableCell className="w-[120px] px-4 py-4">
-                  {p.base.Attack + p.base["Sp. Attack"] + p.base.Speed}
-                </TableCell>
-
-                <TableCell className="w-[120px] px-4 py-4">
-                  {p.base.HP} HP
+            {paginatedPokemons.length === 0 ? (
+              <TableRow className="h-[72px] border-b bg-white">
+                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  No Pokémon found
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              paginatedPokemons.map((p) => (
+                <TableRow
+                  key={p.id}
+                  onClick={() => onRowClick?.(p)}
+                  className="h-[72px] border-b bg-white cursor-pointer hover:bg-gray-50 transition-colors"
+                >
+                  <TableCell className="w-[300px] px-6 py-4 flex items-center gap-3">
+                    <div className="w-[54px] h-[54px] rounded-full bg-[#EBEFF6] flex items-center justify-center">
+                      <img
+                        src={p.image.thumbnail}
+                        alt={p.name.english}
+                        className="w-[32px] h-[32px] object-contain"
+                      />
+                    </div>
+                    <span className="text-base font-medium">{p.name.english}</span>
+                  </TableCell>
+
+                  <TableCell className="w-[100px] px-4 py-4">
+                    #{p.id.toString().padStart(3, "0")}
+                  </TableCell>
+
+                  <TableCell className="w-[450px] px-4 py-4">
+                    <p className="text-sm text-muted-foreground truncate max-w-[420px]">
+                      {p.description}
+                    </p>
+                  </TableCell>
+
+                  <TableCell className="w-[120px] px-4 py-4">
+                    {p.base.Attack + p.base["Sp. Attack"] + p.base.Speed}
+                  </TableCell>
+
+                  <TableCell className="w-[120px] px-4 py-4">
+                    {p.base.HP} HP
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
 
           <TableFooter>
@@ -98,8 +98,8 @@ export function PokemonTable({
                     <select
                       value={rowsPerPage}
                       onChange={(e) => {
-                        onRowsPerPageChange(Number(e.target.value))
-                        onPageChange(1)
+                        setRowsPerPage(Number(e.target.value))
+                        setCurrentPage(1)
                       }}
                       className="border rounded px-2 py-1 bg-white text-black"
                     >
@@ -112,16 +112,14 @@ export function PokemonTable({
                   <div className="flex items-center gap-4">
                     <span>{`${from}–${to} of ${totalItems} items`}</span>
                     <button
-                      onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+                      onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
                       disabled={currentPage === 1}
                       className="disabled:opacity-50"
                     >
                       ←
                     </button>
                     <button
-                      onClick={() =>
-                        onPageChange(Math.min(currentPage + 1, totalPages))
-                      }
+                      onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
                       disabled={currentPage === totalPages}
                       className="disabled:opacity-50"
                     >
