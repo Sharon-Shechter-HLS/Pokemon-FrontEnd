@@ -43,12 +43,12 @@ export default function  DataTable<T>({
   }
 
   return (
-    <div className="w-full max-w-[1376px] border rounded-[8px] overflow-hidden bg-white">
+<div className="w-full max-w-[1376px] border border-[#E2E4EA] rounded-lg overflow-hidden bg-white">
       <div className="overflow-x-auto h-full">
-        <Table className="min-w-full">s
+        <Table className="min-w-full">
 
           <TableHeader>
-            <TableRow className="h-[72px] border-b bg-[#EBEFF6]">
+              <TableRow className="h-[72px] border-b border-[#E2E4EA] bg-white">
               {columns.map((col) => (
                 <TableHead
                   key={col.header}
@@ -72,8 +72,8 @@ export default function  DataTable<T>({
                 <TableRow
                   key={rowKey(row, index)}
                   onClick={() => onRowClick?.(row)}
-                  className="h-[72px] border-b bg-white cursor-pointer hover:bg-gray-50 transition-colors"
-                >
+                  className="h-[72px] border-b border-[#E2E4EA] bg-white">
+                
                   {columns.map((col) => (
                     <TableCell
                       key={col.header}
@@ -88,7 +88,7 @@ export default function  DataTable<T>({
           </TableBody>
 
           <TableFooter>
-            <TableRow>
+            <TableRow  >
               <TableCell colSpan={columns.length}>
                 <PaginationControl
                   currentPage={currentPage}

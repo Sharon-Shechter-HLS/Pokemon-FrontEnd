@@ -29,17 +29,17 @@ export default function PaginationControl({
   const to = Math.min(currentPage * rowsPerPage, totalItems)
 
   return (
-    <div className="flex items-center justify-between w-full px-4 py-3 text-sm text-muted-foreground">
+<div className="flex items-center justify-between w-full px-4 py-2 text-[12px] text-[#71787F] font-['Mulish'] ">
       {/* Left: Rows per page dropdown */}
       <div className="flex items-center gap-2">
         <span>Rows per page:</span>
         <select
+          className="border border-[#E2E4EA] rounded px-2 py-1 bg-white text-[#1A1A1A] text-[12px] font-['Mulish']"
           value={rowsPerPage}
           onChange={(e) => {
             onChangeRowsPerPage(Number(e.target.value))
             onChangePage(1)
           }}
-          className="border rounded px-2 py-1 bg-white text-black"
         >
           {rowsPerPageOptions.map((value) => (
             <option key={value} value={value}>
@@ -53,7 +53,7 @@ export default function PaginationControl({
       <div className="flex items-center gap-4">
         <span>{`${from}–${to} of ${totalItems} items`}</span>
         <Pagination className="m-0">
-          <PaginationContent className="gap-1">
+          <PaginationContent className="w-[68px] h-[24px] gap-[20px] text-[#71787F] items-center justify-center">
             <PaginationItem>
               <PaginationPrevious
                 href="#"
