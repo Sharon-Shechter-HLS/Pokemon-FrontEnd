@@ -1,5 +1,5 @@
 import DataTable from "@/components/Table/Table"
-import type { Column } from "@/components/Table/Table"
+import type { Column } from "@/typs/Column"
 import type { Pokemon } from "@/typs/Pokemon"
 
 
@@ -59,8 +59,6 @@ export default function PokemonTable({ pokemons, onRowClick }: Props) {
       columns={columns}
       onRowClick={onRowClick}
       rowKey={(p) => p.id}
-      rowsPerPageOptions={[5, 10, 20]}
-      defaultRowsPerPage={5}
-    />
+      rowsPerPageOptions={[5, 10, 20]}      />
   )
 }

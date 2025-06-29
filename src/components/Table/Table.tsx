@@ -2,7 +2,6 @@ import { useState } from "react"
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -10,30 +9,21 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import PaginationControl from "@/components/Pagination/Pagination"
+import type { Column } from "@/typs/Column"
 import type { ReactNode } from "react"
 
-export type Column<T> = {
-  header: string
-  accessor?: keyof T
-  render?: (row: T) => ReactNode
-  width?: string
-  className?: string
-}
 
 export type DataTableProps<T> = {
   data: T[]
   columns: Column<T>[]
-  caption?: string
   onRowClick?: (row: T) => void
   rowKey?: (row: T, index: number) => string | number
   rowsPerPageOptions?: number[]
-  defaultRowsPerPage?: number
 }
 
 export default function  DataTable<T>({
   data,
   columns,
-  caption,
   onRowClick,
   rowKey = (_, i) => i,
   rowsPerPageOptions = [5, 10, 20],
@@ -55,8 +45,7 @@ export default function  DataTable<T>({
   return (
     <div className="w-full max-w-[1376px] border rounded-[8px] overflow-hidden bg-white">
       <div className="overflow-x-auto h-full">
-        <Table className="min-w-full">
-          {caption && <TableCaption>{caption}</TableCaption>}
+        <Table className="min-w-full">s
 
           <TableHeader>
             <TableRow className="h-[72px] border-b bg-[#EBEFF6]">
