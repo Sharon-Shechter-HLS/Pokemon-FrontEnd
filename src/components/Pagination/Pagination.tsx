@@ -1,0 +1,82 @@
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination"
+import { cn } from "@/lib/utils"
+
+type PaginationProps = {
+  currentPage: number
+  totalItems: number
+  rowsPerPage: number
+  rowsPerPageOptions: number[]
+  onChangePage: (newPage: number) => void
+  onChangeRowsPerPage: (newRows: number) => void
+}
+
+export default function PaginationControl({
+  currentPage,
+  totalItems,
+  rowsPerPage,
+  rowsPerPageOptions,
+  onChangePage,
+  onChangeRowsPerPage,
+}: PaginationProps) {
+  const totalPages = Math.ceil(totalItems / rowsPerPage)
+  const from = (currentPage - 1) * rowsPerPage + 1
+  const to = Math.min(currentPage * rowsPerPage, totalItems)
+
+  return (
+    <div className="flex items-center justify-between w-full px-4 py-3 text-sm text-muted-foreground">
+      {/* Left: Rows per page dropdown */}
+      <div className="flex items-center gap-2">
+        <span>Rows per page:</span>
+        <select
+          value={rowsPerPage}
+          onChange={(e) => {
+            onChangeRowsPerPage(Number(e.target.value))
+            onChangePage(1)
+          }}
+          className="border rounded px-2 py-1 bg-white text-black"
+        >
+          {rowsPerPageOptions.map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Right: Page info + arrows */}
+      <div className="flex items-center gap-4">
+        <span>{`${from}–${to} of ${totalItems} items`}</span>
+        <Pagination className="m-0">
+          <PaginationContent className="gap-1">
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  onChangePage(Math.max(1, currentPage - 1))
+                }}
+                className={cn(currentPage === 1 && "pointer-events-none opacity-50")}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  onChangePage(Math.min(totalPages, currentPage + 1))
+                }}
+                className={cn(currentPage === totalPages && "pointer-events-none opacity-50")}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </div>
+  )
+}
