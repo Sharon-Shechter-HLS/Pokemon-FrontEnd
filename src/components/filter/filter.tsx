@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./Select"
+} from "../ui/Select"
 import { Calendar, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
