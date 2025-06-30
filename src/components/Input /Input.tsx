@@ -1,13 +1,13 @@
-import { cn } from "@/lib/utils"
-import { Search, X } from "lucide-react"
+import { cn } from "@/lib/utils";
+import { Search, X } from "lucide-react";
 
 type InputProps = {
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  placeholder?: string
-  disabled?: boolean
-  className?: string
-}
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string;
+};
 
 function Input({
   value,
@@ -17,8 +17,8 @@ function Input({
   className,
 }: InputProps) {
   return (
-    <div className={cn("relative", className)}>
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#929AA3] size-4 pointer-events-none" />
+    <div className={cn("relative w-[293px] h-[38px]", className)}>
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4 pointer-events-none" />
 
       {value && (
         <button
@@ -26,7 +26,7 @@ function Input({
           onClick={() =>
             onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>)
           }
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#929AA3] hover:text-[#6b7280] transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <X className="size-4" />
         </button>
@@ -38,15 +38,14 @@ function Input({
         placeholder={placeholder}
         disabled={disabled}
         className={cn(
-          "w-full h-full text-sm text-[#1c1e21] rounded-[8px] border border-[#929AA3] bg-white",
-          "pl-[32px] pr-[32px] py-[8px]",
-          "hover:border-[#6b7280]",
-          "focus:border-[#3B5AA6] focus:outline-none",
-          "disabled:text-[#cbd5e1] disabled:bg-[#f9fafb] disabled:border-[#e5e7eb]",
+          "w-full h-full pl-10 pr-10 py-2 text-sm rounded-[8px] border outline-none transition-all",
+          "bg-background text-foreground border-input",
+          "hover:border-border focus:border-primary-300",
+          "disabled:text-muted-foreground disabled:bg-muted disabled:border-muted"
         )}
       />
     </div>
-  )
+  );
 }
 
-export default Input
+export default Input;
