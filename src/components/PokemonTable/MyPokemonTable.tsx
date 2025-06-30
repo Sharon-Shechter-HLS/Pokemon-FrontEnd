@@ -1,27 +1,20 @@
-<<<<<<< HEAD:src/components/PokemonTable/MyPokemonTable.tsx
-import { useMyPokemons } from "@/hooks/useMyPokemons"
-=======
-import { useState } from "react"
-import DescriptionTooltip from "@/components/ToolTip/ToolTip"
->>>>>>> c1e8e4c67083bb5541b02e04874fa8ab791166c7:src/components/PokemonTable/PokemonTable.tsx
-import DataTable from "@/components/Table/Table"
-import type { Pokemon } from "@/typs/Pokemon"
-<<<<<<< HEAD:src/components/PokemonTable/MyPokemonTable.tsx
-import type { Column } from "@/typs/Column"
-import pokadexIcon from "@/assets/pokadex.png"
-=======
->>>>>>> c1e8e4c67083bb5541b02e04874fa8ab791166c7:src/components/PokemonTable/PokemonTable.tsx
+import { useMyPokemons } from "@/hooks/useMyPokemons";
+import DescriptionTooltip from "@/components/ToolTip/ToolTip";
+import DataTable from "@/components/Table/Table";
+import type { Pokemon } from "@/typs/Pokemon";
+import type { Column } from "@/typs/Column";
+import pokadexIcon from "@/assets/pokadex.png";
 
 type Props = {
-  pokemons: Pokemon[]
-  onRowClick?: (pokemon: Pokemon) => void
-}
+  pokemons: Pokemon[];
+  onRowClick?: (pokemon: Pokemon) => void;
+};
 
 export default function MyPokemonTable({ pokemons, onRowClick }: Props) {
-  const { myPokemonIds } = useMyPokemons()
+  const { myPokemonIds } = useMyPokemons();
 
   // Filter only "my" Pokémon
-  const myPokemons = pokemons.filter((p) => myPokemonIds.includes(p.id))
+  const myPokemons = pokemons.filter((p) => myPokemonIds.includes(p.id));
 
   const columns: Column<Pokemon>[] = [
     {
@@ -69,19 +62,15 @@ export default function MyPokemonTable({ pokemons, onRowClick }: Props) {
     {
       header: "Power level",
       width: "w-[120px]",
-<<<<<<< HEAD:src/components/PokemonTable/MyPokemonTable.tsx
-      render: (p) => "Power level " + p.base.Attack,
-=======
       render: (p) =>
         `${p.base.Attack + p.base["Sp. Attack"] + p.base.Speed}`,
->>>>>>> c1e8e4c67083bb5541b02e04874fa8ab791166c7:src/components/PokemonTable/PokemonTable.tsx
     },
     {
       header: "HP level",
       width: "w-[120px]",
       render: (p) => `${p.base.HP} HP`,
     },
-  ]
+  ];
 
   return (
     <DataTable
@@ -91,5 +80,5 @@ export default function MyPokemonTable({ pokemons, onRowClick }: Props) {
       rowKey={(p) => p.id}
       rowsPerPageOptions={[5, 10, 20]}
     />
-  )
+  );
 }
