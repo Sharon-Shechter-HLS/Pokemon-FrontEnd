@@ -2,6 +2,7 @@ import { useState } from "react"
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -12,18 +13,20 @@ import PaginationControl from "@/components/Pagination/Pagination"
 import type { Column } from "@/typs/Column"
 import type { ReactNode } from "react"
 
-
 export type DataTableProps<T> = {
   data: T[]
   columns: Column<T>[]
+  caption?: string
   onRowClick?: (row: T) => void
   rowKey?: (row: T, index: number) => string | number
   rowsPerPageOptions?: number[]
+  defaultRowsPerPage?: number
 }
 
 export default function  DataTable<T>({
   data,
   columns,
+  caption,
   onRowClick,
   rowKey = (_, i) => i,
   rowsPerPageOptions = [5, 10, 20],
@@ -43,12 +46,12 @@ export default function  DataTable<T>({
   }
 
   return (
-<div className="w-full max-w-[1376px] border border-[#E2E4EA] rounded-lg overflow-hidden bg-white">
-      <div className="overflow-x-auto h-full">
+    <div className="w-full max-w-[1376px] border rounded-[8px] bg-white">
         <Table className="min-w-full">
+          {caption && <TableCaption>{caption}</TableCaption>}
 
           <TableHeader>
-              <TableRow className="h-[72px] border-b border-[#E2E4EA] bg-white">
+            <TableRow className="h-[72px] border-b bg-neutrals-200">
               {columns.map((col) => (
                 <TableHead
                   key={col.header}
@@ -72,8 +75,8 @@ export default function  DataTable<T>({
                 <TableRow
                   key={rowKey(row, index)}
                   onClick={() => onRowClick?.(row)}
-                  className="h-[72px] border-b border-[#E2E4EA] bg-white">
-                
+                  className="h-[72px] border-b bg-white cursor-pointer hover:bg-gray-50 transition-colors"
+                >
                   {columns.map((col) => (
                     <TableCell
                       key={col.header}
@@ -88,7 +91,7 @@ export default function  DataTable<T>({
           </TableBody>
 
           <TableFooter>
-            <TableRow  >
+            <TableRow>
               <TableCell colSpan={columns.length}>
                 <PaginationControl
                   currentPage={currentPage}
@@ -106,6 +109,5 @@ export default function  DataTable<T>({
           </TableFooter>
         </Table>
       </div>
-    </div>
   )
 }

@@ -44,7 +44,7 @@ export default function PokemonTable({ pokemons, onRowClick }: Props) {
     {
       header: "Power level",
       width: "w-[120px]",
-      render: (p) => p.base.Attack + p.base["Sp. Attack"] + p.base.Speed,
+      render: (p) => 'Power level ' +  p.base.Attack,
     },
     {
       header: "HP level",
