@@ -1,8 +1,16 @@
+<<<<<<< HEAD:src/components/PokemonTable/MyPokemonTable.tsx
 import { useMyPokemons } from "@/hooks/useMyPokemons"
+=======
+import { useState } from "react"
+import DescriptionTooltip from "@/components/ToolTip/ToolTip"
+>>>>>>> c1e8e4c67083bb5541b02e04874fa8ab791166c7:src/components/PokemonTable/PokemonTable.tsx
 import DataTable from "@/components/Table/Table"
 import type { Pokemon } from "@/typs/Pokemon"
+<<<<<<< HEAD:src/components/PokemonTable/MyPokemonTable.tsx
 import type { Column } from "@/typs/Column"
 import pokadexIcon from "@/assets/pokadex.png"
+=======
+>>>>>>> c1e8e4c67083bb5541b02e04874fa8ab791166c7:src/components/PokemonTable/PokemonTable.tsx
 
 type Props = {
   pokemons: Pokemon[]
@@ -51,15 +59,22 @@ export default function MyPokemonTable({ pokemons, onRowClick }: Props) {
       header: "Description",
       width: "w-[450px]",
       render: (p) => (
-        <p className="text-sm text-muted-foreground truncate max-w-[420px]">
-          {p.description}
-        </p>
+        <DescriptionTooltip content={p.description}>
+          <p className="text-sm text-muted-foreground truncate max-w-[420px] cursor-help">
+            {p.description}
+          </p>
+        </DescriptionTooltip>
       ),
     },
     {
       header: "Power level",
       width: "w-[120px]",
+<<<<<<< HEAD:src/components/PokemonTable/MyPokemonTable.tsx
       render: (p) => "Power level " + p.base.Attack,
+=======
+      render: (p) =>
+        `${p.base.Attack + p.base["Sp. Attack"] + p.base.Speed}`,
+>>>>>>> c1e8e4c67083bb5541b02e04874fa8ab791166c7:src/components/PokemonTable/PokemonTable.tsx
     },
     {
       header: "HP level",
