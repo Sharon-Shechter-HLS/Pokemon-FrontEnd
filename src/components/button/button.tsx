@@ -1,20 +1,26 @@
-import { cva } from "class-variance-authority"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const sizeSmall = "h-[32px] px-3 py-1.5 text-sm";
+const sizeMedium = "h-[36px] px-4 py-2 text-base";
+const sizeLarge = "h-[40px] px-6 py-3 text-lg";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
         primary:
-          "bg-[#3B5AA6] text-white hover:bg-[#293F74] active:bg-[#182442] disabled:bg-gray-200 disabled:text-gray-400",
+          "bg-primary-300 text-white shadow-xs hover:bg-primary-400 active:bg-primary-500 disabled:bg-primary-50",
         secondary:
-          "border border-[#3B5AA6] text-[#3B5AA6] hover:bg-[#EBEFF6] active:bg-[#B1BDDB] disabled:text-gray-400 disabled:border-gray-300",
+          "bg-primary-50 text-primary-500 shadow-xs hover:bg-primary-100 active:bg-primary-200 disabled:text-gray-400 disabled:bg-gray-100",
       },
       size: {
-        sm: "h-[32px] px-4 py-2 text-sm",
-        md: "h-[36px] px-4 py-2 text-base",
-        lg: "h-[40px] px-5 py-3 text-lg",
+        sm: sizeSmall,
+        md: sizeMedium,
+        lg: sizeLarge,
       },
     },
     defaultVariants: {
@@ -22,32 +28,31 @@ const buttonVariants = cva(
       size: "md",
     },
   }
-)
+);
 
+// Button props type
+type ButtonProps = React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  };
 
-type ButtonProps = {
-  children: React.ReactNode
-  variant?: "primary" | "secondary"
-  size?: "sm" | "md" | "lg"
-  onClick?: () => void
-  disabled?: boolean
-}
-
+// Button component
 function Button({
-  children,
-  variant = "primary",
-  size = "md",
-  onClick,
-  disabled,
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
 }: ButtonProps) {
+  const Comp = asChild ? Slot : "button";
+
   return (
-    <button
-      className={cn(buttonVariants({ variant, size }))}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      {children}
-    </button>
-  )
+    <Comp
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  );
 }
-export default Button
+
+export { Button, buttonVariants, type ButtonProps };
