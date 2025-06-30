@@ -1,6 +1,10 @@
 import DataTable from "@/components/Table/Table"
 import type { Column } from "@/typs/Column"
 import type { Pokemon } from "@/typs/Pokemon"
+import { useMyPokemons } from "@/hooks/useMyPokemons"
+import pokadexIcon from "@/assets/pokadex.png"
+
+
 
 
 type Props = {
@@ -8,25 +12,38 @@ type Props = {
   onRowClick?: (pokemon: Pokemon) => void
 }
 
-export default function PokemonTable({ pokemons, onRowClick }: Props) {
+export default function AllPokemonTable({ pokemons, onRowClick }: Props) {
+  const { isMyPokemon } = useMyPokemons()
   const columns: Column<Pokemon>[] = [
-    {
-      header: "Pokémon Name",
-      width: "w-[300px]",
-      className: "flex items-center gap-3",
-      render: (p) => (
-        <>
-          <div className="w-[54px] h-[54px] rounded-full bg-[#EBEFF6] flex items-center justify-center">
-            <img
-              src={p.image.thumbnail}
-              alt={p.name.english}
-              className="w-[32px] h-[32px] object-contain"
-            />
-          </div>
-          <span className="text-base font-medium">{p.name.english}</span>
-        </>
-      ),
-    },
+        {
+  header: "Pokémon Name",
+  width: "w-[300px]",
+  className: "flex items-center gap-3",
+  render: (p) => (
+    <>
+      <div className="w-[54px] h-[54px] rounded-full bg-[#EBEFF6] flex items-center justify-center">
+        <img
+          src={p.image.thumbnail}
+          alt={p.name.english}
+          className="w-[32px] h-[32px] object-contain"
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-base font-medium">{p.name.english}</span>
+        {isMyPokemon(p.id) && (
+          <img
+            src={pokadexIcon}
+            alt="Pokédex Icon"
+            width={24}
+            height={24}
+            className="object-contain"
+          />
+        )}
+      </div>
+    </>
+  ),
+},
+
     {
       header: "ID",
       width: "w-[100px]",
