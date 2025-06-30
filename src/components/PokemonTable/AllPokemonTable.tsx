@@ -3,6 +3,8 @@ import type { Column } from "@/typs/Column"
 import type { Pokemon } from "@/typs/Pokemon"
 import { useMyPokemons } from "@/hooks/useMyPokemons"
 import pokadexIcon from "@/assets/pokadex.png"
+import DescriptionTooltip from "../ToolTip/ToolTip"
+
 
 
 
@@ -53,10 +55,12 @@ export default function AllPokemonTable({ pokemons, onRowClick }: Props) {
       header: "Description",
       width: "w-[450px]",
       render: (p) => (
-        <p className="text-sm text-muted-foreground truncate max-w-[420px]">
-          {p.description}
-        </p>
-      ),
+          <DescriptionTooltip content={p.description}>
+            <p className="text-sm text-muted-foreground truncate max-w-[420px]">
+              {p.description}
+            </p>
+          </DescriptionTooltip>
+        ),
     },
     {
       header: "Power level",
