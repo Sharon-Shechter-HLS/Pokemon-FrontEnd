@@ -1,7 +1,8 @@
+import { useState } from "react"
+import DescriptionTooltip from "@/components/ToolTip/ToolTip"
 import DataTable from "@/components/Table/Table"
 import type { Column } from "@/typs/Column"
 import type { Pokemon } from "@/typs/Pokemon"
-
 
 type Props = {
   pokemons: Pokemon[]
@@ -36,15 +37,18 @@ export default function PokemonTable({ pokemons, onRowClick }: Props) {
       header: "Description",
       width: "w-[450px]",
       render: (p) => (
-        <p className="text-sm text-muted-foreground truncate max-w-[420px]">
-          {p.description}
-        </p>
+        <DescriptionTooltip content={p.description}>
+          <p className="text-sm text-muted-foreground truncate max-w-[420px] cursor-help">
+            {p.description}
+          </p>
+        </DescriptionTooltip>
       ),
     },
     {
       header: "Power level",
       width: "w-[120px]",
-      render: (p) => 'Power level ' +  p.base.Attack,
+      render: (p) =>
+        `${p.base.Attack + p.base["Sp. Attack"] + p.base.Speed}`,
     },
     {
       header: "HP level",
@@ -59,6 +63,7 @@ export default function PokemonTable({ pokemons, onRowClick }: Props) {
       columns={columns}
       onRowClick={onRowClick}
       rowKey={(p) => p.id}
-      rowsPerPageOptions={[5, 10, 20]}      />
+      rowsPerPageOptions={[5, 10, 20]}
+    />
   )
 }
