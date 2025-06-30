@@ -46,12 +46,12 @@ export default function  DataTable<T>({
   }
 
   return (
-    <div className="w-full max-w-[1376px] border rounded-[8px] bg-white">
+    <div className="w-full max-w-[1376px] border rounded-[8px]">
         <Table className="min-w-full">
           {caption && <TableCaption>{caption}</TableCaption>}
 
           <TableHeader>
-            <TableRow className="h-[72px] border-b bg-neutrals-200">
+            <TableRow className="h-[72px] border-b bg-primary-50">
               {columns.map((col) => (
                 <TableHead
                   key={col.header}
@@ -90,7 +90,7 @@ export default function  DataTable<T>({
             )}
           </TableBody>
 
-          <TableFooter>
+          <TableFooter className="bg-white">
             <TableRow>
               <TableCell colSpan={columns.length}>
                 <PaginationControl
