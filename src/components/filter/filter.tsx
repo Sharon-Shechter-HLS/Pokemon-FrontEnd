@@ -23,7 +23,7 @@ type FilterProps<T> = {
   renderLabel?: (value: T) => string;
 };
 
-export function Filter<T>({
+export default function Filter<T>({
   disabled = false,
   value,
   onChange,
