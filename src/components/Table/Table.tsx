@@ -30,9 +30,10 @@ export default function  DataTable<T>({
   onRowClick,
   rowKey = (_, i) => i,
   rowsPerPageOptions = [5, 10, 20],
+  defaultRowsPerPage = 10 
 }: DataTableProps<T>) {
   const [currentPage, setCurrentPage] = useState(1)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage)
 
   const totalItems = data.length
   const from = (currentPage - 1) * rowsPerPage
