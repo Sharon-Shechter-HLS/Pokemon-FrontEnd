@@ -10,19 +10,19 @@ import { cn } from "@/lib/utils"
 type PaginationProps = {
   currentPage: number
   totalItems: number
-  rowsPerPage: number
-  rowsPerPageOptions: number[]
-  onChangePage: (newPage: number) => void
-  onChangeRowsPerPage: (newRows: number) => void
+  rowsPerPage?: number
+  rowsPerPageOptions?: number[]
+  onChangePage?: (newPage: number) => void
+  onChangeRowsPerPage?: (newRows: number) => void
 }
 
 export default function PaginationControl({
   currentPage,
   totalItems,
-  rowsPerPage,
-  rowsPerPageOptions,
-  onChangePage,
-  onChangeRowsPerPage,
+  rowsPerPage = 5,
+  rowsPerPageOptions = [5,10,20],
+  onChangePage = ()=> {}, 
+  onChangeRowsPerPage = () => {} ,
 }: PaginationProps) {
   const totalPages = Math.ceil(totalItems / rowsPerPage)
   const from = (currentPage - 1) * rowsPerPage + 1
