@@ -1,55 +1,70 @@
-import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import pokemonsData from "@/data/pokemonsData.json"
+import type { Pokemon } from "@/typs/Pokemon"
 
-const STORAGE_KEY = "myPokemons"
 const DEFAULT_POKEMON_IDS = [1, 5, 7]
 
-export function useMyPokemons() {
-  const [myPokemonIds, setMyPokemonIds] = useState<number[]>([])
+// Mock backend functions
+async function fetchAllPokemons(): Promise<Pokemon[]> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const enrichedData = pokemonsData.map((pokemon: Pokemon) => ({
+        ...pokemon,
+        isMyPokemon: DEFAULT_POKEMON_IDS.includes(pokemon.id),
+      }))
+      resolve(enrichedData)
+    }, 500) // Simulate backend delay
+  })
+}
 
-  // Load from localStorage or use defaults if empty
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    try {
-      const parsed = JSON.parse(stored || "")
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        setMyPokemonIds(parsed)
-        return
+async function fetchMyPokemons(): Promise<Pokemon[]> {
+  const allPokemons = await fetchAllPokemons()
+  return allPokemons.filter((pokemon) => pokemon.isMyPokemon)
+}
+
+async function fetchFilteredPokemons(
+  searchQuery: string,
+  sortOption?: string,
+  isMyPokemons: boolean = false
+): Promise<Pokemon[]> {
+  const allPokemons = isMyPokemons ? await fetchMyPokemons() : await fetchAllPokemons()
+
+  let filteredPokemons = allPokemons
+
+  // Apply search filtering
+  if (searchQuery) {
+    filteredPokemons = filteredPokemons.filter((pokemon) =>
+      pokemon.name.english.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }
+
+  // Apply sorting
+  if (sortOption) {
+    filteredPokemons = [...filteredPokemons].sort((a, b) => {
+      if (sortOption === "name") {
+        return a.name.english.localeCompare(b.name.english)
+      } else if (sortOption === "hp") {
+        return b.base.HP - a.base.HP
+      } else if (sortOption === "attack") {
+        return b.base.Attack - a.base.Attack
+      } else if (sortOption === "id") {
+        return a.id - b.id
       }
-    } catch (err) {
-      console.error("Invalid localStorage value:", err)
-    }
-
-    // fallback
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_POKEMON_IDS))
-    setMyPokemonIds(DEFAULT_POKEMON_IDS)
-  }, [])
-
-  // Log when it actually updates
-  useEffect(() => {
-    console.log("My Pokémons (updated):", myPokemonIds)
-  }, [myPokemonIds])
-
-  // Sync localStorage on change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(myPokemonIds))
-  }, [myPokemonIds])
-
-  const isMyPokemon = (id: number) => myPokemonIds.includes(id)
-
-  const addPokemon = (id: number) => {
-    if (!isMyPokemon(id)) {
-      setMyPokemonIds((prev) => [...prev, id])
-    }
+      return 0
+    })
   }
 
-  const removePokemon = (id: number) => {
-    setMyPokemonIds((prev) => prev.filter((pid) => pid !== id))
-  }
+  return filteredPokemons
+}
+
+export function useMyPokemons(searchQuery: string = "", sortOption?: string, isMyPokemons: boolean = false) {
+  const { data: pokemons = [], isLoading } = useQuery<Pokemon[]>({
+    queryKey: ["pokemons", searchQuery, sortOption, isMyPokemons], // Include isMyPokemons in query key
+    queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons), // Fetch filtered data
+  })
 
   return {
-    myPokemonIds,
-    isMyPokemon,
-    addPokemon,
-    removePokemon,
+    pokemons,
+    isLoading,
   }
 }

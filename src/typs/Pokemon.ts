@@ -2,9 +2,9 @@ export type Pokemon = {
   id: number
   name: {
     english: string
-    japanese: string
-    chinese: string
-    french: string
+    french?: string
+    japanese?: string
+    chinese?: string
   }
   type: string[]
   base: {
@@ -17,10 +17,15 @@ export type Pokemon = {
   }
   species: string
   description: string
-  image: {
-    sprite: string
-    thumbnail: string
-    hires: string
+  evolution?: {
+    next?: string[][] // Adjusted to match the JSON structure
   }
-  owned?: boolean
+  profile?: {
+    gender?: string
+  }
+  image : {
+    thumbnail?: string
+    hires?: string
+  }
+  isMyPokemon?: boolean // Added this field
 }
