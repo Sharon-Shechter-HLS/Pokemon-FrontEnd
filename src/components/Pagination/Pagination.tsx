@@ -10,10 +10,10 @@ import { cn } from "@/lib/utils"
 type PaginationProps = {
   currentPage: number
   totalItems: number
-  rowsPerPage?: number // Optional
-  rowsPerPageOptions?: number[] // Optional
-  onChangePage?: (newPage: number) => void // Optional
-  onChangeRowsPerPage?: (newRows: number) => void // Optional
+  rowsPerPage?: number 
+  rowsPerPageOptions?: number[] 
+  onChangePage?: (newPage: number) => void 
+  onChangeRowsPerPage?: (newRows: number) => void 
 }
 
 export default function PaginationControl({
