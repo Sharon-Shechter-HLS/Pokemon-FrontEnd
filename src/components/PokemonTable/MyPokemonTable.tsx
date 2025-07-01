@@ -23,7 +23,7 @@ export default function MyPokemonTable({ pokemons, onRowClick }: Props) {
       className: "flex items-center gap-3",
       render: (p) => (
         <>
-          <div className="w-[54px] h-[54px] rounded-full bg-[#EBEFF6] flex items-center justify-center">
+          <div className="w-[54px] h-[54px] rounded-full bg-primary-50 flex items-center justify-center">
             <img
               src={p.image.thumbnail}
               alt={p.name.english}
