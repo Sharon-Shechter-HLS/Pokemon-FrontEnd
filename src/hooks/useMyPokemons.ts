@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import pokemonsData from "@/data/pokemonsData.json"
 import type { Pokemon } from "@/typs/Pokemon"
 
-const DEFAULT_POKEMON_IDS = [1, 5, 7]
+const DEFAULT_POKEMON_IDS = [1, 5, 7,8]
 
 // Mock backend functions
 async function fetchAllPokemons(): Promise<Pokemon[]> {
