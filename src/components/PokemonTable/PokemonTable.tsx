@@ -73,6 +73,7 @@ export default function PokemonTable({ pokemons, onRowClick }: PokemonTableProps
       onRowClick={onRowClick}
       rowKey={(pokemon) => pokemon.id}
       rowsPerPageOptions={[5, 10, 20]}
+      enablePagination={true}
     />
   )
 }

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import FilterBar from "@/components/FilterBar/FilterBar"
+import FilterBar from "@/pages/AllPokemonsPage/FilterBar"
 import PokemonTable from "@/components/PokemonTable/PokemonTable"
 import { useMyPokemons } from "@/hooks/useMyPokemons"
 

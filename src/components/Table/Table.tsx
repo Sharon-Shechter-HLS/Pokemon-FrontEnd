@@ -10,9 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import PaginationControl from "@/components/Pagination/Pagination"
-import type { Column } from "@/typs/Column"
+import type { Column } from "@/components/Table/Types"
 import type { ReactNode } from "react"
-import type { PaginationState } from "@/typs/paginationState"
+import type { PaginationState } from "@/components/Table/Types"
 
 export type DataTableProps<T> = {
   data: T[]
@@ -22,16 +22,22 @@ export type DataTableProps<T> = {
   rowKey?: (row: T, index: number) => string | number
   rowsPerPageOptions?: number[]
   defaultRowsPerPage?: number
+  enablePagination?: boolean
+  currentPage?: number // Add this property
+  rowsPerPage?: number // Add this property
+  onChangePage?: (page: number) => void // Add this property
+  onChangeRowsPerPage?: (rowsPerPage: number) => void // Add this property
 }
 
 export default function DataTable<T>({
   data,
   columns,
   caption,
-  onRowClick,
+  onRowClick = undefined,
   rowKey = (_, i) => i,
   rowsPerPageOptions = [5, 10, 20],
   defaultRowsPerPage = 10,
+  enablePagination = true
 }: DataTableProps<T>) {
   const [pagination, setPagination] = useState<PaginationState>({
     currentPage: 1,
@@ -94,7 +100,7 @@ export default function DataTable<T>({
             ))
           )}
         </TableBody>
-
+          {enablePagination && (
         <TableFooter className="bg-white">
           <TableRow>
             <TableCell colSpan={columns.length}>
@@ -116,6 +122,7 @@ export default function DataTable<T>({
             </TableCell>
           </TableRow>
         </TableFooter>
+          )}
       </Table>
     </div>
   )

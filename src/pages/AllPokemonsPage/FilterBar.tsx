@@ -1,5 +1,5 @@
-import Input from "../Input /Input"
-import Filter from "../filter/filter"
+import Input from "../../components/Input /Input"
+import Filter from "../../components/filter/filter"
 
 type FilterBarProps = {
   searchQuery: string
