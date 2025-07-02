@@ -1,31 +1,35 @@
 export type Pokemon = {
-  id: number
+  id: number;
   name: {
-    english: string
-    french?: string
-    japanese?: string
-    chinese?: string
-  }
-  type: string[]
+    english: string;
+    french?: string;
+    japanese?: string;
+    chinese?: string;
+  };
+  type: string[];
   base: {
-    HP: number
-    Attack: number
-    Defense: number
-    "Sp. Attack": number
-    "Sp. Defense": number
-    Speed: number
-  }
-  species: string
-  description: string
+    HP: number;
+    Attack: number;
+    Defense: number;
+    "Sp. Attack": number;
+    "Sp. Defense": number;
+    Speed: number;
+  };
+  species: string;
+  description: string;
   evolution?: {
-    next?: string[][] // Adjusted to match the JSON structure
-  }
+    next?: string[][];
+  };
   profile?: {
-    gender?: string
-  }
-  image : {
-    thumbnail?: string
-    hires?: string
-  }
-  isMyPokemon?: boolean // Added this field
-}
+    gender?: string;
+    height?: string;
+    weight?: string;
+    ability?: string[][]; 
+  };
+  image: {
+    sprite?: string;
+    thumbnail?: string;
+    hires?: string;
+  };
+  isMyPokemon?: boolean;
+};
