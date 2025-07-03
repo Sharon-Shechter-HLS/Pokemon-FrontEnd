@@ -1,6 +1,6 @@
 import DataTable from "@/components/Table/Table"
 import DescriptionTooltip from "@/components/ToolTip/ToolTip"
-import pokadexIcon from "@/assets/pokadex.png"
+import pokadexIcon from "@/assets/pokadex.svg"
 import PokemonLogo from "@/components/PokemonLogo/PokemonLogo"
 import type { Pokemon } from "@/typs/Pokemon"
 
