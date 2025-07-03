@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
-import Button from "../Button/button"
-import Logo from "./Logo.png"
+import { Button } from "../Button/button"
+import Logo from "../../assets/headerLogo.svg"
 
 export default function Header() {
   const navigate = useNavigate() 
