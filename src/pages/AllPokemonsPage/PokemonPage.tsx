@@ -1,6 +1,6 @@
 import { useState } from "react";
 import FilterBar from "@/pages/AllPokemonsPage/FilterBar";
-import PokemonTable from "@/components/PokemonTable/PokemonTable";
+import PokemonTable from "@/components/Table/PokemonTable";
 import { useMyPokemons } from "@/hooks/useMyPokemons";
 import PokemonInfoModal from "@/components/Modals/InfoModal"; 
 
