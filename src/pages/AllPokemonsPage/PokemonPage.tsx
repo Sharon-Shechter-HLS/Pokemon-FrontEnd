@@ -17,30 +17,32 @@ export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) 
   const { pokemons, isLoading } = useMyPokemons(searchQuery, sortOption, isMyPokemons);
 
   const handleRowClick = (pokemon: any) => {
-    setSelectedPokemon(pokemon); 
-    setIsModalOpen(true); 
+    setSelectedPokemon(pokemon);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); 
+    setIsModalOpen(false);
     setSelectedPokemon(null);
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-[32px]">
-      <FilterBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        sortOption={sortOption}
-        onSortChange={setSortOption}
-      />
+    <div className="min-h-screen flex flex-col items-center">
+      <div className="w-full max-w-[1400px] mx-auto">
+        <FilterBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortOption={sortOption}
+          onSortChange={setSortOption}
+        />
 
-      <div className="w-full max-w-[1376px] mt-6 border">
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <PokemonTable pokemons={pokemons} onRowClick={handleRowClick} />
-        )}
+        <div>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <PokemonTable pokemons={pokemons} onRowClick={handleRowClick} />
+          )}
+        </div>
       </div>
 
       {/* Info Modal */}

@@ -1,6 +1,7 @@
 import DataTable from "@/components/Table/Table"
 import DescriptionTooltip from "@/components/ToolTip/ToolTip"
 import pokadexIcon from "@/assets/pokadex.png"
+import PokemonLogo from "@/components/PokemonLogo/PokemonLogo"
 import type { Pokemon } from "@/typs/Pokemon"
 
 type PokemonTableProps = {
@@ -16,13 +17,7 @@ export default function PokemonTable({ pokemons, onRowClick }: PokemonTableProps
       className: "flex items-center gap-3",
       render: (pokemon: Pokemon) => (
         <>
-          <div className="w-[54px] h-[54px] rounded-full bg-primary-50 flex items-center justify-center">
-            <img
-              src={pokemon.image.thumbnail}
-              alt={pokemon.name.english}
-              className="w-[32px] h-[32px] object-contain"
-            />
-          </div>
+          <PokemonLogo size={54} imgSrc={pokemon.image.thumbnail} />
           <div className="flex items-center gap-2">
             <span className="text-base font-medium">{pokemon.name.english}</span>
             {pokemon.isMyPokemon && (
@@ -45,10 +40,10 @@ export default function PokemonTable({ pokemons, onRowClick }: PokemonTableProps
     },
     {
       header: "Description",
-      width: "w-[450px]",
+      width: "w-30% max-w-[520px]",
       render: (pokemon: Pokemon) => (
         <DescriptionTooltip content={pokemon.description}>
-          <p className="text-sm text-muted-foreground truncate max-w-[420px] cursor-help">
+          <p className="text-sm truncate max-w-[520px] cursor-help">
             {pokemon.description}
           </p>
         </DescriptionTooltip>
@@ -56,7 +51,7 @@ export default function PokemonTable({ pokemons, onRowClick }: PokemonTableProps
     },
     {
       header: "Power level",
-      width: "w-[120px]",
+      width: "w-30% max-w-[200px]",
       render: (pokemon: Pokemon) => `Power level ${pokemon.base.Attack}`,
     },
     {

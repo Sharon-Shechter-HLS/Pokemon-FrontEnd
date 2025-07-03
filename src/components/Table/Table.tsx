@@ -57,8 +57,8 @@ export default function DataTable<T>({
   }
 
   return (
-    <div className="w-full max-w-[1376px] border rounded-[8px]">
-      <Table className="min-w-full">
+    <div className="w-full w-90% max-w-[1376px] border rounded-[8px]">
+      <Table className="min-w-90%">
         {caption && <TableCaption>{caption}</TableCaption>}
 
         <TableHeader>

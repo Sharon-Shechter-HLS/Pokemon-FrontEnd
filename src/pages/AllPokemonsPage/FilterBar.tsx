@@ -14,19 +14,18 @@ export default function FilterBar({
   onSearchChange,
   sortOption,
   onSortChange,
-  className = "flex flex-row items-center justify-between gap-8 w-100%",
 }: FilterBarProps) {
   return (
-    <div className={className}>
-      <div>
+    <div className="flex flex-row justify-between items-center p-2 ">
+    
         <Input
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search Pokémon"
         />
-      </div>
+    
 
-      <div>
+    
         <Filter
           value={sortOption}
           onChange={onSortChange}
@@ -39,7 +38,7 @@ export default function FilterBar({
           getKey={(value) => value}
           placeholder="Sort by"
         />
-      </div>
+      
     </div>
   );
 }
