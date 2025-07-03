@@ -76,7 +76,7 @@ export default function DataTable<T>({
 
         <TableBody>
           {pageSlice.length === 0 ? (
-            <TableRow className="h-[72px] border-b bg-white">
+            <TableRow className="h-72px border-b bg-white">
               <TableCell colSpan={columns.length} className="text-center text-muted-foreground">
                 No items found
               </TableCell>
@@ -86,7 +86,7 @@ export default function DataTable<T>({
               <TableRow
                 key={rowKey(row, index)}
                 onClick={() => onRowClick?.(row)}
-                className="h-[72px] border-b bg-white cursor-pointer hover:bg-gray-50 transition-colors"
+                className="h-72px border-b bg-white cursor-pointer hover:bg-gray-50 transition-colors"
               >
                 {columns.map((col) => (
                   <TableCell

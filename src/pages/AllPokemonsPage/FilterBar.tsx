@@ -1,26 +1,24 @@
-import Input from "../../components/Input /Input"
-import Filter from "../../components/filter/filter"
+import Input from "../../components/Input /Input";
+import Filter from "../../components/filter/filter";
 
 type FilterBarProps = {
-  searchQuery: string
-  onSearchChange: (query: string) => void
-  sortOption: string | undefined
-  onSortChange: (option: string | undefined) => void
-  className?: string
-  marginRight?: string
-}
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  sortOption: string | undefined;
+  onSortChange: (option: string | undefined) => void;
+  className?: string;
+};
 
 export default function FilterBar({
   searchQuery,
   onSearchChange,
   sortOption,
   onSortChange,
-  className = "flex items-center justify-start gap-8",
-  marginRight = "mr-225",
+  className = "flex flex-row items-center justify-between gap-8 w-100%",
 }: FilterBarProps) {
   return (
-<div className ={className}>
-      <div className = {marginRight}>
+    <div className={className}>
+      <div>
         <Input
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
@@ -28,7 +26,7 @@ export default function FilterBar({
         />
       </div>
 
-        <div>
+      <div>
         <Filter
           value={sortOption}
           onChange={onSortChange}
@@ -43,5 +41,5 @@ export default function FilterBar({
         />
       </div>
     </div>
-  )
+  );
 }
