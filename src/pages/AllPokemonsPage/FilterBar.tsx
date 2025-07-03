@@ -1,7 +1,9 @@
-import Input from "../../components/Input /Input";
-import Filter from "../../components/filter/filter";
+import Headline from "./Headline"; // Import your existing Headline component
+import Input from "../../components/Input /Input"; // Import your existing Input component
+import Filter from "../../components/filter/filter"; 
 
 type FilterBarProps = {
+  title: React.ReactNode; // Add title for the toolbar
   searchQuery: string;
   onSearchChange: (query: string) => void;
   sortOption: string | undefined;
@@ -10,22 +12,29 @@ type FilterBarProps = {
 };
 
 export default function FilterBar({
+  title,
   searchQuery,
   onSearchChange,
   sortOption,
   onSortChange,
+  className = "",
 }: FilterBarProps) {
   return (
-    <div className="flex flex-row justify-between items-center p-2 ">
-    
+    <div className={`w-full mb-4 ${className}`}>
+      {/* Headline */}
+      <Headline className="text-2xl mb-4">{title}</Headline>
+
+      {/* Toolbar */}
+      <div className="flex items-center justify-between bg-transparent rounded-md">
+        {/* Search Input */}
         <Input
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search Pokémon"
+          className="w-max" // Adjust width and spacing
         />
-    
 
-    
+        {/* Filter Dropdown */}
         <Filter
           value={sortOption}
           onChange={onSortChange}
@@ -38,7 +47,7 @@ export default function FilterBar({
           getKey={(value) => value}
           placeholder="Sort by"
         />
-      
+      </div>
     </div>
   );
 }
