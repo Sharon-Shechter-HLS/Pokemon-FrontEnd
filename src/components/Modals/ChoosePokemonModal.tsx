@@ -10,7 +10,7 @@ import {
   CardFooter,
 } from "../ui/card";
 import { FaTimes } from "react-icons/fa";
-import { Button } from "@/components/Button/Button";
+import { Button } from "@/components/Button/button";
 import { Separator } from "../ui/separator";
 
 type ChoosePokemonModalProps = {
@@ -22,7 +22,7 @@ const ChoosePokemonModal = ({ onSelect, onClose }: ChoosePokemonModalProps) => {
   const { pokemons, isLoading } = useMyPokemons(undefined, undefined, true);
   const [selected, setSelected] = useState<Pokemon | null>(null);
 
-  if (isLoading) return <div className="p-8 text-center">Loading...</div>;
+  if (isLoading) return 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

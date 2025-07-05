@@ -1,9 +1,12 @@
-import { useNavigate } from "react-router-dom"
-import { Button } from "../Button/button"
-import Logo from "../../assets/headerLogo.svg"
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Button } from "../Button/button";
+import Logo from "../../assets/headerLogo.svg";
+import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
 
 export default function Header() {
-  const navigate = useNavigate() 
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false); 
 
   return (
     <header className="w-full px-8 py-4 bg-white flex justify-between items-center shadow-sm">
@@ -20,10 +23,21 @@ export default function Header() {
         </div>
       </div>
 
-      <Button size="lg" onClick={() => alert("Start a Fight clicked!")}>
-        { /* Will route to the fight */}
+      {/* Start Fight Button */}
+      <Button size="lg" onClick={() => setIsModalOpen(true)}>
         Start a Fight
       </Button>
+
+      {/* Choose Pokemon Modal */}
+      {isModalOpen && (
+        <ChoosePokemonModal
+          onSelect={(pokemon) => {
+            console.log("Selected Pokémon:", pokemon);
+            setIsModalOpen(false); // Close modal after selecting a Pokémon
+          }}
+          onClose={() => setIsModalOpen(false)} // Close modal when "X" is clicked
+        />
+      )}
     </header>
-  )
+  );
 }

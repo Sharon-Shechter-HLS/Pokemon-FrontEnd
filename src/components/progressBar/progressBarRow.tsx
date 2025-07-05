@@ -1,27 +1,29 @@
 import { Progress } from "@/components/ui/progress";
 
-export type ChampionPokemon = {
-  name: string;
-  speed: number;
-};
 
-function getProgressBarClass(progress: number) {
-  if (progress > 80) return "bg-[var(--color-success-green)]";
-  if (progress > 30) return "bg-[var(--color-warning-yellow)]";
+
+function getCurrentHPClass(CurrentHP: number, HP: number) {
+  const percentage = (CurrentHP / HP) * 100;
+  if (percentage > 80) return "bg-[var(--color-success-green)]";
+  if (percentage > 30) return "bg-[var(--color-warning-yellow)]";
   return "bg-[var(--color-error-red)]";
 }
 
 export const progressBarRow = ({
   HP,
-  progress,
-  pokemon,
+  CurrentHP,
+  pokemonName,
+  speed,
   disabled = false,
 }: {
   HP: number;
-  progress: number;
-  pokemon: ChampionPokemon;
+  CurrentHP: number;
+  pokemonName: string;
+  speed: number;
   disabled?: boolean;
 }) => {
+  const percentage = (CurrentHP / HP) * 100;
+
   return (
     <div
       className={`relative ${
@@ -33,19 +35,24 @@ export const progressBarRow = ({
       {disabled && (
         <div className="absolute inset-0 bg-gray-200 opacity-18 rounded-sm pointer-events-none z-10" />
       )}
-      <h2 className="text-2xl font-semibold mb-4">{pokemon.name}</h2>
+      {/* Pokémon Name */}
+      <h2 className="text-2xl font-semibold mb-4">{pokemonName}</h2>
+
+      {/* Progress Bar */}
       <Progress
-        value={progress}
-        max={HP}
+        value={percentage}
+        max={100}
         className="w-full"
-        indicatorClassName={getProgressBarClass(progress)}
+        indicatorClassName={getCurrentHPClass(CurrentHP, HP)}
       />
+
+      {/* Additional Info */}
       <div className="flex justify-between items-center mt-2 text-sm">
         <span className="font-light">
-          Speed: <span className="font-semibold">{pokemon.speed}</span>
+          Speed: <span className="font-semibold">{speed}</span>
         </span>
         <span className="font-light">
-          {(progress / 100) * HP}/{HP}
+          {CurrentHP}/{HP}
         </span>
       </div>
     </div>
