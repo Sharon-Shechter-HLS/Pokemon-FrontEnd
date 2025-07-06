@@ -60,16 +60,19 @@ async function fetchFilteredPokemons(
 export function useMyPokemons(
   searchQuery: string = "",
   sortOption?: string,
-  isMyPokemons: boolean = false
+  isMyPokemons: boolean = false,
+  fetchRandom: boolean = false 
 ) {
   const { data: pokemons = [], isLoading } = useQuery<Pokemon[]>({
-    queryKey: ["pokemons", searchQuery, sortOption, isMyPokemons], // Include isMyPokemons in query key
-    queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons), // Fetch filtered data
+    queryKey: ["pokemons", searchQuery, sortOption, isMyPokemons, fetchRandom], 
+    queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons), 
   });
 
   // Compute a random Pokémon from the fetched list
   const randomPokemon =
-    pokemons.length > 0 ? pokemons[Math.floor(Math.random() * pokemons.length)] : null;
+    fetchRandom && pokemons.length > 0
+      ? pokemons[Math.floor(Math.random() * pokemons.length)]
+      : null;
 
   return {
     pokemons,

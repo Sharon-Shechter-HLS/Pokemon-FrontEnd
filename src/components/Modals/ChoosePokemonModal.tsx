@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { useMyPokemons } from "../../hooks/useMyPokemons";
 import type { Pokemon } from "../../typs/Pokemon";
 import PokemonLogo from "../PokemonLogo/PokemonLogo";
@@ -10,19 +11,23 @@ import {
   CardFooter,
 } from "../ui/card";
 import { FaTimes } from "react-icons/fa";
-import { Button } from "@/components/Button/button";
+import { Button } from "@/components/Button/button"; // Import Button component
 import { Separator } from "../ui/separator";
 
 type ChoosePokemonModalProps = {
-  onSelect: (pokemon: Pokemon) => void;
-  onClose: () => void;
+  onClose: () => void; // Callback to close the modal
 };
 
-const ChoosePokemonModal = ({ onSelect, onClose }: ChoosePokemonModalProps) => {
-  const { pokemons, isLoading } = useMyPokemons(undefined, undefined, true);
-  const [selected, setSelected] = useState<Pokemon | null>(null);
+const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
+  // Fetch only "My Pokémon" for selection
+  const { pokemons: myPokemons, isLoading: isMyPokemonsLoading } = useMyPokemons(undefined, undefined, true); 
+  // Fetch a random Pokémon for the opponent
+  const { randomPokemon, isLoading: isRandomPokemonLoading } = useMyPokemons(undefined, undefined, false, true); 
 
-  if (isLoading) return 
+  const [selected, setSelected] = useState<Pokemon | null>(null);
+  const navigate = useNavigate(); // Initialize navigation
+
+  if (isMyPokemonsLoading || isRandomPokemonLoading) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -46,13 +51,13 @@ const ChoosePokemonModal = ({ onSelect, onClose }: ChoosePokemonModalProps) => {
         {/* Content */}
         <CardContent>
           <div className="overflow-y-auto max-h-[300px] flex flex-col gap-6 items-center">
-            {Array.from({ length: Math.ceil(pokemons.length / 3) }).map(
+            {Array.from({ length: Math.ceil(myPokemons.length / 3) }).map(
               (_, rowIdx) => (
                 <div
                   key={rowIdx}
                   className="flex flex-row gap-6 w-full justify-center"
                 >
-                  {pokemons
+                  {myPokemons
                     .slice(rowIdx * 3, rowIdx * 3 + 3)
                     .map((pokemon) => {
                       const isSelected = selected?.id === pokemon.id;
@@ -91,10 +96,14 @@ const ChoosePokemonModal = ({ onSelect, onClose }: ChoosePokemonModalProps) => {
         {/* Footer */}
         <CardFooter className="flex justify-center">
           <Button
-            className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600"
+            variant="primary"
+            size="sm"
             onClick={() => {
-              if (selected) {
-                onSelect(selected);
+              if (selected && randomPokemon) {
+                navigate("/arena", {
+                  state: { userPokemon: selected, opponentPokemon: randomPokemon },
+                }); // Navigate to Arena page with props
+                onClose(); // Close the modal
               }
             }}
             disabled={!selected}

@@ -1,31 +1,20 @@
+import { useLocation } from "react-router-dom"; 
 import { useEffect, useState } from "react";
 import Arena from "@/pages/Arena/Arena";
 import { ArenaHeader } from "@/components/Header/arenaHeader";
 import VSComponent from "@/components/PreFight/VSComponent";
-import { useMyPokemons } from "@/hooks/useMyPokemons";
-import type { Pokemon } from "@/typs/Pokemon";
+import type { Pokemon } from "@/typs/Pokemon"; 
 
 export default function ArenaPage() {
-  const { pokemons: myPokemons, isLoading } = useMyPokemons();
-  const [currentUser, setCurrentUser] = useState<Pokemon | null>(null);
-  const [opponent, setOpponent] = useState<Pokemon | null>(null);
+  const location = useLocation(); 
+  const { userPokemon, opponentPokemon }: { userPokemon: Pokemon; opponentPokemon: Pokemon } = location.state || {}; // Explicitly type state
 
   const [userTurn, setUserTurn] = useState(true);
-  const [userCurrentHP, setUserCurrentHP] = useState(0);
-  const [opponentCurrentHP, setOpponentCurrentHP] = useState(0);
+  const [userCurrentHP, setUserCurrentHP] = useState<number>(userPokemon?.base.HP || 0); 
+  const [opponentCurrentHP, setOpponentCurrentHP] = useState<number>(opponentPokemon?.base.HP || 0); 
   const [dialogue, setDialogue] = useState("Your turn!");
   const [canCatchPokemon, setCanCatchPokemon] = useState(false);
   const [showVSComponent, setShowVSComponent] = useState(true);
-
-  useEffect(() => {
-    // Initialize the opponent and user Pokémon
-    if (myPokemons.length > 1) {
-      setCurrentUser(myPokemons[0]); // First Pokémon as user
-      setOpponent(myPokemons[1]); // Second Pokémon as opponent
-      setUserCurrentHP(myPokemons[0].base.HP);
-      setOpponentCurrentHP(myPokemons[1].base.HP);
-    }
-  }, [myPokemons]);
 
   useEffect(() => {
     // Show VSComponent for 5 seconds
@@ -34,28 +23,28 @@ export default function ArenaPage() {
   }, []);
 
   const handleAttack = () => {
-    if (userTurn && opponent) {
-      const damage = currentUser?.base.Attack || 0;
-      setDialogue(`${currentUser?.name.english} attacks!`);
-      setOpponentCurrentHP((prev) => Math.max(prev - damage, 0));
-      setCanCatchPokemon(opponentCurrentHP - damage <= opponent.base.HP * 0.3 && opponentCurrentHP - damage > 0);
+    if (userTurn && opponentPokemon) {
+      const damage = userPokemon?.base.Attack || 0;
+      setDialogue(`${userPokemon?.name.english} attacks!`);
+      setOpponentCurrentHP((prev: number) => Math.max(prev - damage, 0)); // Add type annotation for prev
+      setCanCatchPokemon(opponentCurrentHP - damage <= opponentPokemon.base.HP * 0.3 && opponentCurrentHP - damage > 0);
 
       // Check if opponent fainted
       if (opponentCurrentHP - damage <= 0) {
         setTimeout(() => {
-          setDialogue(`${opponent.name.english} fainted!`);
+          setDialogue(`${opponentPokemon.name.english} fainted!`);
         }, 1000);
       } else {
         // Simulate opponent's attack after a delay
         setTimeout(() => {
-          const opponentDamage = opponent?.base.Attack || 0;
-          setDialogue(`${opponent.name.english} attacks!`);
-          setUserCurrentHP((prev) => Math.max(prev - opponentDamage, 0));
+          const opponentDamage = opponentPokemon?.base.Attack || 0;
+          setDialogue(`${opponentPokemon.name.english} attacks!`);
+          setUserCurrentHP((prev: number) => Math.max(prev - opponentDamage, 0)); // Add type annotation for prev
 
           // Check if user fainted
           if (userCurrentHP - opponentDamage <= 0) {
             setTimeout(() => {
-              setDialogue(`${currentUser?.name.english} fainted!`);
+              setDialogue(`${userPokemon?.name.english} fainted!`);
             }, 1000);
           } else {
             setUserTurn(true); // Switch back to user's turn
@@ -68,11 +57,11 @@ export default function ArenaPage() {
 
   const handleCatch = () => {
     if (canCatchPokemon) {
-      setDialogue(`You caught ${opponent?.name.english}!`);
+      setDialogue(`You caught ${opponentPokemon?.name.english}!`);
     }
   };
 
-  if (isLoading || !currentUser || !opponent) {
+  if (!userPokemon || !opponentPokemon) {
     return <div className="p-10">Loading...</div>;
   }
 
@@ -86,14 +75,14 @@ export default function ArenaPage() {
       <div className="w-full h-full">
         {showVSComponent ? (
           <VSComponent
-            userPokemon={currentUser}
-            opponentPokemon={opponent}
+            userPokemon={userPokemon}
+            opponentPokemon={opponentPokemon}
           />
         ) : (
           <Arena
             className="w-full h-[90%] bg-cover bg-center relative"
-            userPokemon={currentUser}
-            opponentPokemon={opponent}
+            userPokemon={userPokemon}
+            opponentPokemon={opponentPokemon}
             userCurrentHP={userCurrentHP}
             opponentCurrentHP={opponentCurrentHP}
             userTurn={userTurn}

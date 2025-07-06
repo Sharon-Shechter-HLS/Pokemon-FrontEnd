@@ -31,11 +31,7 @@ export default function Header() {
       {/* Choose Pokemon Modal */}
       {isModalOpen && (
         <ChoosePokemonModal
-          onSelect={(pokemon) => {
-            console.log("Selected Pokémon:", pokemon);
-            setIsModalOpen(false); // Close modal after selecting a Pokémon
-          }}
-          onClose={() => setIsModalOpen(false)} // Close modal when "X" is clicked
+          onClose={() => setIsModalOpen(false)} 
         />
       )}
     </header>
