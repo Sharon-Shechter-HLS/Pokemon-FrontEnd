@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "../../lib/utils";
 import { PaginationInfo } from "../ui/pagination";
-import { RowsPerPageDropdown } from "./RowsPerPageDropdown";
+import { RowsPerPageDropdown } from "../ui/RowsPerPage";
 
 function TableFooter({
   className,
