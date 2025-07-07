@@ -1,6 +1,57 @@
-import * as React from "react"
+import * as React from "react";
+import { cn } from "../../lib/utils";
+import { PaginationInfo } from "../ui/pagination";
+import { RowsPerPageDropdown } from "./RowsPerPageDropdown";
 
-import { cn } from "@/lib/utils"
+function TableFooter({
+  className,
+  page = 1,
+  pageSize = 10,
+  total = 0,
+  onPageChange,
+  onPageSizeChange,
+  rowsPerPageOptions = [10, 20, 50, 100],
+  ...props
+}: React.ComponentProps<"tfoot"> & {
+  page?: number;
+  pageSize?: number;
+  total?: number;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (size: number) => void;
+  rowsPerPageOptions?: number[];
+}) {
+  return (
+    <tfoot
+      data-slot="table-footer"
+      className={cn(
+        "border-t font-medium [&>tr]:last:border-b-0 bg-component-background",
+        className
+      )}
+      {...props}
+    >
+      <tr>
+        <td colSpan={100}>
+          <div className="flex items-center w-full px-2 py-1">
+            <RowsPerPageDropdown
+              value={pageSize}
+              onChange={onPageSizeChange || (() => {})}
+              options={rowsPerPageOptions}
+            />
+            <div className="ml-auto">
+              <PaginationInfo
+                page={page}
+                pageSize={pageSize}
+                total={total}
+                onPrev={() => onPageChange && onPageChange(page - 1)}
+                onNext={() => onPageChange && onPageChange(page + 1)}
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+  );
+}
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
@@ -14,17 +65,17 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
         {...props}
       />
     </div>
-  )
+  );
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn("bg-primary-50 [&_tr]:border-b", className)}
       {...props}
     />
-  )
+  );
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
@@ -34,20 +85,7 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
       className={cn("[&_tr:last-child]:border-0", className)}
       {...props}
     />
-  )
-}
-
-function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
-  return (
-    <tfoot
-      data-slot="table-footer"
-      className={cn(
-        "bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",
-        className
-      )}
-      {...props}
-    />
-  )
+  );
 }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
@@ -60,7 +98,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
@@ -73,7 +111,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function TableCell({ className, ...props }: React.ComponentProps<"td">) {
@@ -86,7 +124,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function TableCaption({
@@ -99,7 +137,7 @@ function TableCaption({
       className={cn("text-muted-foreground mt-4 text-sm", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -111,4 +149,4 @@ export {
   TableRow,
   TableCell,
   TableCaption,
-}
+};
