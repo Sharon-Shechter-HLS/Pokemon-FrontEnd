@@ -64,9 +64,7 @@ export function DataTable<T>({
             </TableCell>
           </TableRow>
         ) : rowRenderer ? (
-          data.map((item, index) => (
-            <React.Fragment key={index}>{rowRenderer(item)}</React.Fragment>
-          ))
+          data.map((item, index) => <React.Fragment key={index}>{rowRenderer(item)}</React.Fragment>)
         ) : (
           data.map((item, rowIndex) => (
             <TableRow key={rowIndex}>
