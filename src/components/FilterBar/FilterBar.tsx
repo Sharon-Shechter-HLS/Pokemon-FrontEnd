@@ -19,7 +19,7 @@ type FilterToolbarProps = {
   title: React.ReactNode;
   searchValue: string;
   onSearchChange: (value: string) => void;
-  options: Array<{ label: string; value: string }>;
+  filterOptions: Array<{ label: string; value: string }>; // Added this property
   filterValue: string | null;
   onFilterChange: (value: string | null) => void;
   filterLabel?: string;
@@ -30,7 +30,7 @@ export const FilterBar = ({
   title,
   searchValue,
   onSearchChange,
-  options,
+  filterOptions, // Updated to use the new property
   filterValue,
   onFilterChange,
   filterLabel = "Filter",
@@ -46,7 +46,7 @@ export const FilterBar = ({
         size="md"
       />
       <Filter
-        options={options}
+        options={filterOptions} // Updated to use the new property
         value={filterValue}
         onChange={onFilterChange}
         label={filterLabel}
