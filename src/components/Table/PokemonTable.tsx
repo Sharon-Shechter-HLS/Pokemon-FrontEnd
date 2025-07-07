@@ -42,7 +42,7 @@ export const PokemonTable = ({
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setPagination({ page: 1, pageSize: newPageSize }); // Reset to page 1 when page size changes
+    setPagination({ page: 1, pageSize: newPageSize }); 
   };
 
   const paginatedPokemons = pokemons.slice(
