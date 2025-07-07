@@ -20,14 +20,14 @@ export type Pokemon = {
   species: string;
   description: string;
   evolution: {
-    next?: [string, string][];
+    next?: string[][]; 
     [key: string]: any;
   };
   profile: {
     height: string;
     weight: string;
     egg: string[];
-    ability: [string, string][];
+    ability: string[][]; 
     gender: string;
     [key: string]: any;
   };
@@ -37,5 +37,5 @@ export type Pokemon = {
     hires: string;
     [key: string]: string;
   };
-  isMyPokemon: boolean;
+  isMyPokemon?: boolean;
 };
