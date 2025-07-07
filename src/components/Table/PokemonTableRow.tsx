@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Pokemon } from "../../typs/Pokemon";
+import { type Pokemon } from "../../typs/Pokemon";
 import { TableCell, TableRow } from "../ui/table";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
 import PokemonInfoModal from "../Modals/InfoModal";
@@ -45,7 +45,14 @@ export function PokemonTableRow({ pokemon }: PokemonTableRowProps) {
       <PokemonInfoModal
         open={open}
         onClose={() => setOpen(false)}
-        pokemon={pokemon} 
+        id={pokemon.id}
+        name={pokemon.name.english}
+        img={pokemon.image?.hires || ""}
+        description={pokemon.description}
+        height={pokemon.profile?.height || ""}
+        weight={pokemon.profile?.weight || ""}
+        category={pokemon.species || ""}
+        abilities={pokemon.profile?.ability?.map((a) => a[0]) || []}
       />
     </>
   );
