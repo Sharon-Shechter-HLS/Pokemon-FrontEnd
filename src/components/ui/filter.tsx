@@ -9,7 +9,7 @@ import {
 } from "../ui/dropDown";
 import { Button } from "../ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { FiX } from "react-icons/fi"; // Import the X icon from react-icons
+import { FiX } from "react-icons/fi"; 
 
 type FilterOption = {
   label: React.ReactNode;
