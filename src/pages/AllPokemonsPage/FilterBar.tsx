@@ -25,7 +25,7 @@ export default function FilterBar({
       <Headline className="text-2xl mb-4">{title}</Headline>
 
       {/* Toolbar */}
-      <div className="flex items-center justify-between bg-transparent rounded-md">
+      <div className="flex items-center justify-between bg-transparent rounded-md w-full">
         {/* Search Input */}
         <Input
           value={searchQuery}

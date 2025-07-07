@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { useMyPokemons } from "../../hooks/useMyPokemons";
 import type { Pokemon } from "../../typs/Pokemon";
 import PokemonLogo from "../PokemonLogo/PokemonLogo";
 import {
@@ -11,73 +9,75 @@ import {
   CardFooter,
 } from "../ui/card";
 import { FaTimes } from "react-icons/fa";
-import { Button } from "@/components/Button/button"; // Import Button component
+import { Button } from "@/components/Button/button";
 import { Separator } from "../ui/separator";
+import { useMyPokemons } from "../../hooks/useMyPokemons";
 
 type ChoosePokemonModalProps = {
-  onClose: () => void; // Callback to close the modal
+  onSelect: (pokemon: Pokemon) => void;
+  onClose: () => void;
 };
 
-const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
-  // Fetch only "My Pokémon" for selection
-  const { pokemons: myPokemons, isLoading: isMyPokemonsLoading } = useMyPokemons(undefined, undefined, true); 
-  // Fetch a random Pokémon for the opponent
-  const { randomPokemon, isLoading: isRandomPokemonLoading } = useMyPokemons(undefined, undefined, false, true); 
-
+const ChoosePokemonModal = ({ onSelect, onClose }: ChoosePokemonModalProps) => {
+  const { pokemons, isLoading } = useMyPokemons("", undefined, true); 
   const [selected, setSelected] = useState<Pokemon | null>(null);
-  const navigate = useNavigate(); // Initialize navigation
 
-  if (isMyPokemonsLoading || isRandomPokemonLoading) return null;
+  if (isLoading) return <div className="p-8 text-center">Loading...</div>;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <Card className="max-w-[502px] w-full rounded-md">
-        {/* Header */}
-        <CardHeader className="flex flex-col items-start w-full">
-          <div className="flex flex-row items-center w-full">
-            <CardTitle className="text-2xl font-normal mb-2">
-              Choose Your Pokémon
-            </CardTitle>
-            <span className="flex-1" />
-            <button onClick={onClose} className="ml-auto">
-              <FaTimes
-                size={24}
-                className="cursor-pointer text-gray-500 hover:text-gray-800 transition-colors"
-              />
-            </button>
-          </div>
+      <Card className="bg-white rounded-lg shadow-lg p-8 min-w-[350px] max-w-[90vw] relative">
+        <button onClick={onClose} className="absolute top-4 right-4">
+          <FaTimes
+            size={24}
+            className="cursor-pointer text-gray-500 hover:text-gray-800 transition-colors"
+          />
+        </button>
+        <CardHeader>
+          <CardTitle>Choose Your Pokémon</CardTitle>
         </CardHeader>
-
-        {/* Content */}
         <CardContent>
-          <div className="overflow-y-auto max-h-[300px] flex flex-col gap-6 items-center">
-            {Array.from({ length: Math.ceil(myPokemons.length / 3) }).map(
+          <div className="flex flex-col gap-15 items-center">
+            {Array.from({ length: Math.ceil(pokemons.length / 3) }).map(
               (_, rowIdx) => (
                 <div
                   key={rowIdx}
-                  className="flex flex-row gap-6 w-full justify-center"
+                  className="flex flex-row gap-12 w-full justify-center"
                 >
-                  {myPokemons
+                  {pokemons
                     .slice(rowIdx * 3, rowIdx * 3 + 3)
-                    .map((pokemon) => {
+                    .map((pokemon, colIdx) => {
+                      const isMiddle = colIdx === 1;
+                      const isEvenRow = rowIdx % 2 === 0;
+                      const translateY = isMiddle
+                        ? isEvenRow
+                          ? "translate-y-1"
+                          : "-translate-y-1"
+                        : "";
                       const isSelected = selected?.id === pokemon.id;
                       return (
                         <button
                           key={pokemon.id}
                           onClick={() => setSelected(pokemon)}
                           type="button"
-                          className={`flex items-center justify-center rounded-full hover:border-blue-600 transition-transform border-2 ${
-                            isSelected
-                              ? "border-blue-600"
-                              : "border-transparent"
+                          className={`flex flex-row items-center rounded-full justify-center hover:border-blue-600 transition-transform border-2 ${translateY} ${
+                            isSelected ? "border-blue-600" : "border-transparent"
                           }`}
+                          style={{ padding: 0 }}
                         >
                           <PokemonLogo
+                            name={
+                              typeof pokemon.name === "string"
+                                ? pokemon.name
+                                : pokemon.name.english
+                            }
                             imgSrc={
-                              pokemon.image?.hires ||
-                              pokemon.image?.thumbnail ||
-                              pokemon.image?.sprite ||
-                              ""
+                              typeof pokemon.image === "string"
+                                ? pokemon.image
+                                : pokemon.image?.hires ||
+                                  pokemon.image?.thumbnail ||
+                                  pokemon.image?.sprite ||
+                                  ""
                             }
                             size={86}
                           />
@@ -89,21 +89,13 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
             )}
           </div>
         </CardContent>
-
-        {/* Separator */}
-        <Separator className="my-4" />
-
-        {/* Footer */}
+        <Separator />
         <CardFooter className="flex justify-center">
           <Button
-            variant="primary"
-            size="sm"
+            className="w-26 h-10"
             onClick={() => {
-              if (selected && randomPokemon) {
-                navigate("/arena", {
-                  state: { userPokemon: selected, opponentPokemon: randomPokemon },
-                }); // Navigate to Arena page with props
-                onClose(); // Close the modal
+              if (selected) {
+                onSelect(selected);
               }
             }}
             disabled={!selected}

@@ -1,39 +1,64 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import HeaderMenu from "./NavMenu";
 import { Button } from "../Button/button";
-import Logo from "../../assets/headerLogo.svg";
 import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
+import PokemonLogoSrc from "../../assets/headerLogo.svg";
 
-export default function Header() {
+type HeaderMenuItem = {
+  name: string | React.ReactNode;
+  href: string;
+  isActive?: boolean;
+};
+
+type HeaderProps = {
+  items: HeaderMenuItem[];
+};
+
+type HeaderLogoProps = {
+  src: string;
+  alt: string;
+  className?: string;
+};
+
+export function Header({ items }: HeaderProps) {
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+
+  const HeaderLogo = ({
+    src,
+    alt,
+    className = "h-14 w-37 object-contain",
+  }: HeaderLogoProps) => (
+    <div className="flex items-center">
+      <img src={src} alt={alt} className={className} />
+    </div>
+  );
 
   return (
-    <header className="w-full px-8 py-4 bg-white flex justify-between items-center shadow-sm">
-      <div className="flex items-center gap-4">
-        <img src={Logo} alt="Pokemon Logo" className="h-[40px]" />
-
-        <div className="flex gap-2 ml-4">
-          <Button variant="primary" size="md" onClick={() => navigate("/allpokemon")}>
-            All Pokemons
-          </Button>
-          <Button variant="secondary" size="md" onClick={() => navigate("/mypokemon")}>
-            My Pokemons
-          </Button>
+    <>
+      <header className="w-full flex items-center justify-between px-6 bg-white border-b h-20">
+        <div className="flex items-center gap-6 flex-shrink-0">
+          <HeaderLogo src={PokemonLogoSrc} alt="Pokédex Logo" />
+          <HeaderMenu items={items} />
         </div>
-      </div>
-
-      {/* Start Fight Button */}
-      <Button size="lg" onClick={() => setIsModalOpen(true)}>
-        Start a Fight
-      </Button>
-
-      {/* Choose Pokemon Modal */}
-      {isModalOpen && (
-        <ChoosePokemonModal
-          onClose={() => setIsModalOpen(false)} 
-        />
+        <Button size={"lg"} onClick={() => setShowModal(true)}>
+          Start a Fight
+        </Button>
+      </header>
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <ChoosePokemonModal
+            onSelect={async (pokemon) => {
+              setShowModal(false);
+              navigate(`/arena?userId=${pokemon.id}`);
+            }}
+            onClose={() => setShowModal(false)}
+          />
+        </div>
       )}
-    </header>
+    </>
   );
 }
+
+export default Header;

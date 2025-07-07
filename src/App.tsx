@@ -1,28 +1,58 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; 
-import Header from "./components/Header/Header";
-import AllPokemonPage from "./pages/AllPokemonsPage/AllPokemonPage";
-import MypokemonPage from "./pages/AllPokemonsPage/MypokemonPage";
-import ArenaPage from "./pages/Arena/ArenaPage"; // Import the ArenaPage component
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { Header } from "./components/Header/Header";
+import AllPokemonsPage from "./pages/AllPokemonsPage/AllPokemonPage";
+import MyPokemonsPage from "./pages/AllPokemonsPage/MypokemonPage";
+import ArenaPage from "./pages/Arena/ArenaPage";
 import "./App.css";
 
 const queryClient = new QueryClient();
 
+const AppContent = () => {
+  const location = useLocation();
+  const items = [
+    {
+      name: "All Pokémons",
+      href: "/all-pokemons",
+      isActive: location.pathname === "/all-pokemons",
+    },
+    {
+      name: (
+        <span className="flex items-center gap-2">
+          My Pokémons
+          
+        </span>
+      ),
+      href: "/my-pokemons",
+      isActive: location.pathname === "/my-pokemons",
+    },
+  ];
+
+  return (
+    <>
+      <Header items={items} />
+      <Routes>
+        <Route path="/all-pokemons" element={<AllPokemonsPage />} />
+        <Route path="/my-pokemons" element={<MyPokemonsPage />} />
+        <Route path="/arena" element={<ArenaPage />} />
+        <Route path="/" element={<Navigate to="/all-pokemons" replace />} />
+      </Routes>
+    </>
+  );
+};
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <Header />
-        <div className="App bg-neutral-100">
-          <Routes>
-            <Route path="/" element={<Navigate to="/allpokemon" replace />} />
-            <Route path="/allpokemon" element={<AllPokemonPage />} />
-            <Route path="/mypokemon" element={<MypokemonPage />} />
-            <Route path="/arena" element={<ArenaPage />} /> {/* Use ArenaPage instead of Arena */}
-          </Routes>
-        </div>
-        {/* Add any additional components or modals here */}
-      </Router>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
     </QueryClientProvider>
   );
 }

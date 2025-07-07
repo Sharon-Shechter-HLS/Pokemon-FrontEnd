@@ -4,33 +4,45 @@ import {
   CardTitle,
   CardContent,
   CardDescription,
-} from "@/components/ui/card";
+} from "../ui/card";
 import { Separator } from "../ui/separator";
-import { FaTimes } from 'react-icons/fa';
-import type { Pokemon } from "@/typs/Pokemon";
+import { FaTimes } from "react-icons/fa"; 
+import { getPokemonAttributes } from "../../utils/getAtributes";
+import type { PokemonAttribute } from "../../utils/getAtributes";
 
 type PokemonInfoModalProps = {
   open: boolean;
   onClose: () => void;
-  pokemon: Pokemon;
+  id?: number;
+  name?: string;
+  img?: string;
+  description?: string;
+  height?: string;
+  weight?: string;
+  category?: string;
+  abilities?: string[];
 };
 
 export function PokemonInfoModal({
   open,
   onClose,
-  pokemon,
+  id,
+  name,
+  img,
+  description,
+  height,
+  weight,
+  category,
+  abilities,
 }: PokemonInfoModalProps) {
   if (!open) return null;
 
-  const { id, name, image, description, profile, species, type } = pokemon;
-
-  const attributes = [
-    { label: "Height", value: profile?.height ?? "?" },
-    { label: "Weight", value: profile?.weight ?? "?" },
-    { label: "Category", value: species ?? "?" },
-    { label: "Abilities", value: profile?.ability?.map((a) => a[0]).join(", ") ?? "?" },
-    { label: "Type", value: type.join(", ") },
-  ];
+  const attributes: PokemonAttribute[] = getPokemonAttributes({
+    height: height ?? "?",
+    weight: weight ?? "?",
+    category: category ?? "?",
+    abilities: abilities ?? [],
+  });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -40,14 +52,14 @@ export function PokemonInfoModal({
             <span className="text-xs text-gray-500">#{id ?? "?"}</span>
             <span className="flex-1" />
             <button onClick={onClose} className="ml-auto">
-              <FaTimes className="cursor-pointer" />
+              <FaTimes className="cursor-pointer" /> {/* Use FaTimes icon */}
             </button>
           </div>
-          <CardTitle className="text-2xl font-normal mb-2">{name?.english}</CardTitle>
+          <CardTitle className="text-2xl font-normal mb-2">{name}</CardTitle>
         </CardHeader>
         <img
-          src={image?.hires || "/pokemon-placeholder.png"}
-          alt={name?.english ?? "?"}
+          src={img || "/pokemon-placeholder.png"}
+          alt={name ?? "?"}
           className="mb-1 w-[180px] h-[165px] mx-auto"
         />
         <CardContent>
@@ -55,14 +67,18 @@ export function PokemonInfoModal({
             <span className="mb-2">{description ?? "?"}</span>
             <Separator className="my-4" />
             <div className="flex flex-row space-x-5">
-              {attributes.map((attr) => (
-                <div className="flex flex-col space-y-2" key={attr.label}>
-                  <span className="font-normal text-gray-400 mr-1 text-xs">
-                    {attr.label}
-                  </span>
-                  <span>{attr.value}</span>
-                </div>
-              ))}
+              {attributes.length > 0 ? (
+                attributes.map((attr) => (
+                  <div className="flex flex-col space-y-2" key={attr.label}>
+                    <span className="font-normal text-gray-400 mr-1 text-xs">
+                      {attr.label}
+                    </span>
+                    <span>{attr.value ?? "?"}</span>
+                  </div>
+                ))
+              ) : (
+                <span>?</span>
+              )}
             </div>
           </CardDescription>
         </CardContent>
