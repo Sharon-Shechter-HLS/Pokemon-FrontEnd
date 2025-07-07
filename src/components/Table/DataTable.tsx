@@ -21,7 +21,7 @@ type DataTableProps<T> = {
   page: number;
   pageSize: number;
   total: number;
-  rowRenderer?: (item: T) => React.ReactNode; 
+  rowRenderer?: (item: T) => React.ReactNode; // Custom row renderer
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
   rowsPerPageOptions?: number[];
@@ -64,13 +64,15 @@ export function DataTable<T>({
             </TableCell>
           </TableRow>
         ) : rowRenderer ? (
-          data.map((item, index) => <React.Fragment key={index}>{rowRenderer(item)}</React.Fragment>)
+          data.map((item, index) => (
+            <React.Fragment key={index}>{rowRenderer(item)}</React.Fragment>
+          ))
         ) : (
           data.map((item, rowIndex) => (
             <TableRow key={rowIndex}>
               {columns.map((column, colIndex) => (
                 <TableCell key={colIndex} className="px-4">
-                  {column.accessor(item)}so 
+                  {column.accessor(item)}
                 </TableCell>
               ))}
             </TableRow>
