@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { FilterBar } from "../components/FilterBar/FilterBar";
-import PokemonTable from "../components/Table/PokemonTable";
+import PokemonPage from "./PokemonPage";
 
 export default function AllPokemonsPage() {
   const [searchQuery, setSearchQuery] = useState(""); 
