@@ -1,5 +1,5 @@
 import PokemonPage from "./PokemonPage";
 
 export default function AllPokemonsPage() {
-  return <PokemonPage isMyPokemons={false} />;
+  return <PokemonPage isMyPokemons={true} />;
 }
