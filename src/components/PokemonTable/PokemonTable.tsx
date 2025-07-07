@@ -1,4 +1,4 @@
-import DataTable from "@/components/Table/Table"
+import { DataTable } from "@/components/Table/DataTable"
 import DescriptionTooltip from "@/components/ToolTip/ToolTip"
 import pokadexIcon from "@/assets/pokadex.png"
 import PokemonLogo from "@/components/PokemonLogo/PokemonLogo"
@@ -6,10 +6,24 @@ import type { Pokemon } from "@/typs/Pokemon"
 
 type PokemonTableProps = {
   pokemons: Pokemon[]
-  onRowClick?: (pokemon: Pokemon) => void
+  page: number
+  pageSize: number
+  total: number
+  onPageChange: (page: number) => void
+  onPageSizeChange: (size: number) => void
+  loading?: boolean
+  onRowClick?: (pokemon: Pokemon) => void // Add this prop
 }
 
-export default function PokemonTable({ pokemons, onRowClick }: PokemonTableProps) {
+export default function PokemonTable({
+  pokemons,
+  page,
+  pageSize,
+  total,
+  onPageChange,
+  onPageSizeChange,
+  loading = false,
+}: PokemonTableProps) {
   const columns = [
     {
       header: "Pokémon Name",
@@ -50,12 +64,12 @@ export default function PokemonTable({ pokemons, onRowClick }: PokemonTableProps
       ),
     },
     {
-      header: "Power level",
+      header: "Power Level",
       width: "w-30% max-w-[200px]",
       render: (pokemon: Pokemon) => `Power level ${pokemon.base.Attack}`,
     },
     {
-      header: "HP level",
+      header: "HP Level",
       width: "w-[120px]",
       render: (pokemon: Pokemon) => `${pokemon.base.HP} HP`,
     },
@@ -63,12 +77,15 @@ export default function PokemonTable({ pokemons, onRowClick }: PokemonTableProps
 
   return (
     <DataTable
-      data={pokemons}
       columns={columns}
-      onRowClick={onRowClick}
-      rowKey={(pokemon) => pokemon.id}
-      rowsPerPageOptions={[5, 10, 20]}
-      enablePagination={true}
+      rows={pokemons}
+      page={page}
+      pageSize={pageSize}
+      total={total}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
+      rowsPerPageOptions={[5, 10, 20, 30]}
+      loading={loading}
     />
   )
 }

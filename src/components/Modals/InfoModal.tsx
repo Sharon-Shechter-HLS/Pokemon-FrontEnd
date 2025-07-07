@@ -4,15 +4,15 @@ import {
   CardTitle,
   CardContent,
   CardDescription,
-} from "@/components/ui/card";
+} from "../ui/card";
 import { Separator } from "../ui/separator";
-import { FaTimes } from 'react-icons/fa';
+import { FiX } from "react-icons/fi"; // Import React X icon
 import type { Pokemon } from "@/typs/Pokemon";
 
 type PokemonInfoModalProps = {
   open: boolean;
   onClose: () => void;
-  pokemon: Pokemon;
+  pokemon: Pokemon; // Use the Pokemon type directly
 };
 
 export function PokemonInfoModal({
@@ -20,49 +20,61 @@ export function PokemonInfoModal({
   onClose,
   pokemon,
 }: PokemonInfoModalProps) {
-  if (!open) return null;
-
-  const { id, name, image, description, profile, species, type } = pokemon;
-
-  const attributes = [
-    { label: "Height", value: profile?.height ?? "?" },
-    { label: "Weight", value: profile?.weight ?? "?" },
-    { label: "Category", value: species ?? "?" },
-    { label: "Abilities", value: profile?.ability?.map((a) => a[0]).join(", ") ?? "?" },
-    { label: "Type", value: type.join(", ") },
-  ];
+  if (!open || !pokemon) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <Card className="max-w-[502px] w-full rounded-md">
         <CardHeader className="flex flex-col items-start w-full">
           <div className="flex flex-row items-center w-full">
-            <span className="text-xs text-gray-500">#{id ?? "?"}</span>
+            <span className="text-xs text-gray-500">#{pokemon.id}</span>
             <span className="flex-1" />
             <button onClick={onClose} className="ml-auto">
-              <FaTimes className="cursor-pointer" />
+              <FiX className="cursor-pointer text-gray-500 hover:text-gray-700" size={20} />
             </button>
           </div>
-          <CardTitle className="text-2xl font-normal mb-2">{name?.english}</CardTitle>
+          <CardTitle className="text-2xl font-normal mb-2">
+            {pokemon.name.english}
+          </CardTitle>
         </CardHeader>
         <img
-          src={image?.hires || "/pokemon-placeholder.png"}
-          alt={name?.english ?? "?"}
+          src={pokemon.image?.hires || "/pokemon-placeholder.png"}
+          alt={pokemon.name.english}
           className="mb-1 w-[180px] h-[165px] mx-auto"
         />
         <CardContent>
           <CardDescription className="bg-neutral-100 p-4">
-            <span className="mb-2">{description ?? "?"}</span>
+            <span className="mb-2">{pokemon.description}</span>
             <Separator className="my-4" />
             <div className="flex flex-row space-x-5">
-              {attributes.map((attr) => (
-                <div className="flex flex-col space-y-2" key={attr.label}>
-                  <span className="font-normal text-gray-400 mr-1 text-xs">
-                    {attr.label}
-                  </span>
-                  <span>{attr.value}</span>
-                </div>
-              ))}
+              <div className="flex flex-col space-y-2">
+                <span className="font-normal text-gray-400 mr-1 text-xs">
+                  Height
+                </span>
+                <span>{pokemon.profile?.height || "?"}</span>
+              </div>
+              <div className="flex flex-col space-y-2">
+                <span className="font-normal text-gray-400 mr-1 text-xs">
+                  Weight
+                </span>
+                <span>{pokemon.profile?.weight || "?"}</span>
+              </div>
+              <div className="flex flex-col space-y-2">
+                <span className="font-normal text-gray-400 mr-1 text-xs">
+                  Category
+                </span>
+                <span>{pokemon.species || "?"}</span>
+              </div>
+              <div className="flex flex-col space-y-2">
+                <span className="font-normal text-gray-400 mr-1 text-xs">
+                  Abilities
+                </span>
+                <span>
+                  {pokemon.profile?.ability
+                    ?.map((ability) => ability[0])
+                    .join(", ") || "?"}
+                </span>
+              </div>
             </div>
           </CardDescription>
         </CardContent>
