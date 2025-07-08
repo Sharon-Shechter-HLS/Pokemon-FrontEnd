@@ -134,7 +134,7 @@ export function useBattleState({
     winner,
     showChooseModal,
     setShowChooseModal,
-    canCatchPokemon: canCatch,
+    canCatchPokemon,
     handleCatch,
     isCatching,
     catchAnimationKey,
