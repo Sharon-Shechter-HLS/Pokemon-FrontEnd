@@ -54,7 +54,7 @@ const AppContent = () => {
         user={userPokemon} // Pass user Pokémon data
         opponent={opponentPokemon} // Pass opponent Pokémon data
         starter="user" // Define the starter (user starts the battle)
-        className="p-8"
+     
       />
     );
   };

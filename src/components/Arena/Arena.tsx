@@ -9,6 +9,7 @@ import {useBattleState } from "../../hooks/useBattleHook";
 import EndOfFightModal from "../Modals/EndOfFightModal";
 import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
 import type { Pokemon } from "../../typs/Pokemon";
+import arenaBackground from "../../assets/arenaBackground.png"; 
 
 export type ChampionData = {
   id: number;
@@ -32,8 +33,8 @@ const Arena = ({
   starter,
 }: {
   className?: string;
-  user: Pokemon; // Renamed from champion1Data
-  opponent: Pokemon; // Renamed from champion2Data
+  user: Pokemon; 
+  opponent: Pokemon; 
   starter: "user" | "opponent";
 }) => {
   const {
@@ -54,28 +55,26 @@ const Arena = ({
 
   return (
     <div
-      className={`arena-background ${className} pb-0 mb-0 relative bg-cover bg-center w-full h-max-[570px]`}
+      className={`arena-background ${className} pb-0 mb-0 relative bg-cover bg-center w-full h-screen`} 
       style={{
-        backgroundImage: "url('/arena-background.png')",
+        backgroundImage: `url(${arenaBackground})`,
       }}
     >
       <div className="min-w-[50%] h-[50%] absolute top-0 right-0 m-2">
         <div className="absolute top-0 right-0 m-3 w-[40%]">
           <CompetitorProgress
-            maxLife={user.base.HP} // Updated from champion1Data to user
+            maxLife={user.base.HP}
             currentLife={userLife}
             pokemon={{
-              name: user.name.english, // Updated from champion1Data to user
-              speed: user.base.Speed, // Updated from champion1Data to user
+              name: user.name.english,
+              speed: user.base.Speed,
             }}
             disabled={turn !== "opponent"}
           />
         </div>
         <CompetitorPhoto
-          imageUrl={user.image?.hires || ""} // Updated from champion1Data to user
-          className={`absolute bottom-14 left-36 ${
-            turn === "opponent" && userLife > 0 ? "animate-vibrate" : ""
-          }${userLife <= 0 ? "animate-faint-right" : ""}`}
+          imageUrl={user.image?.hires || ""}
+          className={`absolute bottom-1 left-20 transform scale-[0.5]`}
         />
       </div>
       <DialogueBox
@@ -85,20 +84,18 @@ const Arena = ({
       <div className="min-w-[50%] h-[50%] absolute bottom-0 left-0 m-2">
         <div className="absolute bottom-0 left-0 m-3 w-[40%]">
           <CompetitorProgress
-            maxLife={opponent.base.HP} // Updated from champion2Data to opponent
+            maxLife={opponent.base.HP}
             currentLife={opponentLife}
             pokemon={{
-              name: opponent.name.english, // Updated from champion2Data to opponent
-              speed: opponent.base.Speed, // Updated from champion2Data to opponent
+              name: opponent.name.english,
+              speed: opponent.base.Speed,
             }}
             disabled={turn !== "user"}
           />
         </div>
         <CompetitorPhoto
-          imageUrl={opponent.image?.hires || ""} // Updated from champion2Data to opponent
-          className={`absolute top-14 right-36 transform scale-x-[-1] ${
-            turn === "user" && opponentLife > 0 ? "animate-vibrate" : ""
-          }${opponentLife <= 0 ? "animate-faint-right" : ""}`}
+          imageUrl={opponent.image?.hires || ""}
+          className={`absolute top-1 right-20 scale-[0.6]`}
         />
       </div>
       {!isCatching && (
@@ -113,7 +110,7 @@ const Arena = ({
             title="CATCH"
             svg={<Pokador />}
             className={
-              userLife > 0 && userLife < user.base.HP * 0.3 // Updated from champion1Data to user
+              userLife > 0 && userLife < user.base.HP * 0.3
                 ? "animate-vibrate"
                 : ""
             }
@@ -140,29 +137,29 @@ const Arena = ({
       {showEndModal && (
         <EndOfFightModal
           title={
-            winner === user.name.english // Updated from champion1Data to user
-              ? `${opponent.name.english} Lost the match` // Updated from champion2Data to opponent
-              : `You Caught ${opponent.name.english}!` // Updated from champion2Data to opponent
+            winner === user.name.english
+              ? `${opponent.name.english} Lost the match`
+              : `You Caught ${opponent.name.english}!`
           }
           winner={winner || ""}
           winnerImageUrl={
-            winner === user.name.english // Updated from champion1Data to user
-              ? opponent.image?.hires || "" // Updated from champion2Data to opponent
-              : user.image?.hires || "" // Updated from champion1Data to user
+            winner === user.name.english
+              ? opponent.image?.hires || ""
+              : user.image?.hires || ""
           }
           description={
-            winner !== user.name.english // Updated from champion1Data to user
+            winner !== user.name.english
               ? {
-                  title: opponent.name.english, // Updated from champion2Data to opponent
+                  title: opponent.name.english,
                   attributes: [
-                    { label: "Speed", value: String(opponent.base.Speed) }, // Updated from champion2Data to opponent
-                    { label: "Category", value: opponent.species || "?" }, // Updated from champion2Data to opponent
+                    { label: "Speed", value: String(opponent.base.Speed) },
+                    { label: "Category", value: opponent.species || "?" },
                     {
                       label: "Abilities",
                       value:
                         opponent.profile?.ability
                           ?.map((a) => a[0])
-                          .join(", ") || "", // Updated from champion2Data to opponent
+                          .join(", ") || "",
                     },
                   ],
                 }

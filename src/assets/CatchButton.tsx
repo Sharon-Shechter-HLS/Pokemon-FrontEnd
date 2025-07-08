@@ -1,3 +1,5 @@
+import pokadexIcon from "./pokadexIcon.svg"; // Import the SVG file
+
 export const Pokador = ({
   size = 80,
   ...props
@@ -38,7 +40,7 @@ export const Pokador = ({
         width="635"
         height="634"
         preserveAspectRatio="none"
-        xlinkHref="data:image/png;base64,..." // Replace with actual base64 data
+        xlinkHref={pokadexIcon} // Use the imported SVG file
       />
     </defs>
   </svg>

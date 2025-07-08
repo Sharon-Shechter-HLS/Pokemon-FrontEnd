@@ -1,3 +1,5 @@
+import glovIcon from "./glovIcon.svg"; // Import the SVG file
+
 export const AttackButton = () => (
   <svg
     width="56"
@@ -28,7 +30,7 @@ export const AttackButton = () => (
         width="512"
         height="512"
         preserveAspectRatio="none"
-        xlinkHref="" 
+        xlinkHref={glovIcon} // Use the imported SVG file
       />
     </defs>
   </svg>
