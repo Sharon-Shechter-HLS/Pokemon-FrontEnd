@@ -44,6 +44,8 @@ const AppContent = () => {
     // Select two Pokémon for testing
     const userPokemon = pokemons[0];
     const opponentPokemon = pokemons[1];
+    console.log("User Pokémon:", userPokemon);
+    console.log("Opponent Pokémon:", opponentPokemon);
 
     if (!userPokemon || !opponentPokemon) {
       return <div className="p-8 text-center">Not enough Pokémon available.</div>;
