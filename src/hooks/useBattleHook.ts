@@ -22,9 +22,10 @@ export function useBattleState({
   const [showEndModal, setShowEndModal] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
   const [showChooseModal, setShowChooseModal] = useState(false);
-  const [canCatchPokemon, setCanCatchPokemon] = useState(0); // Tracks catchability
-  const [isCatching, setIsCatching] = useState(false); // Tracks catching animation
-  const [catchAnimationKey, setCatchAnimationKey] = useState(0); // Animation key for catching
+  const [canCatchPokemon, setCanCatchPokemon] = useState(0);
+  const [isCatching, setIsCatching] = useState(false);
+  const [catchAnimationKey, setCatchAnimationKey] = useState(0);
+  const [isAttacking, setIsAttacking] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -57,6 +58,7 @@ export function useBattleState({
   }, [userLife, opponentLife, champion1Data.name.english, champion2Data.name.english]);
 
   const handleAttack = async () => {
+    setIsAttacking(true);
     setDialogue(
       turn === "user"
         ? `${champion2Data.name.english} is attacking!`
@@ -65,20 +67,28 @@ export function useBattleState({
 
     if (turn === "user") {
       const newLife = await calculateLife(
-        champion2Data.base.Speed,
-        opponentLife
+        champion2Data.base.Speed, // Power
+        opponentLife,            // Current Life
+        champion2Data.base.HP    // Max Life
       );
-      setOpponentLife(newLife);
-      setTurn("opponent");
-      setDialogue(`${champion1Data.name.english}'s turn`);
+      setTimeout(() => {
+        setOpponentLife(newLife);
+        setTurn("opponent");
+        setIsAttacking(false);
+        setDialogue(`${champion1Data.name.english}'s turn`);
+      }, 700);
     } else {
       const newLife = await calculateLife(
-        champion1Data.base.Speed,
-        userLife
+        champion1Data.base.Speed, // Power
+        userLife,                 // Current Life
+        champion1Data.base.HP     // Max Life
       );
-      setUserLife(newLife);
-      setTurn("user");
-      setDialogue(`${champion2Data.name.english}'s turn`);
+      setTimeout(() => {
+        setUserLife(newLife);
+        setTurn("user");
+        setIsAttacking(false);
+        setDialogue(`${champion2Data.name.english}'s turn`);
+      }, 600);
     }
   };
 
@@ -112,6 +122,7 @@ export function useBattleState({
     setCanCatchPokemon(0);
     setIsCatching(false);
     setCatchAnimationKey(0);
+    setIsAttacking(false);
   };
 
   return {
@@ -123,11 +134,12 @@ export function useBattleState({
     winner,
     showChooseModal,
     setShowChooseModal,
-    canCatchPokemon, // Added to the return object
-    handleCatch, // Added to the return object
-    isCatching, // Added to the return object
-    catchAnimationKey, // Added to the return object
+    canCatchPokemon,
+    handleCatch,
+    isCatching,
+    catchAnimationKey,
     handleAttack,
     resetBattle,
+    isAttacking,
   };
 }
