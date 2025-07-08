@@ -1,36 +1,46 @@
-import glovIcon from "./glovIcon.svg"; // Import the SVG file
+import pokadexIcon from "./pokadexIcon.svg"; // Import the SVG file
 
-export const AttackButton = () => (
+export const Pokador = ({
+  size = 80,
+  ...props
+}: { size?: number } & React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="56"
-    height="56"
+    width={size}
+    height={size}
+    {...props}
     viewBox="0 0 56 56"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
     <rect
-      x="0.5"
-      y="0.0305176"
-      width="55"
-      height="55"
-      fill="url(#pattern0_6337_3669)"
+      x="1.28711"
+      y="1.28711"
+      width="53.4258"
+      height="53.4258"
+      rx="26.7129"
+      fill="url(#pattern0_6337_3674)"
+      stroke="black"
+      strokeWidth="1.65235"
     />
     <defs>
       <pattern
-        id="pattern0_6337_3669"
+        id="pattern0_6337_3674"
         patternContentUnits="objectBoundingBox"
         width="1"
         height="1"
       >
-        <use xlinkHref="#image0_6337_3669" transform="scale(0.00195312)" />
+        <use
+          xlinkHref="#image0_6337_3674"
+          transform="matrix(0.0015748 0 0 0.00165483 0.0114138 -0.01)"
+        />
       </pattern>
       <image
-        id="image0_6337_3669"
-        width="512"
-        height="512"
+        id="image0_6337_3674"
+        width="635"
+        height="634"
         preserveAspectRatio="none"
-        xlinkHref={glovIcon} // Use the imported SVG file
+        xlinkHref={pokadexIcon} 
       />
     </defs>
   </svg>
