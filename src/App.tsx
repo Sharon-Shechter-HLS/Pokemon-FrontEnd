@@ -11,6 +11,8 @@ import AllpokemonsPage from "./pages/AllpokemonsPage";
 import MypokemonsPage from "./pages/MypokemonsPage";
 import Arena from "./components/Arena/Arena"; // Import Arena component
 import { useMyPokemons } from "./hooks/useMyPokemons"; // Import useMyPokemons hook
+import Arena from "./components/Arena/Arena"; // Import Arena component
+import { useMyPokemons } from "./hooks/useMyPokemons"; // Import useMyPokemons hook
 import "./App.css";
 
 const queryClient = new QueryClient();
@@ -42,9 +44,8 @@ const AppContent = () => {
     }
 
     // Select two Pokémon for testing
-    const userPokemon = pokemons[1];
-    const opponentPokemon = pokemons[0];
-   
+    const userPokemon = pokemons[0];
+    const opponentPokemon = pokemons[1];
 
     if (!userPokemon || !opponentPokemon) {
       return <div className="p-8 text-center">Not enough Pokémon available.</div>;
@@ -52,10 +53,10 @@ const AppContent = () => {
 
     return (
       <Arena
-        user={userPokemon}
-        opponent={opponentPokemon}
-        starter="user"
-     
+        user={userPokemon} // Pass user Pokémon data
+        opponent={opponentPokemon} // Pass opponent Pokémon data
+        starter="user" // Define the starter (user starts the battle)
+        className="p-8"
       />
     );
   };
@@ -66,6 +67,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/all-pokemons" element={<AllpokemonsPage />} />
         <Route path="/my-pokemons" element={<MypokemonsPage />} />
+        <Route path="/arena" element={<ArenaRoute />} />
         <Route path="/arena" element={<ArenaRoute />} />
         <Route path="/" element={<Navigate to="/all-pokemons" replace />} />
       </Routes>
