@@ -96,13 +96,18 @@ export function useBattleState({
   };
 
   const handleCatch = () => {
-    setOpponentCaught(true);
-    setWinner(userData.name.english);
-    setDialogue(`${opponentData.name.english} was caught!`);
-
+    if (!canCatchPokemon) {
+      setDialogue("The Pokémon got away!");
+      return;
+    }
+    setIsCatching(true);
+    setCatchAnimationKey((key) => key + 1);
     setTimeout(() => {
+      setIsCatching(false);
+      setWinner(champion1Data.name.english); 
       setShowEndModal(true);
-    }, 1000); 
+      setDialogue(`${champion2Data.name.english} was caught!`);
+    }, 1200);
   };
 
   const resetBattle = () => {
