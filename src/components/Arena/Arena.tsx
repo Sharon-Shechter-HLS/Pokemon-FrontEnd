@@ -5,11 +5,12 @@ import FightButton from "./FightButtons";
 import { AttackButton } from "../../assets/AttackButton";
 import { Pokador } from "../../assets/CatchButton";
 import attackButtonBackground from "../../assets/attackButoonBackground.png";
-import {useBattleState } from "../../hooks/useBattleHook";
+import { useBattleState } from "../../hooks/useBattleHook";
 import EndOfFightModal from "../Modals/EndOfFightModal";
 import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
 import type { Pokemon } from "../../typs/Pokemon";
-import arenaBackground from "../../assets/arenaBackground.png"; 
+import arenaBackground from "../../assets/arenaBackground.png";
+import { useEffect } from "react";
 
 export type ChampionData = {
   id: number;
@@ -33,8 +34,8 @@ const Arena = ({
   starter,
 }: {
   className?: string;
-  user: Pokemon; 
-  opponent: Pokemon; 
+  user: Pokemon;
+  opponent: Pokemon;
   starter: "user" | "opponent";
 }) => {
   const {
@@ -49,13 +50,24 @@ const Arena = ({
     canCatchPokemon,
     handleCatch,
     isCatching,
-    catchAnimationKey,
     handleAttack,
-  } = useBattleState({ champion1Data: user, champion2Data: opponent, starter }); // Updated hook arguments
+    opponentCaught, // New state
+  } = useBattleState({ champion1Data: user, champion2Data: opponent, starter });
+
+  // Automatically trigger opponent's attack after 2 seconds
+  useEffect(() => {
+    if (turn === "opponent") {
+      const opponentAttackTimeout = setTimeout(() => {
+        handleAttack();
+      }, 2000); // 2 seconds delay
+
+      return () => clearTimeout(opponentAttackTimeout); // Cleanup timeout
+    }
+  }, [turn, handleAttack]);
 
   return (
     <div
-      className={`arena-background ${className} pb-0 mb-0 relative bg-cover bg-center w-full h-screen`} 
+      className={`arena-background ${className} pb-0 mb-0 relative bg-cover bg-center w-full h-screen`}
       style={{
         backgroundImage: `url(${arenaBackground})`,
       }}
@@ -94,7 +106,9 @@ const Arena = ({
           />
         </div>
         <CompetitorPhoto
-          imageUrl={opponent.image?.hires || ""}
+          imageUrl={
+            opponentCaught ? "/path/to/pokedex-icon.png" : opponent.image?.hires || ""
+          } // Replace photo with Pokédex icon if caught
           className={`absolute top-1 right-20 scale-[0.6]`}
         />
       </div>
@@ -105,28 +119,21 @@ const Arena = ({
             svg={<AttackButton />}
             imageUrl={attackButtonBackground}
             onClick={handleAttack}
+            disabled={turn !== "user"} // Disable button when it's not the user's turn
           />
           <FightButton
             title="CATCH"
             svg={<Pokador />}
-            className={
-              userLife > 0 && userLife < user.base.HP * 0.3
-                ? "animate-vibrate"
-                : ""
-            }
-            key={canCatchPokemon}
             onClick={handleCatch}
-            disabled={turn === "opponent" || !canCatchPokemon}
+            disabled={!canCatchPokemon} // Enable only when canCatchPokemon is true
           />
         </div>
       )}
       {isCatching && (
         <div
-          key={catchAnimationKey}
           className="fixed left-1/2 top-1/2 z-50 pointer-events-none"
           style={{
             transform: "translate(-50%, -50%)",
-            animation: `pokador-catch-move 1.2s cubic-bezier(0.4,0,0.2,1) forwards`,
           }}
         >
           <div>

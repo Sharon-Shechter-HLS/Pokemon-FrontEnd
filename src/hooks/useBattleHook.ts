@@ -22,28 +22,13 @@ export function useBattleState({
   const [showEndModal, setShowEndModal] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
   const [showChooseModal, setShowChooseModal] = useState(false);
-  const [canCatchPokemon, setCanCatchPokemon] = useState(0);
   const [isCatching, setIsCatching] = useState(false);
-  const [catchAnimationKey, setCatchAnimationKey] = useState(0);
   const [isAttacking, setIsAttacking] = useState(false);
+  const [opponentCaught, setOpponentCaught] = useState(false); // New state for replacing opponent photo
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-    if (
-      userLife > 0 &&
-      userLife < champion1Data.base.HP * 0.3 &&
-      turn === "user"
-    ) {
-      interval = setInterval(() => {
-        setCanCatchPokemon((tick) => tick + 1);
-      }, 500);
-    } else {
-      setCanCatchPokemon(0);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [userLife, champion1Data.base.HP, turn]);
+  // Calculate canCatchPokemon based on opponent's life percentage
+  const canCatchPokemon =
+    turn === "user" && opponentLife > 0 && opponentLife < champion2Data.base.HP * 0.5;
 
   useEffect(() => {
     if (userLife <= 0) {
@@ -98,10 +83,10 @@ export function useBattleState({
       return;
     }
     setIsCatching(true);
-    setCatchAnimationKey((key) => key + 1);
     setTimeout(() => {
       setIsCatching(false);
-      setWinner(champion1Data.name.english); // User caught the opponent's Pokémon
+      setOpponentCaught(true); // Replace opponent photo with Pokédex icon
+      setWinner(champion1Data.name.english);
       setShowEndModal(true);
       setDialogue(`${champion2Data.name.english} was caught!`);
     }, 1200);
@@ -119,10 +104,9 @@ export function useBattleState({
     setShowEndModal(false);
     setWinner(null);
     setShowChooseModal(false);
-    setCanCatchPokemon(0);
     setIsCatching(false);
-    setCatchAnimationKey(0);
     setIsAttacking(false);
+    setOpponentCaught(false); // Reset opponent photo
   };
 
   return {
@@ -137,9 +121,9 @@ export function useBattleState({
     canCatchPokemon,
     handleCatch,
     isCatching,
-    catchAnimationKey,
     handleAttack,
     resetBattle,
     isAttacking,
+    opponentCaught, // New state
   };
 }

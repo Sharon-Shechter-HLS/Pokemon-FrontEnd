@@ -42,8 +42,8 @@ const AppContent = () => {
     }
 
     // Select two Pokémon for testing
-    const userPokemon = pokemons[0];
-    const opponentPokemon = pokemons[1];
+    const userPokemon = pokemons[1];
+    const opponentPokemon = pokemons[0];
     console.log("User Pokémon:", userPokemon);
     console.log("Opponent Pokémon:", opponentPokemon);
 
