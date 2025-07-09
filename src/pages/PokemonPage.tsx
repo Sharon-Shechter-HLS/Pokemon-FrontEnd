@@ -22,16 +22,16 @@ export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) 
       <FilterBar
         title={title}
         searchValue={searchQuery}
-        onSearchChange={(value) => setSearchQuery(value)} // Update search query
+        onSearchChange={(value) => setSearchQuery(value)} 
         filterOptions={filterOptions}
         filterValue={filterValue}
         filterLabel="Id"
-        onFilterChange={(value) => setFilterValue(value)} // Update filter value
+        onFilterChange={(value) => setFilterValue(value)} 
       />
       <PokemonTable
-        isMyPokemons={isMyPokemons} // Pass the prop to determine data source
-        searchQuery={searchQuery} // Pass search query to the table
-        sortOption={filterValue ?? undefined} // Pass filter value to the table
+        isMyPokemons={isMyPokemons} 
+        searchQuery={searchQuery} 
+        sortOption={filterValue ?? undefined} 
       />
     </div>
   );

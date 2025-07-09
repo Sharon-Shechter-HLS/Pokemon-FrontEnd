@@ -83,7 +83,7 @@ export function useBattleState({
   // Add a 2-second delay before showing the end modal
   setTimeout(() => {
     setShowEndModal(true);
-  }, 2000); // 2 seconds delay
+  }, 1000); // 2 seconds delay
 };
 
   const resetBattle = () => {
