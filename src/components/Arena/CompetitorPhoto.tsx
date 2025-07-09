@@ -1,18 +1,18 @@
 import { cn } from "../../lib/utils";
 
-type ChampionProps = {
+type CompetitorImageProps = {
   imageUrl: string;
   alt?: string;
-  size?: number | string; // e.g., 200 or "200px"
+  size?: number | string; 
   className?: string;
 };
 
 const CompetitorPhoto = ({
   imageUrl,
-  alt = "Champion Pokémon",
+  alt = "Competitor Image",
   size = 200,
   className = "",
-}: ChampionProps) => {
+}: CompetitorImageProps) => {
   const sizeClass = `w-[${typeof size === "number" ? size + "px" : size}] h-[${
     typeof size === "number" ? size + "px" : size
   }]`;

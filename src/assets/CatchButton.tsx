@@ -40,7 +40,7 @@ export const Pokador = ({
         width="635"
         height="634"
         preserveAspectRatio="none"
-        xlinkHref={pokadexIcon} // Use the imported SVG file
+        xlinkHref={pokadexIcon} 
       />
     </defs>
   </svg>

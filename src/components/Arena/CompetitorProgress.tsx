@@ -6,7 +6,7 @@ export type ChampionPokemon = {
 };
 
 function getProgressBarClass(currentLife: number, maxLife: number) {
-  const lifePercentage = (currentLife / maxLife) * 100; // Calculate life percentage
+  const lifePercentage = (currentLife / maxLife) * 100; 
   if (lifePercentage > 80) return "bg-[var(--color-success-green)]";
   if (lifePercentage > 30) return "bg-[var(--color-warning-yellow)]";
   return "bg-[var(--color-error-red)]";
@@ -39,7 +39,7 @@ export const CompetitorProgress = ({
         value={currentLife}
         max={maxLife}
         className="w-full"
-        indicatorClassName={getProgressBarClass(currentLife, maxLife)} // Ensure correct class is applied
+        indicatorClassName={getProgressBarClass(currentLife, maxLife)} 
       />
       <div className="flex justify-between items-center mt-2 text-sm">
         <span className="font-light">

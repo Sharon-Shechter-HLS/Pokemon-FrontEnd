@@ -12,8 +12,8 @@ export function useBattleState({
   starter: "user" | "opponent";
 }) {
   const [turn, setTurn] = useState<"user" | "opponent">(starter);
-  const [userLife, setUserLife] = useState(champion1Data.base.HP); // Initialize to full HP
-  const [opponentLife, setOpponentLife] = useState(champion2Data.base.HP); // Initialize to full HP
+  const [userLife, setUserLife] = useState(champion1Data.base.HP); 
+  const [opponentLife, setOpponentLife] = useState(champion2Data.base.HP); 
   const [dialogue, setDialogue] = useState<string>(
     starter === "user"
       ? `${champion1Data.name.english} is starting the fight!` 
@@ -76,19 +76,15 @@ export function useBattleState({
   };
 
   const handleCatch = () => {
-    if (!canCatchPokemon) {
-      setDialogue("The Pokémon got away!");
-      return;
-    }
-    setIsCatching(true);
-    setTimeout(() => {
-      setIsCatching(false);
-      setOpponentCaught(true);
-      setWinner(champion1Data.name.english);
-      setShowEndModal(true);
-      setDialogue(`${champion2Data.name.english} was caught!`);
-    }, 1200);
-  };
+  setOpponentCaught(true); 
+  setWinner(champion1Data.name.english);
+  setDialogue(`${champion2Data.name.english} was caught!`);
+
+  // Add a 2-second delay before showing the end modal
+  setTimeout(() => {
+    setShowEndModal(true);
+  }, 2000); // 2 seconds delay
+};
 
   const resetBattle = () => {
     setUserLife(champion1Data.base.HP);

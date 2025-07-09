@@ -51,17 +51,17 @@ const Arena = ({
     handleCatch,
     isCatching,
     handleAttack,
-    opponentCaught, // New state
+    opponentCaught, 
   } = useBattleState({ champion1Data: user, champion2Data: opponent, starter });
 
-  // Automatically trigger opponent's attack after 2 seconds
+  
   useEffect(() => {
     if (turn === "opponent") {
       const opponentAttackTimeout = setTimeout(() => {
         handleAttack();
       }, 2000); // 2 seconds delay
 
-      return () => clearTimeout(opponentAttackTimeout); // Cleanup timeout
+      return () => clearTimeout(opponentAttackTimeout);
     }
   }, [turn, handleAttack]);
 
@@ -72,7 +72,7 @@ const Arena = ({
         backgroundImage: `url(${arenaBackground})`,
       }}
     >
-      {/* User Pokémon on the left */}
+      {/* User Pokémon  */}
       <div className="min-w-[50%] h-[50%] absolute bottom-0 left-0 m-2">
         <div className="absolute bottom-0 left-0 m-3 w-[40%]">
           <CompetitorProgress
@@ -91,7 +91,7 @@ const Arena = ({
         />
       </div>
 
-      {/* Opponent Pokémon on the right */}
+      {/* Opponent Pokémon */}
       <div className="min-w-[50%] h-[50%] absolute top-0 right-0 m-2">
         <div className="absolute top-0 right-0 m-3 w-[40%]">
           <CompetitorProgress
@@ -104,12 +104,17 @@ const Arena = ({
             disabled={turn !== "opponent"}
           />
         </div>
-        <CompetitorPhoto
-          imageUrl={
-            opponentCaught ? "/path/to/pokedex-icon.png" : opponent.image?.hires || ""
-          }
-          className={`absolute bottom-1 left-20 transform scale-[0.5]`}
-        />
+        {opponentCaught ? (
+          <Pokador
+            size={200} 
+            className="absolute bottom-28 left-60 transform scale-[1]"
+          />
+        ) : (
+          <CompetitorPhoto
+            imageUrl={opponent.image?.hires || ""}
+            className={`absolute bottom-1 left-30 transform scale-[0.5]`}
+          />
+        )}
       </div>
       <DialogueBox
         className="w-[40%] h-[17%] relative top-30 justify-center"
@@ -122,28 +127,17 @@ const Arena = ({
             svg={<AttackButton />}
             imageUrl={attackButtonBackground}
             onClick={handleAttack}
-            disabled={turn !== "user"} // Disable button when it's not the user's turn
+            disabled={turn !== "user"}
           />
           <FightButton
             title="CATCH"
             svg={<Pokador />}
             onClick={handleCatch}
-            disabled={!canCatchPokemon} // Enable only when canCatchPokemon is true
+            disabled={!canCatchPokemon} 
           />
         </div>
       )}
-      {isCatching && (
-        <div
-          className="fixed left-1/2 top-1/2 z-50 pointer-events-none"
-          style={{
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <div>
-            <Pokador size={200} />
-          </div>
-        </div>
-      )}
+     
       {showEndModal && (
         <EndOfFightModal
           title={
