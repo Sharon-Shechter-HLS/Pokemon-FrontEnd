@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
 import { DataTable } from "./DataTable";
 import { PokemonTableRow } from "./PokemonTableRow";
@@ -16,9 +17,24 @@ export const PokemonTable = ({
 }: PokemonTableProps) => {
   const { pokemons, isLoading } = useMyPokemons(searchQuery, sortOption, isMyPokemons);
 
-  const page = 1; 
-  const pageSize = 10;
+  const [page, setPage] = useState(1); 
+  const [pageSize, setPageSize] = useState(10); 
+
   const total = pokemons.length; 
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage); 
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize); 
+    setPage(1); 
+  };
+
+  const paginatedPokemons = pokemons.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  ); // Paginate the data
 
   const columns = [
     {
@@ -33,7 +49,6 @@ export const PokemonTable = ({
       header: "Description",
       accessor: (pokemon: Pokemon) => pokemon.description,
     },
-
     {
       header: "Power Level",
       accessor: (pokemon: Pokemon) => pokemon.base.Attack,
@@ -46,16 +61,16 @@ export const PokemonTable = ({
 
   return (
     <DataTable
-      data={pokemons}
+      data={paginatedPokemons} 
       columns={columns}
       isLoading={isLoading}
       page={page}
       pageSize={pageSize}
       total={total}
       rowRenderer={(pokemon) => <PokemonTableRow key={pokemon.id} pokemon={pokemon} />}
-      onPageChange={() => {}}
-      onPageSizeChange={() => {}}
-      rowsPerPageOptions={[5, 10, 20]}
+      onPageChange={handlePageChange} 
+      onPageSizeChange={handlePageSizeChange} 
+      rowsPerPageOptions={[5, 10, 20]} 
     />
   );
 };
