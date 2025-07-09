@@ -12,8 +12,8 @@ export function useBattleState({
   starter: "user" | "opponent";
 }) {
   const [turn, setTurn] = useState<"user" | "opponent">(starter);
-  const [userLife, setUserLife] = useState(champion1Data.base.HP);
-  const [opponentLife, setOpponentLife] = useState(champion2Data.base.HP);
+  const [userLife, setUserLife] = useState(champion1Data.base.HP); // Initialize to full HP
+  const [opponentLife, setOpponentLife] = useState(champion2Data.base.HP); // Initialize to full HP
   const [dialogue, setDialogue] = useState<string>(
     starter === "user"
       ? `${champion2Data.name.english} is starting the fight!`
