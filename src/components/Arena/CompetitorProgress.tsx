@@ -5,9 +5,10 @@ export type ChampionPokemon = {
   speed: number;
 };
 
-function getProgressBarClass(currentLife: number) {
-  if (currentLife > 80) return "bg-[var(--color-success-green)]";
-  if (currentLife > 30) return "bg-[var(--color-warning-yellow)]";
+function getProgressBarClass(currentLife: number, maxLife: number) {
+  const lifePercentage = (currentLife / maxLife) * 100; // Calculate life percentage
+  if (lifePercentage > 80) return "bg-[var(--color-success-green)]";
+  if (lifePercentage > 30) return "bg-[var(--color-warning-yellow)]";
   return "bg-[var(--color-error-red)]";
 }
 
@@ -38,14 +39,14 @@ export const CompetitorProgress = ({
         value={currentLife}
         max={maxLife}
         className="w-full"
-        indicatorClassName={getProgressBarClass(currentLife)}
+        indicatorClassName={getProgressBarClass(currentLife, maxLife)} // Ensure correct class is applied
       />
       <div className="flex justify-between items-center mt-2 text-sm">
         <span className="font-light">
           Speed: <span className="font-semibold">{pokemon.speed}</span>
         </span>
         <span className="font-light">
-          {(currentLife / 100) * maxLife}/{maxLife}
+          {currentLife}/{maxLife} {/* Display absolute values */}
         </span>
       </div>
     </div>

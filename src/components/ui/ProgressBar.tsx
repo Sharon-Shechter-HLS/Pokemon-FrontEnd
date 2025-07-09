@@ -5,12 +5,17 @@ import { cn } from "../../lib/utils";
 
 function Progress({
   className,
-  value,
+  value = 0,
+  max = 100,
   indicatorClassName,
   ...props
 }: React.ComponentProps<typeof ProgressPrimitive.Root> & {
   indicatorClassName?: string;
 }) {
+  const safeValue = value ?? 0; 
+  const safeMax = max ?? 100; 
+  const percentage = (safeValue / safeMax) * 100; 
+
   return (
     <ProgressPrimitive.Root
       data-slot="progress"
@@ -23,10 +28,10 @@ function Progress({
       <ProgressPrimitive.Indicator
         data-slot="progress-indicator"
         className={cn(
-          "bg-primary h-full w-full flex-1 transition-all",
+          "bg-primary h-full flex-1 transition-all",
           indicatorClassName
         )}
-        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+        style={{ transform: `translateX(-${100 - percentage}%)` }} // Use percentage for width calculation
       />
     </ProgressPrimitive.Root>
   );
