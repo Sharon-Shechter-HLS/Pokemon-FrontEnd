@@ -23,14 +23,14 @@ export type ChampionData = {
 
 export type ArenaProps = {
   className?: string;
-  champion1Data: ChampionData;
-  champion2Data: ChampionData;
+  userData: ChampionData;
+  opponentData: ChampionData;
 };
 
 const Arena = ({
   className = "",
-  user,
-  opponent,
+  user: userData,
+  opponent: opponentData,
   starter,
 }: {
   className?: string;
@@ -52,9 +52,8 @@ const Arena = ({
     isCatching,
     handleAttack,
     opponentCaught, 
-  } = useBattleState({ champion1Data: user, champion2Data: opponent, starter });
+  } = useBattleState({ champion1Data: userData, champion2Data: opponentData, starter });
 
-  
   useEffect(() => {
     if (turn === "opponent") {
       const opponentAttackTimeout = setTimeout(() => {
@@ -76,17 +75,17 @@ const Arena = ({
       <div className="min-w-[50%] h-[50%] absolute bottom-0 left-0 m-2">
         <div className="absolute bottom-0 left-0 m-3 w-[40%]">
           <CompetitorProgress
-            maxLife={user.base.HP}
+            maxLife={userData.base.HP}
             currentLife={userLife}
             pokemon={{
-              name: user.name.english,
-              speed: user.base.Speed,
+              name: userData.name.english,
+              speed: userData.base.Speed,
             }}
             disabled={turn !== "user"}
           />
         </div>
         <CompetitorPhoto
-          imageUrl={user.image?.hires || ""}
+          imageUrl={userData.image?.hires || ""}
           className={`absolute top-1 right-20 scale-[0.6]`}
         />
       </div>
@@ -95,11 +94,11 @@ const Arena = ({
       <div className="min-w-[50%] h-[50%] absolute top-0 right-0 m-2">
         <div className="absolute top-0 right-0 m-3 w-[40%]">
           <CompetitorProgress
-            maxLife={opponent.base.HP}
+            maxLife={opponentData.base.HP}
             currentLife={opponentLife}
             pokemon={{
-              name: opponent.name.english,
-              speed: opponent.base.Speed,
+              name: opponentData.name.english,
+              speed: opponentData.base.Speed,
             }}
             disabled={turn !== "opponent"}
           />
@@ -111,7 +110,7 @@ const Arena = ({
           />
         ) : (
           <CompetitorPhoto
-            imageUrl={opponent.image?.hires || ""}
+            imageUrl={opponentData.image?.hires || ""}
             className={`absolute bottom-1 left-30 transform scale-[0.5]`}
           />
         )}
@@ -141,34 +140,36 @@ const Arena = ({
       {showEndModal && (
         <EndOfFightModal
           title={
-            winner === user.name.english
-              ? `${opponent.name.english} Lost the match`
-              : `You Caught ${opponent.name.english}!`
+            winner === userData.name.english
+              ? `You caught ${opponentData.name.english}!` 
+              : `${userData.name.english} lost the match` 
           }
           winner={winner || ""}
           winnerImageUrl={
-            winner === user.name.english
-              ? opponent.image?.hires || ""
-              : user.image?.hires || ""
+            winner === userData.name.english
+              ? opponentData.image?.hires || "" 
+              : userData.image?.hires || "" 
           }
-          description={
-            winner !== user.name.english
-              ? {
-                  title: opponent.name.english,
-                  attributes: [
-                    { label: "Speed", value: String(opponent.base.Speed) },
-                    { label: "Category", value: opponent.species || "?" },
-                    {
-                      label: "Abilities",
-                      value:
-                        opponent.profile?.ability
-                          ?.map((a) => a[0])
-                          .join(", ") || "",
-                    },
-                  ],
-                }
-              : undefined
-          }
+          description={{
+            title: winner === userData.name.english ? opponentData.name.english : userData.name.english,
+            attributes: [
+              {
+                label: "Speed",
+                value: String(winner === userData.name.english ? opponentData.base.Speed : userData.base.Speed),
+              },
+              {
+                label: "Category",
+                value: winner === userData.name.english ? opponentData.species || "Unknown" : userData.species || "Unknown",
+              },
+              {
+                label: "Abilities",
+                value:
+                  winner === userData.name.english
+                    ? opponentData.profile?.ability?.map((a) => a[0]).join(", ") || "None"
+                    : userData.profile?.ability?.map((a) => a[0]).join(", ") || "None",
+              },
+            ],
+          }}
           onPlayAgain={() => setShowChooseModal(true)}
           onReturnToMenu={() => window.location.assign("/")}
         />

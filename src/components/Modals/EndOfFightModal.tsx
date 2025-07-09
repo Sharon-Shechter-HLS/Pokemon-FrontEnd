@@ -67,7 +67,7 @@ export const EndOfFightModal = ({
           <div className="flex gap-4 mt-5">
             <Button onClick={onPlayAgain} className="px-6 py-2">
               {description && title?.toLowerCase().includes("caught")
-                ? "Continue Fighting"
+                ? "Continue Battle"
                 : "Switch Pokemon"}
             </Button>
             <Button

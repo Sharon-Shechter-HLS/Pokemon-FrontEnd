@@ -44,8 +44,7 @@ const AppContent = () => {
     // Select two Pokémon for testing
     const userPokemon = pokemons[1];
     const opponentPokemon = pokemons[0];
-    console.log("User Pokémon:", userPokemon);
-    console.log("Opponent Pokémon:", opponentPokemon);
+   
 
     if (!userPokemon || !opponentPokemon) {
       return <div className="p-8 text-center">Not enough Pokémon available.</div>;
@@ -53,9 +52,9 @@ const AppContent = () => {
 
     return (
       <Arena
-        user={userPokemon} // Pass user Pokémon data
-        opponent={opponentPokemon} // Pass opponent Pokémon data
-        starter="user" // Define the starter (user starts the battle)
+        user={userPokemon}
+        opponent={opponentPokemon}
+        starter="user"
      
       />
     );
