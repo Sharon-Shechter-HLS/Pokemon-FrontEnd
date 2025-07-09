@@ -8,11 +8,11 @@ export function calculateNewLifeBar(
   currentLife: number,
   maxLife: number
 ): number {
-  const baseDamage = (power / 100) * (maxLife * 0.25);
-  const randomFactor = Math.random() * (maxLife * 0.05);
-  const damage = Math.max(1, Math.round(baseDamage + randomFactor));
-  const newLife = Math.max(0, currentLife - damage);
-  return Math.floor(newLife);
+  const baseDamage = (power / 100) * (maxLife * 0.25); // Calculate damage based on power
+  const randomFactor = Math.random() * (maxLife * 0.05); // Add randomness to damage
+  const damage = Math.max(1, Math.round(baseDamage + randomFactor)); // Ensure minimum damage is 1
+  const newLife = Math.max(0, currentLife - damage); // Ensure life doesn't go below 0
+  return newLife; // Return the updated life value
 }
 
 export function calculateLife(
