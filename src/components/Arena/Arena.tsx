@@ -72,8 +72,9 @@ const Arena = ({
         backgroundImage: `url(${arenaBackground})`,
       }}
     >
-      <div className="min-w-[50%] h-[50%] absolute top-0 right-0 m-2">
-        <div className="absolute top-0 right-0 m-3 w-[40%]">
+      {/* User Pokémon on the left */}
+      <div className="min-w-[50%] h-[50%] absolute bottom-0 left-0 m-2">
+        <div className="absolute bottom-0 left-0 m-3 w-[40%]">
           <CompetitorProgress
             maxLife={user.base.HP}
             currentLife={userLife}
@@ -81,20 +82,18 @@ const Arena = ({
               name: user.name.english,
               speed: user.base.Speed,
             }}
-            disabled={turn !== "opponent"}
+            disabled={turn !== "user"}
           />
         </div>
         <CompetitorPhoto
           imageUrl={user.image?.hires || ""}
-          className={`absolute bottom-1 left-20 transform scale-[0.5]`}
+          className={`absolute top-1 right-20 scale-[0.6]`}
         />
       </div>
-      <DialogueBox
-        className="w-[40%] h-[17%] relative top-30 justify-center"
-        text={dialogue}
-      ></DialogueBox>
-      <div className="min-w-[50%] h-[50%] absolute bottom-0 left-0 m-2">
-        <div className="absolute bottom-0 left-0 m-3 w-[40%]">
+
+      {/* Opponent Pokémon on the right */}
+      <div className="min-w-[50%] h-[50%] absolute top-0 right-0 m-2">
+        <div className="absolute top-0 right-0 m-3 w-[40%]">
           <CompetitorProgress
             maxLife={opponent.base.HP}
             currentLife={opponentLife}
@@ -102,16 +101,20 @@ const Arena = ({
               name: opponent.name.english,
               speed: opponent.base.Speed,
             }}
-            disabled={turn !== "user"}
+            disabled={turn !== "opponent"}
           />
         </div>
         <CompetitorPhoto
           imageUrl={
             opponentCaught ? "/path/to/pokedex-icon.png" : opponent.image?.hires || ""
-          } // Replace photo with Pokédex icon if caught
-          className={`absolute top-1 right-20 scale-[0.6]`}
+          }
+          className={`absolute bottom-1 left-20 transform scale-[0.5]`}
         />
       </div>
+      <DialogueBox
+        className="w-[40%] h-[17%] relative top-30 justify-center"
+        text={dialogue}
+      ></DialogueBox>
       {!isCatching && (
         <div className="absolute bottom-5 right-6 flex flex-row gap-6">
           <FightButton
