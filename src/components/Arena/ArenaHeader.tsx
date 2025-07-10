@@ -76,13 +76,13 @@ export const ArenaHeader = ({
       <Headline className="mb-2">{headline}</Headline>
       <p className="text-lg text-gray-600">{description}</p>
 
-      <div className="flex items-center justify-center mt-4">
-        <div className={hasChanged ? "opacity-50 pointer-events-none" : ""}>
-          <Filter
-            options={filterOptionsFormatted}
-            value={null}
-            onChange={handleFilterChange}
-            label={filterTitle}
+    <div className="flex items-center justify-between py-4 px-4">
+       <div className={`mr-4 ${hasChanged ? "opacity-50 pointer-events-none" : ""}`}>
+        <Filter
+          options={filterOptionsFormatted}
+          value={null}
+          onChange={handleFilterChange}
+          label={filterTitle}
           />
         </div>
       </div>

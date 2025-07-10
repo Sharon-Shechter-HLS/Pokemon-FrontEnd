@@ -38,7 +38,7 @@ export const EndOfFightModal = ({
             {title || "Fight Over!"} <Pokador size={23} />
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col items-center">
+        <CardContent className="flex flex-col items-center text-black">
           <div className="mb-6">
             <Champion
               imageUrl={winnerImageUrl}

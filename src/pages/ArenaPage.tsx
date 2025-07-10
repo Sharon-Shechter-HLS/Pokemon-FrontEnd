@@ -16,18 +16,21 @@ const ArenaPage = () => {
   const [opponentPokemon, setOpponentPokemon] = useState<Pokemon | null>(null);
   const [showVS, setShowVS] = useState(true);
 
-  const { pokemons: allPokemons, randomPokemon } = useMyPokemons("", undefined, false, true);
+  const { pokemons: myPokemons, randomPokemon, pokemonById } = useMyPokemons(
+    "",
+    undefined,
+    false, // Fetch all Pokémon, not just "myPokemons"
+    true, // Enable random Pokémon fetching
+    userId ? Number(userId) : undefined // Fetch Pokémon by ID if userId exists
+  );
 
-  // Set user and opponent Pokémon only once when data is available
   useEffect(() => {
-    if (userId && allPokemons.length > 0 && !userPokemon && !opponentPokemon) {
-      const selectedUserPokemon = allPokemons.find((pokemon) => pokemon.id === Number(userId));
-      setUserPokemon(selectedUserPokemon || null);
+    if (pokemonById && !userPokemon && !opponentPokemon) {
+      setUserPokemon(pokemonById);
       setOpponentPokemon(randomPokemon || null);
     }
-  }, [userId, allPokemons, randomPokemon, userPokemon, opponentPokemon]);
+  }, [pokemonById, randomPokemon, userPokemon, opponentPokemon]);
 
-  // Hide VS screen after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowVS(false);
@@ -46,9 +49,11 @@ const ArenaPage = () => {
         headline="Welcome to the Arena!"
         description="Choose your Pokémon and battle against opponents."
         filterTitle="Select Your Pokémon"
-        filterOptions={allPokemons}
+        filterOptions={myPokemons}
         onPokemonChange={(pokemon) => navigate(`/arena?userId=${pokemon.id}`)}
       />
+
+      
 
       {showVS ? (
         <VSComponent
@@ -56,7 +61,7 @@ const ArenaPage = () => {
           opponentPokemon={opponentPokemon}
         />
       ) : (
-        <div className="w-[100%] mx-auto"> 
+        <div className="w-[100%] p-4 pb-10"> 
           <Arena
             user={userPokemon}
             opponent={opponentPokemon}

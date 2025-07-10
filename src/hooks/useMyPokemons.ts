@@ -21,6 +21,11 @@ async function fetchAllPokemons(): Promise<Pokemon[]> {
   });
 }
 
+async function fetchPokemonById(id: number): Promise<Pokemon | null> {
+  const allPokemons = await fetchAllPokemons();
+  return allPokemons.find((pokemon) => pokemon.id === id) || null;
+}
+
 async function fetchMyPokemons(): Promise<Pokemon[]> {
   const allPokemons = await fetchAllPokemons();
   return allPokemons.filter((pokemon) => pokemon.isMyPokemon);
@@ -65,14 +70,25 @@ export function useMyPokemons(
   searchQuery: string = "",
   sortOption?: string,
   isMyPokemons: boolean = false,
-  fetchRandom: boolean = false 
+  fetchRandom: boolean = false,
+  pokemonId?: number
 ) {
   const { data: pokemons = [], isLoading } = useQuery<Pokemon[]>({
-    queryKey: ["pokemons", searchQuery, sortOption, isMyPokemons, fetchRandom], 
-    queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons), 
+    queryKey: ["pokemons", searchQuery, sortOption, isMyPokemons, fetchRandom],
+    queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons),
   });
 
-  // Compute a random Pokémon from the fetched list
+  const { data: pokemonById = null } = useQuery<Pokemon | null>({
+    queryKey: ["pokemonById", pokemonId],
+    queryFn: () => (pokemonId ? fetchPokemonById(pokemonId) : Promise.resolve(null)),
+    enabled: !!pokemonId,
+  });
+
+  const { data: myPokemons = [] } = useQuery<Pokemon[]>({
+    queryKey: ["myPokemons"],
+    queryFn: fetchMyPokemons, // Fetch only "myPokemons"
+  });
+
   const randomPokemon =
     fetchRandom && pokemons.length > 0
       ? pokemons[Math.floor(Math.random() * pokemons.length)]
@@ -81,6 +97,8 @@ export function useMyPokemons(
   return {
     pokemons,
     isLoading,
-    randomPokemon, 
+    randomPokemon,
+    pokemonById,
+    myPokemons, // Add myPokemons to the return object
   };
 }

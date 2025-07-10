@@ -44,7 +44,7 @@ const Arena = ({
     opponentLife,
     dialogue,
     showEndModal,
-    setShowEndModal, // Add this line
+    setShowEndModal, 
     winner,
     showChooseModal,
     setShowChooseModal,
@@ -172,8 +172,8 @@ const Arena = ({
             ],
           }}
           onPlayAgain={() => {
-            setShowEndModal(false); // Close the EndOfFightModal
-            setTimeout(() => setShowChooseModal(true), 300); // Open the ChoosePokemonModal after a short delay
+            setShowEndModal(false); 
+            setShowChooseModal(true)
           }}
           onReturnToMenu={() => window.location.assign("/")}
         />

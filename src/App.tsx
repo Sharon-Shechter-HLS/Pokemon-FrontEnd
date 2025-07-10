@@ -82,7 +82,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AppContent />
+       <div className="bg-primary-50"> {/* Apply the background class */}
+          <AppContent />
+        </div>
       </BrowserRouter>
     </QueryClientProvider>
   );
