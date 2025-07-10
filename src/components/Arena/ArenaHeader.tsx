@@ -3,7 +3,6 @@ import { Filter } from "../ui/filter";
 import type { Pokemon } from "../../typs/Pokemon";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
 
-
 type ArenaHeaderProps = {
   headline: string;
   description: string;
@@ -20,7 +19,7 @@ type HeadlineProps = {
 
 const Headline = ({ children, className = "" }: HeadlineProps) => (
   <h1
-    className={`font-mulish font-medium leading-[34px] tracking-[0px] text-gray-900 ${className}`}
+    className={`font-mulish font-bold text-3xl tracking-wide text-gray-900 ${className}`}
   >
     {children}
   </h1>
@@ -73,11 +72,11 @@ export const ArenaHeader = ({
   }));
 
   return (
-    <div className={`arena-header mt-8 ${className}`}>
-      <Headline className="text-5xl font-bold mb-4">{headline}</Headline>
-      <p className="text-xl text-gray-600">{description}</p>
+    <div className={`arena-header mt-4 text-center ${className}`}>
+      <Headline className="mb-2">{headline}</Headline>
+      <p className="text-lg text-gray-600">{description}</p>
 
-      <div className="flex items-start">
+      <div className="flex items-center justify-center mt-4">
         <div className={hasChanged ? "opacity-50 pointer-events-none" : ""}>
           <Filter
             options={filterOptionsFormatted}

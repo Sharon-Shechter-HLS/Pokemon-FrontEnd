@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import pokemonsData from "@/data/pokemonsData.json";
 import type { Pokemon } from "@/typs/Pokemon";
+import { normalizePokemon } from "@/components/utils/normalizePokemon";
 
 const DEFAULT_POKEMON_IDS = [1, 5, 7, 8];
 
@@ -8,10 +9,13 @@ const DEFAULT_POKEMON_IDS = [1, 5, 7, 8];
 async function fetchAllPokemons(): Promise<Pokemon[]> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const enrichedData = pokemonsData.map((pokemon: Pokemon) => ({
-        ...pokemon,
-        isMyPokemon: DEFAULT_POKEMON_IDS.includes(pokemon.id),
-      }));
+      const enrichedData = pokemonsData.map((pokemon: any) => {
+        const normalizedPokemon = normalizePokemon(pokemon);
+        return {
+          ...normalizedPokemon,
+          isMyPokemon: DEFAULT_POKEMON_IDS.includes(normalizedPokemon.id),
+        };
+      });
       resolve(enrichedData);
     }, 500); // Simulate backend delay
   });
@@ -44,9 +48,9 @@ async function fetchFilteredPokemons(
       if (sortOption === "name") {
         return a.name.english.localeCompare(b.name.english);
       } else if (sortOption === "hp") {
-        return b.base.HP - a.base.HP;
+        return (b.base?.HP ?? 0) - (a.base?.HP ?? 0);
       } else if (sortOption === "attack") {
-        return b.base.Attack - a.base.Attack;
+        return (b.base?.Attack ?? 0) - (a.base?.Attack ?? 0);
       } else if (sortOption === "id") {
         return a.id - b.id;
       }

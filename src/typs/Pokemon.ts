@@ -1,4 +1,4 @@
-export type Pokemon = {
+export interface Pokemon {
   id: number;
   name: {
     english: string;
@@ -15,21 +15,19 @@ export type Pokemon = {
     "Sp. Attack": number;
     "Sp. Defense": number;
     Speed: number;
-    [key: string]: number;
   };
-  species: string;
-  description: string;
-  evolution: {
-    next?: string[][]; 
-    [key: string]: any;
+  species?: string;
+  description?: string;
+  evolution?: {
+    next?: string[][];
+    prev?: string[][];
   };
-  profile: {
-    height: string;
-    weight: string;
-    egg: string[];
-    ability: string[][]; 
-    gender: string;
-    [key: string]: any;
+  profile?: {
+    height?: string;
+    weight?: string;
+    gender?: string;
+    ability?: string[][];
+    egg?: string[];
   };
   image: {
     sprite: string;
@@ -38,4 +36,4 @@ export type Pokemon = {
     [key: string]: string;
   };
   isMyPokemon?: boolean;
-};
+}

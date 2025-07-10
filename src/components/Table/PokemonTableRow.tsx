@@ -34,7 +34,7 @@ export function PokemonTableRow({ pokemon }: PokemonTableRowProps) {
           {`#${String(pokemon.id).padStart(4, "0")}`} {/* Format ID */}
         </TableCell>
         <TableCell className="px-4 max-w-[544px] truncate whitespace-nowrap overflow-hidden text-left">
-          <DescriptionTooltip content={pokemon.description}>
+          <DescriptionTooltip content={pokemon.description || ""}>
             <span>{pokemon.description}</span>
           </DescriptionTooltip>
         </TableCell>
