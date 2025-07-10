@@ -71,7 +71,7 @@ export function useBattleState({
         opponentLife,            // Current Life
         champion2Data.base.HP    // Max Life
       );
-      setTimeout(() => {
+      
         setOpponentLife(newLife);
         setTurn("opponent");
         setIsAttacking(false);

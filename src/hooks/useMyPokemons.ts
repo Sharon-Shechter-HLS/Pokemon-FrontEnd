@@ -5,7 +5,6 @@ import { normalizePokemon } from "@/components/utils/normalizePokemon";
 
 const DEFAULT_POKEMON_IDS = [1, 5, 7, 8];
 
-// Mock backend functions
 async function fetchAllPokemons(): Promise<Pokemon[]> {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -17,7 +16,7 @@ async function fetchAllPokemons(): Promise<Pokemon[]> {
         };
       });
       resolve(enrichedData);
-    }, 500); // Simulate backend delay
+    }, 500); 
   });
 }
 
@@ -50,14 +49,22 @@ async function fetchFilteredPokemons(
   // Apply sorting
   if (sortOption) {
     filteredPokemons = [...filteredPokemons].sort((a, b) => {
-      if (sortOption === "name") {
-        return a.name.english.localeCompare(b.name.english);
-      } else if (sortOption === "hp") {
-        return (b.base?.HP ?? 0) - (a.base?.HP ?? 0);
-      } else if (sortOption === "attack") {
-        return (b.base?.Attack ?? 0) - (a.base?.Attack ?? 0);
-      } else if (sortOption === "id") {
-        return a.id - b.id;
+      const [key, order] = sortOption.split("-");
+      const isAscending = order === "asc";
+
+      if (key === "name") {
+        return isAscending
+          ? a.name.english.localeCompare(b.name.english)
+          : b.name.english.localeCompare(a.name.english);
+      } else if (key === "hp") {
+        return isAscending
+          ? (a.base?.HP ?? 0) - (b.base?.HP ?? 0)
+          : (b.base?.HP ?? 0) - (a.base?.HP ?? 0);
+      } else if (key === "attack" || key === "power") {
+        // Handle both "attack" and "power" as synonyms
+        return isAscending
+          ? (a.base?.Attack ?? 0) - (b.base?.Attack ?? 0)
+          : (b.base?.Attack ?? 0) - (a.base?.Attack ?? 0);
       }
       return 0;
     });
@@ -86,7 +93,7 @@ export function useMyPokemons(
 
   const { data: myPokemons = [] } = useQuery<Pokemon[]>({
     queryKey: ["myPokemons"],
-    queryFn: fetchMyPokemons, // Fetch only "myPokemons"
+    queryFn: fetchMyPokemons, 
   });
 
   const randomPokemon =
@@ -99,6 +106,6 @@ export function useMyPokemons(
     isLoading,
     randomPokemon,
     pokemonById,
-    myPokemons, // Add myPokemons to the return object
+    myPokemons, 
   };
 }

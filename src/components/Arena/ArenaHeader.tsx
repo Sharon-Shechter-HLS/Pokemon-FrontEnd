@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Filter } from "../ui/filter";
 import type { Pokemon } from "../../typs/Pokemon";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
+import DescriptionTooltip from "../ToolTip/ToolTip"; // Import the tooltip component
 
 type ArenaHeaderProps = {
   headline: string;
@@ -76,15 +77,31 @@ export const ArenaHeader = ({
       <Headline className="mb-2">{headline}</Headline>
       <p className="text-lg text-gray-600">{description}</p>
 
-    <div className="flex items-center px-4">
-       <div className={`mr-4 mb-3 ${hasChanged ? "opacity-50 pointer-events-none" : ""}`}>
-        <Filter
-          options={filterOptionsFormatted}
-          value={null}
-          onChange={handleFilterChange}
-          label={filterTitle}
-          />
-        </div>
+      <div className="flex items-center px-4">
+        {hasChanged ? (
+          <DescriptionTooltip content="You can only select a Pokémon once. The filter is now disabled.">
+            <div
+              className="mr-4 mb-3 opacity-50"
+              style={{ pointerEvents: "none" }} // Apply pointer-events here
+            >
+              <Filter
+                options={filterOptionsFormatted}
+                value={null}
+                onChange={handleFilterChange}
+                label={filterTitle}
+              />
+            </div>
+          </DescriptionTooltip>
+        ) : (
+          <div className="mr-4 mb-3">
+            <Filter
+              options={filterOptionsFormatted}
+              value={null}
+              onChange={handleFilterChange}
+              label={filterTitle}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

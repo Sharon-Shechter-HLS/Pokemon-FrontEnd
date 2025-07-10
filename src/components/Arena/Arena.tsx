@@ -59,7 +59,7 @@ const Arena = ({
     if (turn === "opponent") {
       const opponentAttackTimeout = setTimeout(() => {
         handleAttack();
-      }, 2000); // 2 seconds delay
+      }, 500); 
 
       return () => clearTimeout(opponentAttackTimeout);
     }
