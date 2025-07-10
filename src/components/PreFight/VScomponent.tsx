@@ -18,7 +18,7 @@ export default function VSComponent({
     >
       <div className="w-1/2 h-full flex items-center justify-center relative">
         <img
-          src={userPokemon.image.thumbnail}
+          src={userPokemon.image.hires}
           alt={userPokemon.name.english}
           className="absolute object-contain"
           style={{
@@ -34,7 +34,7 @@ export default function VSComponent({
 
       <div className="w-1/2 h-full flex items-center justify-center relative">
         <img
-          src={opponentPokemon.image.thumbnail}
+          src={opponentPokemon.image.hires}
           alt={opponentPokemon.name.english}
           className="absolute object-contain"
           style={{

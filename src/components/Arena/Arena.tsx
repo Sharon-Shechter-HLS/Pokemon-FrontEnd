@@ -44,6 +44,7 @@ const Arena = ({
     opponentLife,
     dialogue,
     showEndModal,
+    setShowEndModal, // Add this line
     winner,
     showChooseModal,
     setShowChooseModal,
@@ -106,7 +107,7 @@ const Arena = ({
         {opponentCaught ? (
           <Pokador
             size={200} 
-            className="absolute bottom-28 left-60 transform scale-[1]"
+            className="absolute bottom-28 left-50 transform scale-[1]"
           />
         ) : (
           <CompetitorPhoto
@@ -141,14 +142,14 @@ const Arena = ({
         <EndOfFightModal
           title={
             winner === userData.name.english
-              ? `You caught ${opponentData.name.english}!` 
-              : `${userData.name.english} lost the match` 
+              ? `You caught ${opponentData.name.english}!`
+              : `${userData.name.english} lost the match`
           }
           winner={winner || ""}
           winnerImageUrl={
             winner === userData.name.english
-              ? opponentData.image?.hires || "" 
-              : userData.image?.hires || "" 
+              ? opponentData.image?.hires || ""
+              : userData.image?.hires || ""
           }
           description={{
             title: winner === userData.name.english ? opponentData.name.english : userData.name.english,
@@ -170,7 +171,10 @@ const Arena = ({
               },
             ],
           }}
-          onPlayAgain={() => setShowChooseModal(true)}
+          onPlayAgain={() => {
+            setShowEndModal(false); // Close the EndOfFightModal
+            setTimeout(() => setShowChooseModal(true), 300); // Open the ChoosePokemonModal after a short delay
+          }}
           onReturnToMenu={() => window.location.assign("/")}
         />
       )}

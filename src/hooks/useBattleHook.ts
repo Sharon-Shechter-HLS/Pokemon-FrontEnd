@@ -131,6 +131,7 @@ export function useBattleState({
     opponentLife,
     dialogue,
     showEndModal,
+    setShowEndModal, // Add this line
     winner,
     showChooseModal,
     setShowChooseModal,

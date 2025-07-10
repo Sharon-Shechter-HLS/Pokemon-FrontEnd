@@ -41,7 +41,7 @@ const ArenaPage = () => {
   }
 
   return (
-    <div className="arena-page">
+    <div className="arena-page px-5"> 
       <ArenaHeader
         headline="Welcome to the Arena!"
         description="Choose your Pokémon and battle against opponents."
@@ -56,11 +56,13 @@ const ArenaPage = () => {
           opponentPokemon={opponentPokemon}
         />
       ) : (
-        <Arena
-          user={userPokemon}
-          opponent={opponentPokemon}
-          starter="user"
-        />
+        <div className="w-[100%] mx-auto"> 
+          <Arena
+            user={userPokemon}
+            opponent={opponentPokemon}
+            starter="user"
+          />
+        </div>
       )}
     </div>
   );
