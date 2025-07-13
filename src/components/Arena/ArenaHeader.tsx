@@ -79,16 +79,15 @@ export const ArenaHeader = ({
 
       <div className="flex items-center px-4">
         {hasChanged ? (
-          <DescriptionTooltip content="You can only select a Pokémon once. The filter is now disabled.">
-            <div
-              className="mr-4 mb-3 opacity-50"
-              style={{ pointerEvents: "none" }} // Apply pointer-events here
-            >
+          <DescriptionTooltip content="You have already switched a Pokemon in this battle.">
+            <div className="mr-4 mb-3 relative">
               <Filter
                 options={filterOptionsFormatted}
                 value={null}
-                onChange={handleFilterChange}
+                onChange={() => {}} // Disable functionality by providing an empty handler
                 label={filterTitle}
+                className="opacity-50 cursor-not-allowed" // Add a disabled cursor style
+                disabled // Pass the disabled prop
               />
             </div>
           </DescriptionTooltip>

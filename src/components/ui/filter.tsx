@@ -22,6 +22,8 @@ type FilterProps = {
   onChange: (value: string | null) => void;
   label?: string;
   icon?: React.ReactNode;
+  disabled?: boolean; 
+  className?: string; 
 };
 
 export function Filter({
@@ -30,6 +32,8 @@ export function Filter({
   onChange,
   label = "Filter",
   icon,
+  disabled = false, // Default to false
+  className,
 }: FilterProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -42,13 +46,18 @@ export function Filter({
     : "";
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+    <DropdownMenu open={isOpen && !disabled} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger className="h-9" asChild>
-        <Button className={buttonClass + " relative"}>
+        <Button
+          className={`${buttonClass} relative ${
+            disabled ? "opacity-50 cursor-not-allowed" : ""
+          } ${className}`}
+          disabled={disabled} // Disable the button
+        >
           <span className="flex items-center pointer-events-none">
             {icon}
             {selected ? selected.label : label}
-            {isSelected && (
+            {isSelected && !disabled && ( // Only show clear button if not disabled
               <span
                 className="ml-2 cursor-pointer pointer-events-auto"
                 onClick={(e) => {
@@ -72,19 +81,21 @@ export function Filter({
           </span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>{label}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {safeOptions.map((opt) => (
-          <DropdownMenuItem
-            key={opt.value}
-            onSelect={() => onChange(opt.value)}
-            className={value === opt.value ? "font-bold" : ""}
-          >
-            {opt.label}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
+      {!disabled && ( // Prevent dropdown from rendering if disabled
+        <DropdownMenuContent>
+          <DropdownMenuLabel>{label}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {safeOptions.map((opt) => (
+            <DropdownMenuItem
+              key={opt.value}
+              onSelect={() => onChange(opt.value)}
+              className={value === opt.value ? "font-bold" : ""}
+            >
+              {opt.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      )}
     </DropdownMenu>
   );
 }
