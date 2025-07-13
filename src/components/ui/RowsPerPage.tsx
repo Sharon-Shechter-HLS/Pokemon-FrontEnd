@@ -3,9 +3,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from "../ui/dropDown"; // Adjust the import path as necessary
-import { Button } from "../ui/button"; // Adjust the import path as necessary
-import { ChevronDown, ChevronUp } from "lucide-react"; // Or your icon library
+} from "../ui/dropDown"; 
+import { Button } from "../ui/button"; 
+import { ChevronDown, ChevronUp } from "lucide-react"; 
 import { useState } from "react";
 
 type RowsPerPageDropdownProps = {
