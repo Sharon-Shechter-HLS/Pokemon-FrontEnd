@@ -7,41 +7,37 @@ import {
 } from "../ui/card";
 import { Separator } from "../ui/seperator";
 import ClearIcon from "@mui/icons-material/Clear";
-import { getPokemonAttributes } from "../utils/getAtributes";
-import type { PokemonAttribute } from "../utils/getAtributes";
+import { getPokemonAttributes } from "./utils";
+import type { PokemonAttribute } from "./utils";
+import { type Pokemon } from "../../typs/Pokemon";
 
 type PokemonInfoModalProps = {
   open: boolean;
   onClose: () => void;
-  id?: number;
-  name?: string;
-  img?: string;
-  description?: string;
-  height?: string;
-  weight?: string;
-  category?: string;
-  abilities?: string[];
+  pokemon: Pokemon; 
 };
 
 export function PokemonInfoModal({
   open,
   onClose,
-  id,
-  name,
-  img,
-  description,
-  height,
-  weight,
-  category,
-  abilities,
+  pokemon,
 }: PokemonInfoModalProps) {
   if (!open) return null;
 
+  const {
+    id,
+    name,
+    image,
+    description,
+    profile,
+    species,
+  } = pokemon;
+
   const attributes: PokemonAttribute[] = getPokemonAttributes({
-    height: height ?? "?",
-    weight: weight ?? "?",
-    category: category ?? "?",
-    abilities: abilities ?? [],
+    height: profile?.height ?? "N/A", // Fallback to "N/A" if height is unavailable
+    weight: profile?.weight ?? "N/A", // Fallback to "N/A" if weight is unavailable
+    category: species ?? "Unknown", // Fallback to "Unknown" if species is unavailable
+    abilities: profile?.ability?.map((a) => a[0]) || ["None"], // Fallback to "None" if abilities are unavailable
   });
 
   return (
@@ -55,11 +51,13 @@ export function PokemonInfoModal({
               <ClearIcon className="cursor-pointer" />
             </button>
           </div>
-          <CardTitle className="text-2xl font-normal mb-2">{name}</CardTitle>
+          <CardTitle className="text-2xl font-normal mb-2">
+            {name?.english}
+          </CardTitle>
         </CardHeader>
         <img
-          src={img || "/pokemon-placeholder.png"}
-          alt={name ?? "?"}
+          src={image?.hires || "/pokemon-placeholder.png"}
+          alt={name?.english ?? "?"}
           className="mb-1 w-[180px] h-[165px] mx-auto"
         />
         <CardContent>
