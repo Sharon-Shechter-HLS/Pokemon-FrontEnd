@@ -34,10 +34,10 @@ export function PokemonInfoModal({
   } = pokemon;
 
   const attributes: PokemonAttribute[] = getPokemonAttributes({
-    height: profile?.height ?? "N/A", // Fallback to "N/A" if height is unavailable
-    weight: profile?.weight ?? "N/A", // Fallback to "N/A" if weight is unavailable
-    category: species ?? "Unknown", // Fallback to "Unknown" if species is unavailable
-    abilities: profile?.ability?.map((a) => a[0]) || ["None"], // Fallback to "None" if abilities are unavailable
+    height: profile?.height ?? "N/A", 
+    weight: profile?.weight ?? "N/A", 
+    category: species ?? "Unknown", 
+    abilities: profile?.ability?.map((a) => a[0]) || ["None"], 
   });
 
   return (
