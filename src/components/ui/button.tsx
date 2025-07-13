@@ -4,7 +4,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "../../lib/utils"; 
 
-
 const sizeSmall = "h-[32px] px-3 py-1.5 text-xs";
 const sizeMedium = "h-[36px] px-4 py-2 text-sm";
 const sizeLarge = "h-[40px] px-5 py-3 text-base";
@@ -38,9 +37,9 @@ type ButtonProps = React.ComponentProps<"button"> &
   };
 
 function Button({
-  className,
-  variant,
-  size,
+  className = "",
+  variant = "primary",
+  size = "md",
   asChild = false,
   ...props
 }: ButtonProps) {

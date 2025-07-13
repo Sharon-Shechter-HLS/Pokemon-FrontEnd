@@ -25,7 +25,7 @@ type GenericTableProps<T> = {
   onPageChange: (page: number) => void
   onPageSizeChange: (size: number) => void
   rowsPerPageOptions?: number[]
-  loading?: boolean 
+  loading?: boolean
 }
 
 export function DataTable<T>({
@@ -37,7 +37,7 @@ export function DataTable<T>({
   onPageChange,
   onPageSizeChange,
   rowsPerPageOptions = [5, 10, 20],
-  loading = false, // Default value for loading
+  loading = false,
 }: GenericTableProps<T>) {
   return (
     <Table className="rounded-md overflow-hidden border border-gray-200">
@@ -68,21 +68,23 @@ export function DataTable<T>({
             <TableRow key={index}>
               {columns.map((col) => (
                 <TableCell key={col.header} className={`px-4 ${col.className || ""}`}>
-                  {col.render ? col.render(row) : String(row[col.key as keyof T])}
+                  {col.render ? col.render(row) : String(row[col.key as keyof T] ?? "N/A")}
                 </TableCell>
               ))}
             </TableRow>
           ))
         )}
       </TableBody>
-      <TableFooter
-        page={page}
-        pageSize={pageSize}
-        total={total}
-        onPageChange={onPageChange}
-        onPageSizeChange={onPageSizeChange}
-        rowsPerPageOptions={rowsPerPageOptions}
-      />
+      {total > 0 && (
+        <TableFooter
+          page={page}
+          pageSize={pageSize}
+          total={total}
+          onPageChange={onPageChange}
+          onPageSizeChange={onPageSizeChange}
+          rowsPerPageOptions={rowsPerPageOptions}
+        />
+      )}
     </Table>
   )
 }
