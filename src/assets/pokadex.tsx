@@ -1,4 +1,4 @@
-export const Pokador = ({
+export const pokadex = ({
   size = 80,
   ...props
 }: { size?: number } & React.SVGProps<SVGSVGElement>) => (

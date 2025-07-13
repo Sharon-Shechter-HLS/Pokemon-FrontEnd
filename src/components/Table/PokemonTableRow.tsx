@@ -3,7 +3,7 @@ import { type Pokemon } from "../../typs/Pokemon";
 import { TableCell, TableRow } from "../ui/table";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
 import PokemonInfoModal from "../Modals/InfoModal";
-import { Pokador } from "../../assets/catch-button";
+import { Pokador } from "../../assets/CatchButton";
 
 type PokemonTableRowProps = {
   pokemon: Pokemon;

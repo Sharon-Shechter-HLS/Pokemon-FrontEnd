@@ -5,20 +5,20 @@ export type ChampionPokemon = {
   speed: number;
 };
 
-function getProgressBarClass(progress: number) {
-  if (progress > 80) return "bg-[var(--color-success-green)]";
-  if (progress > 30) return "bg-[var(--color-warning-yellow)]";
+function getProgressBarClass(currentLife: number) {
+  if (currentLife > 80) return "bg-[var(--color-success-green)]";
+  if (currentLife > 30) return "bg-[var(--color-warning-yellow)]";
   return "bg-[var(--color-error-red)]";
 }
 
 export const CompetitorProgress = ({
-  maxProgress,
-  progress,
+  maxLife,
+  currentLife,
   pokemon,
   disabled = false,
 }: {
-  maxProgress: number;
-  progress: number;
+  maxLife: number;
+  currentLife: number;
   pokemon: ChampionPokemon;
   disabled?: boolean;
 }) => {
@@ -35,17 +35,17 @@ export const CompetitorProgress = ({
       )}
       <h2 className="text-2xl font-semibold mb-4">{pokemon.name}</h2>
       <Progress
-        value={progress}
-        max={maxProgress}
+        value={currentLife}
+        max={maxLife}
         className="w-full"
-        indicatorClassName={getProgressBarClass(progress)}
+        indicatorClassName={getProgressBarClass(currentLife)}
       />
       <div className="flex justify-between items-center mt-2 text-sm">
         <span className="font-light">
           Speed: <span className="font-semibold">{pokemon.speed}</span>
         </span>
         <span className="font-light">
-          {(progress / 100) * maxProgress}/{maxProgress}
+          {(currentLife / 100) * maxLife}/{maxLife}
         </span>
       </div>
     </div>
