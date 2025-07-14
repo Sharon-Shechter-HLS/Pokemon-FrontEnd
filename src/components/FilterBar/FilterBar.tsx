@@ -9,7 +9,6 @@ type FilterToolbarProps = {
   onSearchChange: (value: string) => void;
   filterValue: string | null;
   onFilterChange: (value: string | null) => void;
-  className?: string;
 };
 
 export const PageToolbar = ({
