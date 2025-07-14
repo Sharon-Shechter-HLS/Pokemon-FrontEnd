@@ -3,17 +3,17 @@ import { calculateLife } from "../components/utils/lifeCalculate";
 import type { Pokemon } from "../typs/Pokemon";
 
 export function useBattleState({
-  champion1Data,
-  champion2Data,
+  userData: champion1Data,
+  opponentData: champion2Data,
   starter,
 }: {
-  champion1Data: Pokemon;
-  champion2Data: Pokemon;
+  userData: Pokemon;
+  opponentData: Pokemon;
   starter: "user" | "opponent";
 }) {
   const [turn, setTurn] = useState<"user" | "opponent">(starter);
-  const [userLife, setUserLife] = useState(champion1Data.base.HP); // Initialize to full HP
-  const [opponentLife, setOpponentLife] = useState(champion2Data.base.HP); // Initialize to full HP
+  const [userLife, setUserLife] = useState(champion1Data.base.HP); 
+  const [opponentLife, setOpponentLife] = useState(champion2Data.base.HP); 
   const [dialogue, setDialogue] = useState<string>(
     starter === "user"
       ? `${champion2Data.name.english} is starting the fight!`
@@ -61,25 +61,25 @@ export function useBattleState({
     setIsAttacking(true);
     setDialogue(
       turn === "user"
-        ? `${champion2Data.name.english} is attacking!`
-        : `${champion1Data.name.english} is attacking!`
+        ? `${champion1Data.name.english} is attacking!`
+        : `${champion2Data.name.english} is attacking!`
     );
 
     if (turn === "user") {
       const newLife = await calculateLife(
-        champion2Data.base.Speed, // Power
+        champion1Data.base.Speed, // Power
         opponentLife,            // Current Life
         champion2Data.base.HP    // Max Life
       );
-      
+      setTimeout(() => {
         setOpponentLife(newLife);
         setTurn("opponent");
         setIsAttacking(false);
-        setDialogue(`${champion1Data.name.english}'s turn`);
+        setDialogue(`${champion2Data.name.english}'s turn`);
       }, 700);
     } else {
       const newLife = await calculateLife(
-        champion1Data.base.Speed, // Power
+        champion2Data.base.Speed, // Power
         userLife,                 // Current Life
         champion1Data.base.HP     // Max Life
       );
@@ -87,7 +87,7 @@ export function useBattleState({
         setUserLife(newLife);
         setTurn("user");
         setIsAttacking(false);
-        setDialogue(`${champion2Data.name.english}'s turn`);
+        setDialogue(`${champion1Data.name.english}'s turn`);
       }, 600);
     }
   };

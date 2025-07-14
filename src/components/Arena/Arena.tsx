@@ -53,7 +53,7 @@ const Arena = ({
     isCatching,
     handleAttack,
     opponentCaught, 
-  } = useBattleState({ champion1Data: userData, champion2Data: opponentData, starter });
+  } = useBattleState({ userData: userData, opponentData: opponentData, starter });
 
   useEffect(() => {
     if (turn === "opponent") {
