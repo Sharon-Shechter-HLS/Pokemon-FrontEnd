@@ -7,10 +7,10 @@ type PokemonPageProps = {
 };
 
 export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) {
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
-  const [filterValue, setFilterValue] = useState<string | null>(null); // State for filter selection
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [filterValue, setFilterValue] = useState<string | null>(null); 
 
-  const title = isMyPokemons ? "My Pokémons" : "All Pokémons"; // Dynamic title
+  const title = isMyPokemons ? "My Pokémons" : "All Pokémons"; 
   const filterOptions = [
     { label: "Name", value: "name" },
     { label: "HP", value: "hp" },

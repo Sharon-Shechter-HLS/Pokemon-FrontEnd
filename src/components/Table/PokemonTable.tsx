@@ -34,7 +34,7 @@ export const PokemonTable = ({
   const paginatedPokemons = pokemons.slice(
     (page - 1) * pageSize,
     page * pageSize
-  ); // Paginate the data
+  ); 
 
   const columns = [
     {

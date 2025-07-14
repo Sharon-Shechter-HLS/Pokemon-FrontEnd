@@ -9,8 +9,8 @@ import {
 import { Header } from "./components/Header/Header";
 import AllpokemonsPage from "./pages/AllpokemonsPage";
 import MypokemonsPage from "./pages/MypokemonsPage";
-import Arena from "./components/Arena/Arena"; // Import Arena component
-import { useMyPokemons } from "./hooks/useMyPokemons"; // Import useMyPokemons hook
+import Arena from "./components/Arena/Arena"; 
+import { useMyPokemons } from "./hooks/useMyPokemons";
 import "./App.css";
 
 const queryClient = new QueryClient();
