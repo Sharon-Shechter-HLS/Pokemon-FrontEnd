@@ -34,7 +34,7 @@ export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) 
       <PokemonTable
         isMyPokemons={isMyPokemons}
         searchQuery={searchQuery}
-        sortOption={filterValue ?? undefined}
+        sortOption={filterValue || undefined} 
       />
     </div>
   );

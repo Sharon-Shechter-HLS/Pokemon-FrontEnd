@@ -15,13 +15,12 @@ const ArenaPage = () => {
   const [opponentPokemon, setOpponentPokemon] = useState<Pokemon | null>(null);
   const [showVS, setShowVS] = useState(true);
 
-  const { myPokemons, randomPokemon, pokemonById } = useMyPokemons(
-    "",
-    undefined,
-    false,
-    true,
-    userId ? Number(userId) : undefined
-  );
+  const { pokemons: allPokemons, randomPokemon } = useMyPokemons({
+    searchQuery: "",
+    sortOption: undefined,
+    isMyPokemons: false,
+    fetchRandom: true,
+  });
 
   useEffect(() => {
     if (pokemonById && !userPokemon && !opponentPokemon) {

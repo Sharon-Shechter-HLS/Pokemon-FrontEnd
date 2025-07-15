@@ -73,28 +73,22 @@ async function fetchFilteredPokemons(
   return filteredPokemons;
 }
 
-export function useMyPokemons(
-  searchQuery: string = "",
-  sortOption?: string,
-  isMyPokemons: boolean = false,
-  fetchRandom: boolean = false,
-  pokemonId?: number
-) {
+export function useMyPokemons({
+  searchQuery = "",
+  sortOption,
+  isMyPokemons = false,
+  fetchRandom = false,
+}: {
+  searchQuery?: string;
+  sortOption?: string;
+  isMyPokemons?: boolean;
+  fetchRandom?: boolean;
+} = {}) {
   const { data: pokemons = [], isLoading } = useQuery<Pokemon[]>({
     queryKey: ["pokemons", searchQuery, sortOption, isMyPokemons, fetchRandom],
     queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons),
   });
 
-  const { data: pokemonById = null } = useQuery<Pokemon | null>({
-    queryKey: ["pokemonById", pokemonId],
-    queryFn: () => (pokemonId ? fetchPokemonById(pokemonId) : Promise.resolve(null)),
-    enabled: !!pokemonId,
-  });
-
-  const { data: myPokemons = [] } = useQuery<Pokemon[]>({
-    queryKey: ["myPokemons"],
-    queryFn: fetchMyPokemons, 
-  });
 
   const randomPokemon =
     fetchRandom && pokemons.length > 0

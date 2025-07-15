@@ -1,4 +1,4 @@
-import pokadexIcon from "./pokadexIcon.svg"; // Import the SVG file
+import glovIcon from "./glovIcon.svg"; 
 
 export const Pokador = ({
   size = 80,
@@ -40,7 +40,7 @@ export const Pokador = ({
         width="635"
         height="634"
         preserveAspectRatio="none"
-        xlinkHref={pokadexIcon} 
+        xlinkHref={glovIcon} 
       />
     </defs>
   </svg>

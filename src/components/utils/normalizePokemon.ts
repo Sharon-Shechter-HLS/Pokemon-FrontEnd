@@ -34,6 +34,6 @@ export function normalizePokemon(pokemon: any): Pokemon {
       thumbnail: pokemon.image?.thumbnail || "",
       hires: pokemon.image?.hires || "",
     },
-    isMyPokemon: false, // Default to false; can be overridden later
+    isMyPokemon: false, 
   };
 }
