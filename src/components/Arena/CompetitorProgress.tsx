@@ -1,16 +1,10 @@
 import { Progress } from "../ui/ProgressBar";
+import { getProgressBarClass } from "./utils";
 
 export type ChampionPokemon = {
   name: string;
   speed: number;
 };
-
-function getProgressBarClass(currentLife: number, maxLife: number) {
-  const lifePercentage = (currentLife / maxLife) * 100; 
-  if (lifePercentage > 80) return "bg-[var(--color-success-green)]";
-  if (lifePercentage > 30) return "bg-[var(--color-warning-yellow)]";
-  return "bg-[var(--color-error-red)]";
-}
 
 export const CompetitorProgress = ({
   maxLife,
@@ -46,7 +40,7 @@ export const CompetitorProgress = ({
           Speed: <span className="font-semibold">{pokemon.speed}</span>
         </span>
         <span className="font-light">
-          {currentLife}/{maxLife} {/* Display absolute values */}
+          {currentLife}/{maxLife} 
         </span>
       </div>
     </div>

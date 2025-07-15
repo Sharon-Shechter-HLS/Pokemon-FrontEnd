@@ -7,12 +7,10 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Header } from "./components/Header/Header";
-import AllpokemonsPage from "./pages/AllpokemonsPage";
-import MypokemonsPage from "./pages/MypokemonsPage";
-import Arena from "./components/Arena/Arena"; // Import Arena component
-import { useMyPokemons } from "./hooks/useMyPokemons"; // Import useMyPokemons hook
-import Arena from "./components/Arena/Arena"; // Import Arena component
-import { useMyPokemons } from "./hooks/useMyPokemons"; // Import useMyPokemons hook
+import AllPokemonsPage from "./pages/AllPokemonsPage";
+import MyPokemonsPage from "./pages/MyPokemonsPage";
+import ArenaRoute from "./Routes/ArenaRoute";
+import { ROUTES } from "./constants/routes";
 import "./App.css";
 
 const queryClient = new QueryClient();
@@ -22,8 +20,8 @@ const AppContent = () => {
   const items = [
     {
       name: "All Pokémons",
-      href: "/all-pokemons",
-      isActive: location.pathname === "/all-pokemons",
+      href: ROUTES.ALL_POKEMONS,
+      isActive: location.pathname === ROUTES.ALL_POKEMONS,
     },
     {
       name: (
@@ -32,47 +30,19 @@ const AppContent = () => {
             <img src={pokadexIcon} alt="Pokédex Icon" className="w-5 h-5" /> {/* Add the icon */}
         </span>
       ),
-      href: "/my-pokemons",
-      isActive: location.pathname === "/my-pokemons",
+      href: ROUTES.MY_POKEMONS,
+      isActive: location.pathname === ROUTES.MY_POKEMONS,
     },
   ];
-
-  const ArenaRoute = () => {
-    const { pokemons, isLoading } = useMyPokemons("", undefined, true); // Fetch Pokémon data
-
-    if (isLoading) {
-      return <div className="p-8 text-center">Loading...</div>;
-    }
-
-    // Select two Pokémon for testing
-    const userPokemon = pokemons[0];
-    const opponentPokemon = pokemons[1];
-    console.log("User Pokémon:", userPokemon);
-    console.log("Opponent Pokémon:", opponentPokemon);
-
-    if (!userPokemon || !opponentPokemon) {
-      return <div className="p-8 text-center">Not enough Pokémon available.</div>;
-    }
-
-    return (
-      <Arena
-        user={userPokemon} // Pass user Pokémon data
-        opponent={opponentPokemon} // Pass opponent Pokémon data
-        starter="user" // Define the starter (user starts the battle)
-        className="p-8"
-      />
-    );
-  };
 
   return (
     <>
       <Header items={items} />
       <Routes>
-        <Route path="/all-pokemons" element={<AllpokemonsPage />} />
-        <Route path="/my-pokemons" element={<MypokemonsPage />} />
-        <Route path="/arena" element={<ArenaRoute />} />
-        <Route path="/arena" element={<ArenaRoute />} />
-        <Route path="/" element={<Navigate to="/all-pokemons" replace />} />
+        <Route path={ROUTES.ALL_POKEMONS} element={<AllPokemonsPage />} />
+        <Route path={ROUTES.MY_POKEMONS} element={<MyPokemonsPage />} />
+        <Route path={ROUTES.ARENA} element={<ArenaRoute />} />
+        <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.ALL_POKEMONS} replace />} />
       </Routes>
     </>
   );

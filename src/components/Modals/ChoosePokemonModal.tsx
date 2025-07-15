@@ -19,7 +19,9 @@ type ChoosePokemonModalProps = {
 };
 
 const ChoosePokemonModal = ({ onSelect, onClose }: ChoosePokemonModalProps) => {
-  const { pokemons, isLoading } = useMyPokemons("", undefined, true); 
+  const { pokemons, isLoading } = useMyPokemons({
+    isMyPokemons: true, 
+  });
   const [selected, setSelected] = useState<Pokemon | null>(null);
 
   if (isLoading) return <div className="p-8 text-center">Loading...</div>;

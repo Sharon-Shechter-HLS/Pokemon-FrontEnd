@@ -5,7 +5,6 @@ import { normalizePokemon } from "@/components/utils/normalizePokemon";
 
 const DEFAULT_POKEMON_IDS = [1, 5, 7, 8];
 
-// Mock backend functions
 async function fetchAllPokemons(): Promise<Pokemon[]> {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -17,7 +16,7 @@ async function fetchAllPokemons(): Promise<Pokemon[]> {
         };
       });
       resolve(enrichedData);
-    }, 500); // Simulate backend delay
+    }, 500); 
   });
 }
 
@@ -61,18 +60,23 @@ async function fetchFilteredPokemons(
   return filteredPokemons;
 }
 
-export function useMyPokemons(
-  searchQuery: string = "",
-  sortOption?: string,
-  isMyPokemons: boolean = false,
-  fetchRandom: boolean = false 
-) {
+export function useMyPokemons({
+  searchQuery = "",
+  sortOption,
+  isMyPokemons = false,
+  fetchRandom = false,
+}: {
+  searchQuery?: string;
+  sortOption?: string;
+  isMyPokemons?: boolean;
+  fetchRandom?: boolean;
+} = {}) {
   const { data: pokemons = [], isLoading } = useQuery<Pokemon[]>({
-    queryKey: ["pokemons", searchQuery, sortOption, isMyPokemons, fetchRandom], 
-    queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons), 
+    queryKey: ["pokemons", searchQuery, sortOption, isMyPokemons, fetchRandom],
+    queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons),
   });
 
-  // Compute a random Pokémon from the fetched list
+
   const randomPokemon =
     fetchRandom && pokemons.length > 0
       ? pokemons[Math.floor(Math.random() * pokemons.length)]
@@ -81,6 +85,6 @@ export function useMyPokemons(
   return {
     pokemons,
     isLoading,
-    randomPokemon, 
+    randomPokemon,
   };
 }

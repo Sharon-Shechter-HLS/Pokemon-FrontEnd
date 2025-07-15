@@ -4,7 +4,8 @@ import { TableCell, TableRow } from "../ui/table";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
 import PokemonInfoModal from "../Modals/InfoModal";
 import { Pokador } from "../../assets/CatchButton";
-import DescriptionTooltip from "../ToolTip/ToolTip"; 
+import DescriptionTooltip from "../ToolTip/ToolTip";
+import { formatPokemonId } from "../../utils/TableRowUtils"; 
 
 
 type PokemonTableRowProps = {
@@ -31,7 +32,7 @@ export function PokemonTableRow({ pokemon }: PokemonTableRowProps) {
           )}
         </TableCell>
         <TableCell className="px-4 text-left">
-          {`#${String(pokemon.id).padStart(4, "0")}`} 
+          {formatPokemonId(pokemon.id)} 
         </TableCell>
         <TableCell className="px-4 max-w-[544px] truncate whitespace-nowrap overflow-hidden text-left">
           <DescriptionTooltip content={pokemon.description || ""}>
