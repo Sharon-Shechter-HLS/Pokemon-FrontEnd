@@ -16,9 +16,13 @@ const ArenaPage = () => {
   const [opponentPokemon, setOpponentPokemon] = useState<Pokemon | null>(null);
   const [showVS, setShowVS] = useState(true);
 
-  const { pokemons: allPokemons, randomPokemon } = useMyPokemons("", undefined, false, true);
+  const { pokemons: allPokemons, randomPokemon } = useMyPokemons({
+    searchQuery: "",
+    sortOption: undefined,
+    isMyPokemons: false,
+    fetchRandom: true,
+  });
 
-  // Set user and opponent Pokémon only once when data is available
   useEffect(() => {
     if (userId && allPokemons.length > 0 && !userPokemon && !opponentPokemon) {
       const selectedUserPokemon = allPokemons.find((pokemon) => pokemon.id === Number(userId));
@@ -27,7 +31,6 @@ const ArenaPage = () => {
     }
   }, [userId, allPokemons, randomPokemon, userPokemon, opponentPokemon]);
 
-  // Hide VS screen after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowVS(false);

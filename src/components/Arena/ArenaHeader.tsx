@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Filter } from "../ui/filter";
 import type { Pokemon } from "../../typs/Pokemon";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
@@ -47,29 +47,33 @@ export const ArenaHeader = ({
     }
   };
 
-  const filterOptionsFormatted = filterOptions.map((pokemon) => ({
-    label: (
-      <div className="flex items-center justify-between w-full min-w-[256px]">
-        <div className="flex items-center gap-3">
-          <PokemonLogo size={36} imgSrc={pokemon.image?.thumbnail} />
-          <div className="flex flex-col">
-            <span className="font-medium text-base leading-tight">
-              {typeof pokemon.name === "string"
-                ? pokemon.name
-                : pokemon.name.english}
-            </span>
-            <span className="text-xs text-blue-700">
-              Speed: {pokemon.base?.Speed ?? 0}
+  const filterOptionsFormatted = useMemo(
+    () =>
+      filterOptions.map((pokemon) => ({
+        label: (
+          <div className="flex items-center justify-between w-full min-w-[256px]">
+            <div className="flex items-center gap-3">
+              <PokemonLogo size={36} imgSrc={pokemon.image?.thumbnail} />
+              <div className="flex flex-col">
+                <span className="font-medium text-base leading-tight">
+                  {typeof pokemon.name === "string"
+                    ? pokemon.name
+                    : pokemon.name.english}
+                </span>
+                <span className="text-xs text-blue-700">
+                  Speed: {pokemon.base?.Speed ?? 0}
+                </span>
+              </div>
+            </div>
+            <span className="font-semibold text-base">
+              Pwr. {pokemon.base?.Attack ?? 0}
             </span>
           </div>
-        </div>
-        <span className="font-semibold text-base">
-          Pwr. {pokemon.base?.Attack ?? 0}
-        </span>
-      </div>
-    ),
-    value: pokemon.id.toString(),
-  }));
+        ),
+        value: pokemon.id.toString(),
+      })),
+    [filterOptions]
+  );
 
   return (
     <div className={`arena-header mt-4 text-center ${className}`}>
@@ -80,7 +84,7 @@ export const ArenaHeader = ({
         <div className={hasChanged ? "opacity-50 pointer-events-none" : ""}>
           <Filter
             options={filterOptionsFormatted}
-            value={null}
+            value={null} 
             onChange={handleFilterChange}
             label={filterTitle}
           />
