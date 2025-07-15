@@ -153,8 +153,8 @@ const Arena = ({
           winnerImageUrl={winnerImageUrl}
           description={modalDescription}
           onPlayAgain={() => {
-            setShowEndModal(false); // Close the EndOfFightModal
-            setTimeout(() => setShowChooseModal(true), 300); // Open the ChoosePokemonModal after a short delay
+            setShowEndModal(false); 
+            setTimeout(() => setShowChooseModal(true), 300); 
           }}
           onReturnToMenu={() => window.location.assign("/")}
         />
