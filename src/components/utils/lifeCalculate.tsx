@@ -8,7 +8,7 @@ import {
 
 export function updateLifeAfterDamage(power: number, currentLife: number): number {
   const newLife = currentLife - power;
-  return Math.max(newLife, 0); // Ensure life doesn't go below 0
+  return Math.max(newLife, 0); 
 }
 
 export function calculateNewLifeBar(
