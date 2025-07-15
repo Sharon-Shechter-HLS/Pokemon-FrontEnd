@@ -1,5 +1,5 @@
 import type { Pokemon } from "@/typs/Pokemon";
-import VsBackground from "@/assets/VSBackground.svg";
+import VsBackground from "@/assets/vsBackground.svg";
 
 type VSComponentProps = {
   userPokemon: Pokemon;

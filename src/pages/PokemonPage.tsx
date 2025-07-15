@@ -3,7 +3,7 @@ import { FilterBar } from "../components/FilterBar/FilterBar";
 import PokemonTable from "../components/Table/PokemonTable";
 
 type PokemonPageProps = {
-  isMyPokemons?: boolean; // Determines whether to show "My Pokémons" or "All Pokémons"
+  isMyPokemons?: boolean; 
 };
 
 export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) {
@@ -24,14 +24,14 @@ export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) 
         searchValue={searchQuery}
         onSearchChange={(value) => setSearchQuery(value)} 
         filterOptions={filterOptions}
-        filterValue={filterValue}
+        filterValue={filterValue} 
         filterLabel="Id"
         onFilterChange={(value) => setFilterValue(value)} 
       />
       <PokemonTable
-        isMyPokemons={isMyPokemons} 
-        searchQuery={searchQuery} 
-        sortOption={filterValue ?? undefined} 
+        isMyPokemons={isMyPokemons}
+        searchQuery={searchQuery}
+        sortOption={filterValue || undefined} 
       />
     </div>
   );

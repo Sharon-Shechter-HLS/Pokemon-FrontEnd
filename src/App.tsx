@@ -7,10 +7,10 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Header } from "./components/Header/Header";
-import AllpokemonsPage from "./pages/AllpokemonsPage";
-import MypokemonsPage from "./pages/MypokemonsPage";
-import Arena from "./components/Arena/Arena"; 
-import { useMyPokemons } from "./hooks/useMyPokemons";
+import AllPokemonsPage from "./pages/AllPokemonsPage";
+import MyPokemonsPage from "./pages/MyPokemonsPage";
+import ArenaRoute from "./Routes/ArenaRoute";
+import { ROUTES } from "./constants/routes";
 import "./App.css";
 
 const queryClient = new QueryClient();
@@ -20,8 +20,8 @@ const AppContent = () => {
   const items = [
     {
       name: "All Pokémons",
-      href: "/all-pokemons",
-      isActive: location.pathname === "/all-pokemons",
+      href: ROUTES.ALL_POKEMONS,
+      isActive: location.pathname === ROUTES.ALL_POKEMONS,
     },
     {
       name: (
@@ -29,45 +29,19 @@ const AppContent = () => {
           My Pokémons
         </span>
       ),
-      href: "/my-pokemons",
-      isActive: location.pathname === "/my-pokemons",
+      href: ROUTES.MY_POKEMONS,
+      isActive: location.pathname === ROUTES.MY_POKEMONS,
     },
   ];
-
-  const ArenaRoute = () => {
-    const { pokemons, isLoading } = useMyPokemons("", undefined, true); // Fetch Pokémon data
-
-    if (isLoading) {
-      return <div className="p-8 text-center">Loading...</div>;
-    }
-
-    // Select two Pokémon for testing
-    const userPokemon = pokemons[1];
-    const opponentPokemon = pokemons[0];
-   
-
-    if (!userPokemon || !opponentPokemon) {
-      return <div className="p-8 text-center">Not enough Pokémon available.</div>;
-    }
-
-    return (
-      <Arena
-        user={userPokemon}
-        opponent={opponentPokemon}
-        starter="user"
-     
-      />
-    );
-  };
 
   return (
     <>
       <Header items={items} />
       <Routes>
-        <Route path="/all-pokemons" element={<AllpokemonsPage />} />
-        <Route path="/my-pokemons" element={<MypokemonsPage />} />
-        <Route path="/arena" element={<ArenaRoute />} />
-        <Route path="/" element={<Navigate to="/all-pokemons" replace />} />
+        <Route path={ROUTES.ALL_POKEMONS} element={<AllPokemonsPage />} />
+        <Route path={ROUTES.MY_POKEMONS} element={<MyPokemonsPage />} />
+        <Route path={ROUTES.ARENA} element={<ArenaRoute />} />
+        <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.ALL_POKEMONS} replace />} />
       </Routes>
     </>
   );

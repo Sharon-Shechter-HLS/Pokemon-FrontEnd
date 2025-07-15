@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
 import { DataTable } from "./DataTable";
 import { PokemonTableRow } from "./PokemonTableRow";
+import { DEFAULT_ROWS_PER_PAGE_OPTIONS } from "../../constants/pagination";
 import type { Pokemon } from "../../typs/Pokemon";
 
 type PokemonTableProps = {
@@ -10,31 +11,44 @@ type PokemonTableProps = {
   sortOption?: string;
 };
 
+type PaginationState = {
+  page: number;
+  pageSize: number;
+};
+
 export const PokemonTable = ({
   isMyPokemons = false,
   searchQuery = "",
   sortOption,
 }: PokemonTableProps) => {
-  const { pokemons, isLoading } = useMyPokemons(searchQuery, sortOption, isMyPokemons);
+  const [pagination, setPagination] = useState<PaginationState>({
+    page: 1,
+    pageSize: 10,
+  });
 
-  const [page, setPage] = useState(1); 
-  const [pageSize, setPageSize] = useState(10); 
+  const { pokemons, isLoading } = useMyPokemons({
+    searchQuery,
+    sortOption,
+    isMyPokemons,
+    // TODO: Update useMyPokemons to handle pagination (page and pageSize)
+    page: pagination.page,
+    pageSize: pagination.pageSize,
+  });
 
-  const total = pokemons.length; 
+  const total = pokemons.length;
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage); 
+    setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize); 
-    setPage(1); 
+    setPagination({ page: 1, pageSize: newPageSize }); // Reset to page 1 when page size changes
   };
 
   const paginatedPokemons = pokemons.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  ); 
+    (pagination.page - 1) * pagination.pageSize,
+    pagination.page * pagination.pageSize
+  );
 
   const columns = [
     {
@@ -61,16 +75,16 @@ export const PokemonTable = ({
 
   return (
     <DataTable
-      data={paginatedPokemons} 
+      data={paginatedPokemons}
       columns={columns}
       isLoading={isLoading}
-      page={page}
-      pageSize={pageSize}
+      page={pagination.page}
+      pageSize={pagination.pageSize}
       total={total}
       rowRenderer={(pokemon) => <PokemonTableRow key={pokemon.id} pokemon={pokemon} />}
-      onPageChange={handlePageChange} 
-      onPageSizeChange={handlePageSizeChange} 
-      rowsPerPageOptions={[5, 10, 20]} 
+      onPageChange={handlePageChange}
+      onPageSizeChange={handlePageSizeChange}
+      rowsPerPageOptions={DEFAULT_ROWS_PER_PAGE_OPTIONS}
     />
   );
 };

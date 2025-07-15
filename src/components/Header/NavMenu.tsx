@@ -7,7 +7,7 @@ import {
 } from "../ui/NavMenu";
 
 type MenuItem = {
-  name: string | React.ReactNode;
+  name: string ; 
   href: string;
   isActive?: boolean;
 };
