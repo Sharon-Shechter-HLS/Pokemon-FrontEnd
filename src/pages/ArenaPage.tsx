@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ArenaHeader } from "../components/Arena/ArenaHeader";
 import Arena from "../components/Arena/Arena";
 import VSComponent from "../components/PreFight/VScomponent";
@@ -9,13 +9,13 @@ import type { Pokemon } from "../typs/Pokemon";
 const ArenaPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const userId = queryParams.get("userId");
+  const userId = queryParams.get("userId"); 
 
   const [userPokemon, setUserPokemon] = useState<Pokemon | null>(null);
   const [opponentPokemon, setOpponentPokemon] = useState<Pokemon | null>(null);
   const [showVS, setShowVS] = useState(true);
 
-  const { pokemons: allPokemons, randomPokemon } = useMyPokemons({
+  const { randomPokemon, pokemonById, myPokemons } = useMyPokemons({
     searchQuery: "",
     sortOption: undefined,
     isMyPokemons: false,
@@ -23,11 +23,16 @@ const ArenaPage = () => {
   });
 
   useEffect(() => {
-    if (pokemonById && !userPokemon && !opponentPokemon) {
-      setUserPokemon(pokemonById);
-      setOpponentPokemon(randomPokemon || null);
-    }
-  }, [pokemonById, randomPokemon, userPokemon, opponentPokemon]);
+    const fetchPokemon = async () => {
+      if (pokemonById && !userPokemon && !opponentPokemon) {
+        const fetchedPokemon = await pokemonById(Number(userId));
+        setUserPokemon(fetchedPokemon);
+        setOpponentPokemon(randomPokemon || null);
+      }
+    };
+
+    fetchPokemon();
+  }, [pokemonById, randomPokemon, userPokemon, opponentPokemon, userId]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -38,7 +43,7 @@ const ArenaPage = () => {
   }, []);
 
   const handlePokemonChange = (pokemon: Pokemon) => {
-    setUserPokemon(pokemon); 
+    setUserPokemon(pokemon);
   };
 
   if (!userPokemon || !opponentPokemon) {
@@ -52,21 +57,14 @@ const ArenaPage = () => {
         description="Choose your Pokémon and battle against opponents."
         filterTitle="Select Your Pokémon"
         filterOptions={myPokemons}
-        onPokemonChange={handlePokemonChange} 
+        onPokemonChange={handlePokemonChange}
       />
 
       {showVS ? (
-        <VSComponent 
-          userPokemon={userPokemon}
-          opponentPokemon={opponentPokemon}
-        />
+        <VSComponent userPokemon={userPokemon} opponentPokemon={opponentPokemon} />
       ) : (
         <div className="w-[100%] px-4 pb-10">
-          <Arena
-            user={userPokemon}
-            opponent={opponentPokemon}
-            starter="user"
-          />
+          <Arena user={userPokemon} opponent={opponentPokemon} />
         </div>
       )}
     </div>

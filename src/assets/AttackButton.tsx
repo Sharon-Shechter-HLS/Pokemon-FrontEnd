@@ -1,6 +1,6 @@
 import glovIcon from "./glovIcon.svg"; 
 
-export const Pokador = ({
+export const AttackButton = ({
   size = 80,
   ...props
 }: { size?: number } & React.SVGProps<SVGSVGElement>) => (

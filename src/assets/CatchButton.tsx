@@ -1,4 +1,4 @@
-import pokadexIcon from "./pokadexIcon.svg"; // Import the SVG file
+import pokadexIcon from "./pokadexIcon.svg";
 
 export const Pokador = ({
   size = 80,

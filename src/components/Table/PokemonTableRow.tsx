@@ -5,7 +5,7 @@ import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
 import PokemonInfoModal from "../Modals/InfoModal";
 import { Pokador } from "../../assets/CatchButton";
 import DescriptionTooltip from "../ToolTip/ToolTip";
-import { formatPokemonId } from "../../utils/TableRowUtils"; 
+import { formatPokemonId } from "./utils";
 
 
 type PokemonTableRowProps = {

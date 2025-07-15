@@ -20,13 +20,13 @@ export function useBattleState({
   const [showEndModal, setShowEndModal] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
   const [showChooseModal, setShowChooseModal] = useState(false);
-  const [canCatchPokemon, setCanCatchPokemon] = useState(0);
+  const [canCatchPokemonState, setCanCatchPokemonState] = useState(0);
   const [isCatching, setIsCatching] = useState(false);
   const [catchAnimationKey, setCatchAnimationKey] = useState(0);
   const [isAttacking, setIsAttacking] = useState(false);
-  const [opponentCaught, setOpponentCaught] = useState(false);
+  const [opponentCaught, setOpponentCaught] = useState(false); 
 
-  const canCatch = canCatchPokemon(turn, opponentLife, opponentData); 
+
 
   useEffect(() => {
     if (userLife <= 0) {
@@ -37,6 +37,7 @@ export function useBattleState({
       setWinner(userData.name.english);
       setShowEndModal(true);
       setDialogue(`${opponentData.name.english} fainted!`);
+      setOpponentCaught(true); 
     }
   }, [userLife, opponentLife, userData.name.english, opponentData.name.english]);
 
@@ -96,7 +97,7 @@ export function useBattleState({
   };
 
   const handleCatch = () => {
-    if (!canCatchPokemon) {
+    if (!canCatchPokemonState) {
       setDialogue("The Pokémon got away!");
       return;
     }
@@ -104,9 +105,10 @@ export function useBattleState({
     setCatchAnimationKey((key) => key + 1);
     setTimeout(() => {
       setIsCatching(false);
-      setWinner(champion1Data.name.english); 
+      setWinner(userData.name.english); 
       setShowEndModal(true);
-      setDialogue(`${champion2Data.name.english} was caught!`);
+      setDialogue(`${opponentData.name.english} was caught!`);
+      setOpponentCaught(true); 
     }, 1200);
   };
 
@@ -118,10 +120,11 @@ export function useBattleState({
     setShowEndModal(false);
     setWinner(null);
     setShowChooseModal(false);
-    setCanCatchPokemon(0);
+    setCanCatchPokemonState(0);
     setIsCatching(false);
     setCatchAnimationKey(0);
     setIsAttacking(false);
+    setOpponentCaught(false); 
   };
 
   return {
@@ -134,12 +137,13 @@ export function useBattleState({
     winner,
     showChooseModal,
     setShowChooseModal,
-    canCatchPokemon,
+    canCatchPokemon: canCatchPokemonState,
     handleCatch,
     isCatching,
     catchAnimationKey,
     handleAttack,
     resetBattle,
     isAttacking,
+    opponentCaught, 
   };
 }

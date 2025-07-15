@@ -7,10 +7,11 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Header } from "./components/Header/Header";
-import AllPokemonsPage from "./pages/AllPokemonsPage";
+import AllPokemonsPage from "./pages/AllpokemonsPage";
 import MyPokemonsPage from "./pages/MyPokemonsPage";
 import ArenaRoute from "./Routes/ArenaRoute";
 import { ROUTES } from "./constants/routes";
+import pokadexIcon from "./assets/pokadexIcon.svg";
 import "./App.css";
 
 const queryClient = new QueryClient();

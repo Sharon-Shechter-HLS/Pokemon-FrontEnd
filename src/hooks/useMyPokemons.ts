@@ -89,17 +89,22 @@ export function useMyPokemons({
     queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons),
   });
 
-
   const randomPokemon =
     fetchRandom && pokemons.length > 0
       ? pokemons[Math.floor(Math.random() * pokemons.length)]
       : null;
+
+  const pokemonById = async (id: number) => {
+    return await fetchPokemonById(id);
+  };
+
+  const myPokemons = pokemons.filter((pokemon) => pokemon.isMyPokemon);
 
   return {
     pokemons,
     isLoading,
     randomPokemon,
     pokemonById,
-    myPokemons, 
+    myPokemons,
   };
 }
