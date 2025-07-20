@@ -32,7 +32,7 @@ const Arena = ({
   } = useBattleState({ userData: user, opponentData: opponent });
 
   const [showChooseModal, setShowChooseModal] = useState(false);
-  const [showEndModal, setShowEndModal] = useState(true); 
+  const [showEndModal, setShowEndModal] = useState(true);
   const opponentCaught = winner === user.name.english;
 
   const modalTitle =
@@ -93,7 +93,9 @@ const Arena = ({
         </div>
         <CompetitorPhoto
           imageUrl={user.image?.hires || ""}
-          className={`absolute top-1 right-20 scale-[0.6]`}
+          className={`absolute top-1 right-20 scale-[0.6] ${
+            turn === "user" && userLife > 0 ? "animate-vibrate" : ""
+          } ${userLife <= 0 ? "animate-faint-left" : ""}`}
         />
       </div>
 
@@ -111,21 +113,31 @@ const Arena = ({
           />
         </div>
         {opponentCaught ? (
-          <Pokador
-            size={200}
-            className="absolute bottom-28 left-60 transform scale-[1]"
-          />
+          <div
+            key={opponent.name.english}
+            className="fixed left-1/2 top-1/2 z-50 pointer-events-none"
+            style={{
+              transform: "translate(-50%, -50%)",
+              animation: `pokador-catch-move 1.2s cubic-bezier(0.4,0,0.2,1) forwards`,
+            }}
+          >
+            <Pokador size={200} />
+          </div>
         ) : (
           <CompetitorPhoto
             imageUrl={opponent.image?.hires || ""}
-            className={`absolute bottom-1 left-30 transform scale-[0.5]`}
+            className={`absolute bottom-1 left-40 transform scale-[0.5] ${
+              turn === "opponent" && opponentLife > 0 ? "animate-vibrate" : ""
+            } ${opponentLife <= 0 ? "animate-faint-right" : ""}`}
           />
         )}
       </div>
+
       <DialogueBox
         className="w-[40%] h-[17%] relative top-30 justify-center"
         text={dialogue}
       ></DialogueBox>
+
       {/* Fight Buttons */}
       <div className="absolute bottom-5 right-6 flex flex-row gap-6">
         {/* Attack Button */}
@@ -143,6 +155,7 @@ const Arena = ({
           svg={<Pokador />}
           onClick={handleCatch}
           disabled={!canCatch || turn !== "user"}
+          
         />
       </div>
 
@@ -154,8 +167,8 @@ const Arena = ({
           winnerImageUrl={winnerImageUrl}
           description={modalDescription}
           onPlayAgain={() => {
-            setShowEndModal(false); 
-            setShowChooseModal(true); 
+            setShowEndModal(false);
+            setShowChooseModal(true);
           }}
           onReturnToMenu={() => window.location.assign("/")}
         />

@@ -106,6 +106,7 @@ export function useBattleState({
         setDialogue("The Pokémon got away!");
         setTurn("opponent");
       }
+      return;
   };
 
   const canCatch = canCatchPokemon(turn, catchAttempts);
