@@ -6,7 +6,7 @@ import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
 import PokemonLogoSrc from "../../assets/headerLogo.svg";
 
 type HeaderMenuItem = {
-  name: string | React.ReactNode;
+  name: string;
   href: string;
   isActive?: boolean;
 };

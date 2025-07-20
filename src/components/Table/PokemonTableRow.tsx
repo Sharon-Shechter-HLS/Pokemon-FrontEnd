@@ -3,7 +3,7 @@ import { type Pokemon } from "../../typs/Pokemon";
 import { TableCell, TableRow } from "../ui/table";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
 import PokemonInfoModal from "../Modals/InfoModal";
-import { Pokador } from "../../assets/CatchButton";
+import { Pokador } from "../../assets/PokadorIcon";
 import DescriptionTooltip from "../ToolTip/ToolTip";
 import { formatPokemonId } from "./utils";
 

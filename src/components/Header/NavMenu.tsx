@@ -7,13 +7,13 @@ import {
 } from "../ui/NavMenu";
 
 type MenuItem = {
-  name: string ; 
+  name: string;
   href: string;
   isActive?: boolean;
 };
 
 type HeaderMenuProps = {
-  items?: MenuItem[]; 
+  items?: MenuItem[];
 };
 
 export const HeaderMenu: React.FC<HeaderMenuProps> = ({ items = [] }) => (

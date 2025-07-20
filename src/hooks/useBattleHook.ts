@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { calculateLife } from "../components/utils/lifeCalculate";
-import { canCatchPokemon, attemptCatch } from "./utils";
+import { canCatchPokemon, attemptCatch, calculateLife } from "./utils";
 import type { Pokemon } from "../typs/Pokemon";
 
 export function useBattleState({
@@ -119,17 +118,7 @@ export function useBattleState({
     }, 1200);
   };
 
-  // Reset the battle state
-  const resetBattle = () => {
-    setUserLife(userData.base.HP);
-    setOpponentLife(opponentData.base.HP);
-    setTurn(starter);
-    setDialogue(`${userData.name.english} is starting the fight!`);
-    setShowEndModal(false);
-    setWinner(null);
-    setCatchAttempts(0);
-    setIsAttacking(false);
-  };
+
 
   const canCatch = canCatchPokemon(turn, catchAttempts );
 

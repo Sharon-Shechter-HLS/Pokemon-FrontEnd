@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/seperator";
 import { Button } from "../ui/button";
 import Champion from "../Arena/CompetitorPhoto";
-import { Pokador } from "../../assets/CatchButton";
+import { Pokador } from "../../assets/PokadorIcon";
 import ClearIcon from "@mui/icons-material/Clear";
 
 type EndOfFightModalProps = {

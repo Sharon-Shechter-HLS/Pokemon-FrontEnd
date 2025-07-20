@@ -3,8 +3,8 @@ import CompetitorPhoto from "./CompetitorPhoto";
 import CompetitorProgress from "./CompetitorProgress";
 import DialogueBox from "./Dialog";
 import FightButton from "./FightButtons";
-import { AttackButton } from "../../assets/AttackButton";
-import { Pokador } from "../../assets/CatchButton";
+import { GloveIcon } from "@/assets/GloveIcon";
+import { Pokador } from "../../assets/PokadorIcon";
 import attackButtonBackground from "../../assets/attackButoonBackground.png";
 import { useBattleState } from "../../hooks/useBattleHook";
 import EndOfFightModal from "../Modals/EndOfFightModal";
@@ -132,8 +132,8 @@ const Arena = ({
         {/* Attack Button */}
         <FightButton
           title={BUTTON_TITLES.ATTACK}
-          svg={ <AttackButton size={50} />}
-          imageUrl={attackButtonBackground} 
+          svg={<GloveIcon/>}
+          imageUrl={attackButtonBackground}
           onClick={handleUserAttack}
           disabled={isAttacking}
         />
@@ -141,7 +141,7 @@ const Arena = ({
         {/* Catch Button */}
         <FightButton
           title={BUTTON_TITLES.CATCH}
-          svg = {<Pokador size={50} />}
+          svg={<Pokador/>} 
           onClick={handleCatch}
           disabled={!canCatch || isAttacking}
         />
