@@ -1,5 +1,19 @@
-import type { Pokemon } from "../typs/Pokemon";
 
-export function canCatchPokemon(turn: "user" | "opponent", opponentLife: number, opponent: Pokemon): boolean {
-  return turn === "user" && opponentLife > 0 && opponentLife < opponent.base.HP * 0.8;
+export function canCatchPokemon(
+  turn: "user" | "opponent",
+  catchAttempts: number
+): boolean {
+  return (
+    turn === "user" && 
+    catchAttempts < 3 
+  );
+}
+
+export function attemptCatch(
+  catchAttempts: number,
+): { success: boolean; updatedAttempts: number } {
+  const success = Math.random() < 0.1; // 10% chance to catch
+  const updatedAttempts = catchAttempts + 1;
+
+  return { success, updatedAttempts };
 }

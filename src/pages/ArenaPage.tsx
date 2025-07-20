@@ -1,38 +1,18 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { ArenaHeader } from "../components/Arena/ArenaHeader";
 import Arena from "../components/Arena/Arena";
 import VSComponent from "../components/PreFight/VScomponent";
-import { useMyPokemons } from "../hooks/useMyPokemons";
 import type { Pokemon } from "../typs/Pokemon";
 
-const ArenaPage = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const userId = queryParams.get("userId"); 
+interface ArenaPageProps {
+  userPokemon: Pokemon;
+  opponentPokemon: Pokemon;
+}
 
-  const [userPokemon, setUserPokemon] = useState<Pokemon | null>(null);
-  const [opponentPokemon, setOpponentPokemon] = useState<Pokemon | null>(null);
+const ArenaPage = ({ userPokemon: initialUserPokemon, opponentPokemon: initialOpponentPokemon }: ArenaPageProps) => {
+  const [userPokemon, setUserPokemon] = useState<Pokemon | null>(initialUserPokemon);
+  const [opponentPokemon, setOpponentPokemon] = useState<Pokemon | null>(initialOpponentPokemon);
   const [showVS, setShowVS] = useState(true);
-
-  const { randomPokemon, pokemonById, myPokemons } = useMyPokemons({
-    searchQuery: "",
-    sortOption: undefined,
-    isMyPokemons: false,
-    fetchRandom: true,
-  });
-
-  useEffect(() => {
-    const fetchPokemon = async () => {
-      if (pokemonById && !userPokemon && !opponentPokemon) {
-        const fetchedPokemon = await pokemonById(Number(userId));
-        setUserPokemon(fetchedPokemon);
-        setOpponentPokemon(randomPokemon || null);
-      }
-    };
-
-    fetchPokemon();
-  }, [pokemonById, randomPokemon, userPokemon, opponentPokemon, userId]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -56,7 +36,7 @@ const ArenaPage = () => {
         headline="Welcome to the Arena!"
         description="Choose your Pokémon and battle against opponents."
         filterTitle="Select Your Pokémon"
-        filterOptions={myPokemons}
+        filterOptions={[]} // Replace with actual filter options if needed
         onPokemonChange={handlePokemonChange}
       />
 

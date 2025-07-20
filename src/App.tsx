@@ -7,12 +7,12 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Header } from "./components/Header/Header";
-import AllPokemonsPage from "./pages/AllpokemonsPage";
+import AllPokemonsPage from "./pages/AllPokemonsPage";
 import MyPokemonsPage from "./pages/MyPokemonsPage";
-import ArenaRoute from "./Routes/ArenaRoute";
 import { ROUTES } from "./constants/routes";
 import pokadexIcon from "./assets/pokadexIcon.svg";
 import "./App.css";
+import ArenaRoute from "./Routes/ArenaRoute";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +28,7 @@ const AppContent = () => {
       name: (
         <span className="flex items-center gap-2">
           My Pokémons
-            <img src={pokadexIcon} alt="Pokédex Icon" className="w-5 h-5" /> 
+          <img src={pokadexIcon} alt="Pokédex Icon" className="w-5 h-5" />
         </span>
       ),
       href: ROUTES.MY_POKEMONS,
@@ -42,7 +42,7 @@ const AppContent = () => {
       <Routes>
         <Route path={ROUTES.ALL_POKEMONS} element={<AllPokemonsPage />} />
         <Route path={ROUTES.MY_POKEMONS} element={<MyPokemonsPage />} />
-        <Route path={ROUTES.ARENA} element={<ArenaRoute />} />
+        <Route path={ROUTES.ARENA} element={<ArenaRoute />} /> {/* Updated to ArenaPage */}
         <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.ALL_POKEMONS} replace />} />
       </Routes>
     </>

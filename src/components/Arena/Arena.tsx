@@ -11,6 +11,7 @@ import EndOfFightModal from "../Modals/EndOfFightModal";
 import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
 import type { Pokemon } from "../../typs/Pokemon";
 import arenaBackground from "../../assets/arenaBackground.png";
+import { useState } from "react";
 
 const Arena = ({
   user,
@@ -25,16 +26,15 @@ const Arena = ({
     opponentLife,
     dialogue,
     showEndModal,
-    setShowEndModal, 
     winner,
-    showChooseModal,
-    setShowChooseModal,
-    canCatchPokemon,
+    handleUserAttack,
     handleCatch,
-    isCatching,
-    handleAttack,
-    opponentCaught,
+    isAttacking,
+    canCatch,
   } = useBattleState({ userData: user, opponentData: opponent });
+
+  const [showChooseModal, setShowChooseModal] = useState(false);
+  const opponentCaught = winner === user.name.english;
 
   const modalTitle =
     winner === user.name.english
@@ -127,23 +127,25 @@ const Arena = ({
         className="w-[40%] h-[17%] relative top-30 justify-center"
         text={dialogue}
       ></DialogueBox>
-      {!isCatching && (
-        <div className="absolute bottom-5 right-6 flex flex-row gap-6">
-          <FightButton
-            title={BUTTON_TITLES.ATTACK}
-            svg={<AttackButton />}
-            imageUrl={attackButtonBackground}
-            onClick={handleAttack}
-            disabled={turn !== "user"}
-          />
-          <FightButton
-            title={BUTTON_TITLES.CATCH}
-            svg={<Pokador />}
-            onClick={handleCatch}
-            disabled={!canCatchPokemon}
-          />
-        </div>
-      )}
+      {/* Fight Buttons */}
+      <div className="absolute bottom-5 right-6 flex flex-row gap-6">
+        {/* Attack Button */}
+        <FightButton
+          title={BUTTON_TITLES.ATTACK}
+          svg={ <AttackButton size={50} />}
+          imageUrl={attackButtonBackground} 
+          onClick={handleUserAttack}
+          disabled={isAttacking}
+        />
+
+        {/* Catch Button */}
+        <FightButton
+          title={BUTTON_TITLES.CATCH}
+          svg = {<Pokador size={50} />}
+          onClick={handleCatch}
+          disabled={!canCatch || isAttacking}
+        />
+      </div>
 
       {/* End of Fight Modal */}
       {showEndModal && (
@@ -153,8 +155,7 @@ const Arena = ({
           winnerImageUrl={winnerImageUrl}
           description={modalDescription}
           onPlayAgain={() => {
-            setShowEndModal(false); 
-            setShowChooseModal(true)
+            setShowChooseModal(true);
           }}
           onReturnToMenu={() => window.location.assign("/")}
         />

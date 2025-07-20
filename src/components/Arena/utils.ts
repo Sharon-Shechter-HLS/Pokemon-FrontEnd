@@ -1,4 +1,4 @@
-import { HIGH_LIFE_THRESHOLD, MEDIUM_LIFE_THRESHOLD } from "../../constants/progressvalues";
+import { HIGH_LIFE_THRESHOLD, MEDIUM_LIFE_THRESHOLD } from "../../constants/progressValues";
 
 export function getProgressBarClass(currentLife: number, maxLife: number) {
   const lifePercentage = (currentLife / maxLife) * 100;

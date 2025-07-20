@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { calculateLife } from "../components/utils/lifeCalculate";
-import { canCatchPokemon } from "./utils";
+import { canCatchPokemon, attemptCatch } from "./utils";
 import type { Pokemon } from "../typs/Pokemon";
 
 export function useBattleState({
@@ -10,7 +10,7 @@ export function useBattleState({
   userData: Pokemon;
   opponentData: Pokemon;
 }) {
-  const starter = "user"; 
+  const starter = "user";
   const [turn, setTurn] = useState<"user" | "opponent">(starter);
   const [userLife, setUserLife] = useState(userData.base.HP);
   const [opponentLife, setOpponentLife] = useState(opponentData.base.HP);
@@ -19,15 +19,10 @@ export function useBattleState({
   );
   const [showEndModal, setShowEndModal] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
-  const [showChooseModal, setShowChooseModal] = useState(false);
-  const [canCatchPokemonState, setCanCatchPokemonState] = useState(0);
-  const [isCatching, setIsCatching] = useState(false);
-  const [catchAnimationKey, setCatchAnimationKey] = useState(0);
+  const [catchAttempts, setCatchAttempts] = useState(0);
   const [isAttacking, setIsAttacking] = useState(false);
-  const [opponentCaught, setOpponentCaught] = useState(false); 
 
-
-
+  // Check for game end conditions
   useEffect(() => {
     if (userLife <= 0) {
       setWinner(opponentData.name.english);
@@ -37,20 +32,21 @@ export function useBattleState({
       setWinner(userData.name.english);
       setShowEndModal(true);
       setDialogue(`${opponentData.name.english} fainted!`);
-      setOpponentCaught(true); 
     }
   }, [userLife, opponentLife, userData.name.english, opponentData.name.english]);
 
+  // Handle opponent's turn
   useEffect(() => {
     if (turn === "opponent") {
       const opponentAttackTimeout = setTimeout(() => {
-        handleAttack();
+        handleOpponentAttack();
       }, 2000);
 
       return () => clearTimeout(opponentAttackTimeout);
     }
-  }, [turn]); 
+  }, [turn]);
 
+  // Perform attack logic
   const performAttack = async (
     attacker: Pokemon,
     defenderLife: number,
@@ -69,49 +65,61 @@ export function useBattleState({
     }, delay);
   };
 
-  const handleAttack = async () => {
+  // User attacks opponent
+  const handleUserAttack = async () => {
+    if (turn !== "user") return;
     setIsAttacking(true);
-    if (turn === "user") {
-      setDialogue(`${userData.name.english} is attacking!`);
-      await performAttack(
-        userData,
-        opponentLife,
-        opponentData.base.HP,
-        setOpponentLife,
-        "opponent",
-        `${opponentData.name.english}'s turn`,
-        700
-      );
-    } else {
-      setDialogue(`${opponentData.name.english} is attacking!`);
-      await performAttack(
-        opponentData,
-        userLife,
-        userData.base.HP,
-        setUserLife,
-        "user",
-        `${userData.name.english}'s turn`,
-        600
-      );
-    }
+    setDialogue(`${userData.name.english} is attacking!`);
+    await performAttack(
+      userData,
+      opponentLife,
+      opponentData.base.HP,
+      setOpponentLife,
+      "opponent",
+      `${opponentData.name.english}'s turn`,
+      700
+    );
   };
 
+  // Opponent attacks user
+  const handleOpponentAttack = async () => {
+    setIsAttacking(true);
+    setDialogue(`${opponentData.name.english} is attacking!`);
+    await performAttack(
+      opponentData,
+      userLife,
+      userData.base.HP,
+      setUserLife,
+      "user",
+      `${userData.name.english}'s turn`,
+      600
+    );
+  };
+
+  // User attempts to catch the opponent
   const handleCatch = () => {
-    if (!canCatchPokemonState) {
-      setDialogue("The Pokémon got away!");
-      return;
-    }
-    setIsCatching(true);
-    setCatchAnimationKey((key) => key + 1);
+    if (turn !== "user" || catchAttempts >= 3) return;
+
+
+    const { success, updatedAttempts } = attemptCatch(
+      catchAttempts,
+    );
+
+    setCatchAttempts(updatedAttempts);
+
     setTimeout(() => {
-      setIsCatching(false);
-      setWinner(userData.name.english); 
-      setShowEndModal(true);
-      setDialogue(`${opponentData.name.english} was caught!`);
-      setOpponentCaught(true); 
+      if (success) {
+        setWinner(userData.name.english);
+        setShowEndModal(true);
+        setDialogue(`${opponentData.name.english} was caught!`);
+      } else {
+        setDialogue("The Pokémon got away!");
+        setTurn("opponent");
+      }
     }, 1200);
   };
 
+  // Reset the battle state
   const resetBattle = () => {
     setUserLife(userData.base.HP);
     setOpponentLife(opponentData.base.HP);
@@ -119,13 +127,11 @@ export function useBattleState({
     setDialogue(`${userData.name.english} is starting the fight!`);
     setShowEndModal(false);
     setWinner(null);
-    setShowChooseModal(false);
-    setCanCatchPokemonState(0);
-    setIsCatching(false);
-    setCatchAnimationKey(0);
+    setCatchAttempts(0);
     setIsAttacking(false);
-    setOpponentCaught(false); 
   };
+
+  const canCatch = canCatchPokemon(turn, catchAttempts );
 
   return {
     turn,
@@ -133,17 +139,11 @@ export function useBattleState({
     opponentLife,
     dialogue,
     showEndModal,
-    setShowEndModal,
     winner,
-    showChooseModal,
-    setShowChooseModal,
-    canCatchPokemon: canCatchPokemonState,
+    handleUserAttack,
     handleCatch,
-    isCatching,
-    catchAnimationKey,
-    handleAttack,
-    resetBattle,
     isAttacking,
-    opponentCaught, 
+    catchAttempts,
+    canCatch, 
   };
 }
