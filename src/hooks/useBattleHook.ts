@@ -16,7 +16,6 @@ export function useBattleState({
   const [dialogue, setDialogue] = useState<string>(
     `${userData.name.english} is starting the fight!`
   );
-  const [showEndModal, setShowEndModal] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
   const [catchAttempts, setCatchAttempts] = useState(0);
   const [isAttacking, setIsAttacking] = useState(false);
@@ -25,11 +24,9 @@ export function useBattleState({
   useEffect(() => {
     if (userLife <= 0) {
       setWinner(opponentData.name.english);
-      setShowEndModal(true);
       setDialogue(`${userData.name.english} fainted!`);
     } else if (opponentLife <= 0) {
       setWinner(userData.name.english);
-      setShowEndModal(true);
       setDialogue(`${opponentData.name.english} fainted!`);
     }
   }, [userLife, opponentLife, userData.name.english, opponentData.name.english]);
@@ -53,7 +50,7 @@ export function useBattleState({
     setDefenderLife: React.Dispatch<React.SetStateAction<number>>,
     nextTurn: "user" | "opponent",
     nextDialogue: string,
-    delay: number
+    delay?: number
   ) => {
     const newLife = await calculateLife(attacker.base.Speed, defenderLife, defenderMaxLife);
     setTimeout(() => {
@@ -76,7 +73,7 @@ export function useBattleState({
       setOpponentLife,
       "opponent",
       `${opponentData.name.english}'s turn`,
-      700
+      
     );
   };
 
@@ -99,40 +96,30 @@ export function useBattleState({
   const handleCatch = () => {
     if (turn !== "user" || catchAttempts >= 3) return;
 
-
-    const { success, updatedAttempts } = attemptCatch(
-      catchAttempts,
-    );
+    const { success, updatedAttempts } = attemptCatch(catchAttempts);
 
     setCatchAttempts(updatedAttempts);
-
-    setTimeout(() => {
       if (success) {
         setWinner(userData.name.english);
-        setShowEndModal(true);
         setDialogue(`${opponentData.name.english} was caught!`);
       } else {
         setDialogue("The Pokémon got away!");
         setTurn("opponent");
       }
-    }, 1200);
   };
 
-
-
-  const canCatch = canCatchPokemon(turn, catchAttempts );
+  const canCatch = canCatchPokemon(turn, catchAttempts);
 
   return {
     turn,
     userLife,
     opponentLife,
     dialogue,
-    showEndModal,
     winner,
     handleUserAttack,
     handleCatch,
     isAttacking,
     catchAttempts,
-    canCatch, 
+    canCatch,
   };
 }

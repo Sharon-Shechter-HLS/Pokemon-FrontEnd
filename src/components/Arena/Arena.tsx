@@ -25,15 +25,14 @@ const Arena = ({
     userLife,
     opponentLife,
     dialogue,
-    showEndModal,
     winner,
     handleUserAttack,
     handleCatch,
-    isAttacking,
     canCatch,
   } = useBattleState({ userData: user, opponentData: opponent });
 
   const [showChooseModal, setShowChooseModal] = useState(false);
+  const [showEndModal, setShowEndModal] = useState(true); 
   const opponentCaught = winner === user.name.english;
 
   const modalTitle =
@@ -132,30 +131,31 @@ const Arena = ({
         {/* Attack Button */}
         <FightButton
           title={BUTTON_TITLES.ATTACK}
-          svg={<GloveIcon/>}
+          svg={<GloveIcon />}
           imageUrl={attackButtonBackground}
           onClick={handleUserAttack}
-          disabled={isAttacking}
+          disabled={turn !== "user"}
         />
 
         {/* Catch Button */}
         <FightButton
           title={BUTTON_TITLES.CATCH}
-          svg={<Pokador/>} 
+          svg={<Pokador />}
           onClick={handleCatch}
-          disabled={!canCatch || isAttacking}
+          disabled={!canCatch || turn !== "user"}
         />
       </div>
 
       {/* End of Fight Modal */}
-      {showEndModal && (
+      {winner && showEndModal && (
         <EndOfFightModal
           title={modalTitle}
           winner={winner || ""}
           winnerImageUrl={winnerImageUrl}
           description={modalDescription}
           onPlayAgain={() => {
-            setShowChooseModal(true);
+            setShowEndModal(false); 
+            setShowChooseModal(true); 
           }}
           onReturnToMenu={() => window.location.assign("/")}
         />
@@ -167,7 +167,7 @@ const Arena = ({
           <ChoosePokemonModal
             onSelect={async (pokemon) => {
               setShowChooseModal(false);
-              window.location.href = `/arena?userId=${pokemon.id}`;
+              window.location.href = `/arena?id=${pokemon.id}`;
             }}
             onClose={() => setShowChooseModal(false)}
           />
