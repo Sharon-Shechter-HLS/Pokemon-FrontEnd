@@ -1,51 +1,49 @@
-import { cn } from "@/lib/utils";
-import { Search, X } from "lucide-react";
+import * as React from "react";
+import { cn } from "../../lib/utils";
 
-type InputProps = {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  disabled?: boolean;
-  className?: string;
+const customInputStyles =
+  "font-[var(--font-family-mulish)] focus:border-[2px] focus:border-[var(--color-primary-400)] hover:border-[2px] hover:border-[var(--color-primary-400)] custom-input active:shadow-none";
+
+type InputProps = React.ComponentProps<"input"> & {
+  startIcon?: React.ReactNode;
+  endComponent?: React.ReactNode;
 };
 
 function Input({
-  value,
-  onChange,
-  placeholder = "Search",
-  disabled,
   className,
+  type = "text",
+  startIcon,
+  endComponent,
+  ...props
 }: InputProps) {
   return (
-    <div className={cn("relative w-[293px] h-[38px]", className)}>
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4 pointer-events-none" />
-
-      {value && (
-        <button
-          type="button"
-          onClick={() =>
-            onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>)
-          }
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <X className="size-4" />
-        </button>
+    <div className="relative w-full flex items-center">
+      {startIcon && (
+        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          {startIcon}
+        </span>
       )}
-
       <input
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        disabled={disabled}
+        type={type}
+        data-slot="input"
         className={cn(
-          "w-full h-full pl-10 pr-10 py-2 text-sm rounded-[8px] border outline-none transition-all",
-          "bg-background text-foreground border-input",
-          "hover:border-border focus:border-primary-300",
-          "disabled:text-muted-foreground disabled:bg-muted disabled:border-muted"
+          startIcon ? "pl-8" : "pl-3",
+          endComponent ? "pr-8" : "pr-3",
+          "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+          "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+          customInputStyles,
+          className
         )}
+        {...props}
       />
+      {endComponent && (
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
+          {endComponent}
+        </span>
+      )}
     </div>
   );
 }
 
-export default Input;
+export { Input };
