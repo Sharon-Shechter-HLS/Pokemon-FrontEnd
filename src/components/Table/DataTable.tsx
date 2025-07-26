@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import {
   Table,
   TableHeader,
@@ -7,68 +7,70 @@ import {
   TableHead,
   TableRow,
   TableCell,
-} from "../ui/table"
+} from "../ui/table";
 
 type Column<T> = {
-  header: string
-  key?: keyof T
-  render?: (row: T) => React.ReactNode
-  className?: string
-}
+  header: string;
+  accessor: (item: T) => React.ReactNode;
+};
 
-type GenericTableProps<T> = {
-  columns: Column<T>[]
-  rows: T[]
-  page: number
-  pageSize: number
-  total: number
-  onPageChange: (page: number) => void
-  onPageSizeChange: (size: number) => void
-  rowsPerPageOptions?: number[]
-  loading?: boolean 
-}
+type DataTableProps<T> = {
+  data: T[];
+  columns: Column<T>[];
+  isLoading: boolean;
+  page: number;
+  pageSize: number;
+  total: number;
+  rowRenderer?: (item: T) => React.ReactNode; 
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
+  rowsPerPageOptions?: number[];
+};
 
 export function DataTable<T>({
+  data,
   columns,
-  rows,
+  isLoading,
   page,
   pageSize,
   total,
+  rowRenderer,
   onPageChange,
   onPageSizeChange,
   rowsPerPageOptions = [5, 10, 20],
-  loading = false, // Default value for loading
-}: GenericTableProps<T>) {
+}: DataTableProps<T>) {
   return (
     <Table className="rounded-md overflow-hidden border border-gray-200">
       <TableHeader>
         <TableRow>
-          {columns.map((col) => (
-            <TableHead key={col.header} className={`px-4 ${col.className || ""}`}>
-              {col.header}
+          {columns.map((column, index) => (
+            <TableHead key={index} className="px-4 text-left">
+              {column.header}
             </TableHead>
           ))}
         </TableRow>
       </TableHeader>
       <TableBody>
-        {loading ? (
+        {isLoading ? (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">
               Loading...
             </TableCell>
           </TableRow>
-        ) : rows.length === 0 ? (
+        ) : data.length === 0 ? (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">
-              No items found
+              No results
             </TableCell>
           </TableRow>
+        ) : rowRenderer ? (
+          data.map((item, index) => <React.Fragment key={index}>{rowRenderer(item)}</React.Fragment>)
         ) : (
-          rows.map((row, index) => (
-            <TableRow key={index}>
-              {columns.map((col) => (
-                <TableCell key={col.header} className={`px-4 ${col.className || ""}`}>
-                  {col.render ? col.render(row) : String(row[col.key as keyof T])}
+          data.map((item, rowIndex) => (
+            <TableRow key={rowIndex}>
+              {columns.map((column, colIndex) => (
+                <TableCell key={colIndex} className="px-4">
+                  {column.accessor(item)}so 
                 </TableCell>
               ))}
             </TableRow>
@@ -84,5 +86,5 @@ export function DataTable<T>({
         rowsPerPageOptions={rowsPerPageOptions}
       />
     </Table>
-  )
+  );
 }
