@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Filter } from "../ui/filter";
 import type { Pokemon } from "../../typs/Pokemon";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
+import DescriptionTooltip from "../ToolTip/ToolTip"; // Import the tooltip component
 
 type ArenaHeaderProps = {
   headline: string;
@@ -80,15 +81,30 @@ export const ArenaHeader = ({
       <Headline className="mb-2">{headline}</Headline>
       <p className="text-lg text-gray-600">{description}</p>
 
-      <div className="flex items-center justify-center mt-4">
-        <div className={hasChanged ? "opacity-50 pointer-events-none" : ""}>
-          <Filter
-            options={filterOptionsFormatted}
-            value={null} 
-            onChange={handleFilterChange}
-            label={filterTitle}
-          />
-        </div>
+      <div className="flex items-center px-4">
+        {hasChanged ? (
+          <DescriptionTooltip content="You have already switched a Pokemon in this battle.">
+            <div className="mr-4 mb-3 relative">
+              <Filter
+                options={filterOptionsFormatted}
+                value={null}
+                onChange={() => {}} // Disable functionality by providing an empty handler
+                label={filterTitle}
+                className="opacity-50 cursor-not-allowed" // Add a disabled cursor style
+                disabled // Pass the disabled prop
+              />
+            </div>
+          </DescriptionTooltip>
+        ) : (
+          <div className="mr-4 mb-3">
+            <Filter
+              options={filterOptionsFormatted}
+              value={null}
+              onChange={handleFilterChange}
+              label={filterTitle}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

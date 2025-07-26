@@ -20,6 +20,11 @@ async function fetchAllPokemons(): Promise<Pokemon[]> {
   });
 }
 
+async function fetchPokemonById(id: number): Promise<Pokemon | null> {
+  const allPokemons = await fetchAllPokemons();
+  return allPokemons.find((pokemon) => pokemon.id === id) || null;
+}
+
 async function fetchMyPokemons(): Promise<Pokemon[]> {
   const allPokemons = await fetchAllPokemons();
   return allPokemons.filter((pokemon) => pokemon.isMyPokemon);
@@ -44,14 +49,22 @@ async function fetchFilteredPokemons(
   // Apply sorting
   if (sortOption) {
     filteredPokemons = [...filteredPokemons].sort((a, b) => {
-      if (sortOption === "name") {
-        return a.name.english.localeCompare(b.name.english);
-      } else if (sortOption === "hp") {
-        return (b.base?.HP ?? 0) - (a.base?.HP ?? 0);
-      } else if (sortOption === "attack") {
-        return (b.base?.Attack ?? 0) - (a.base?.Attack ?? 0);
-      } else if (sortOption === "id") {
-        return a.id - b.id;
+      const [key, order] = sortOption.split("-");
+      const isAscending = order === "asc";
+
+      if (key === "name") {
+        return isAscending
+          ? a.name.english.localeCompare(b.name.english)
+          : b.name.english.localeCompare(a.name.english);
+      } else if (key === "hp") {
+        return isAscending
+          ? (a.base?.HP ?? 0) - (b.base?.HP ?? 0)
+          : (b.base?.HP ?? 0) - (a.base?.HP ?? 0);
+      } else if (key === "attack" || key === "power") {
+        // Handle both "attack" and "power" as synonyms
+        return isAscending
+          ? (a.base?.Attack ?? 0) - (b.base?.Attack ?? 0)
+          : (b.base?.Attack ?? 0) - (a.base?.Attack ?? 0);
       }
       return 0;
     });
@@ -76,15 +89,22 @@ export function useMyPokemons({
     queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons),
   });
 
-
   const randomPokemon =
     fetchRandom && pokemons.length > 0
       ? pokemons[Math.floor(Math.random() * pokemons.length)]
       : null;
 
+  const pokemonById = async (id: number) => {
+    return await fetchPokemonById(id);
+  };
+
+  const myPokemons = pokemons.filter((pokemon) => pokemon.isMyPokemon);
+
   return {
     pokemons,
     isLoading,
     randomPokemon,
+    pokemonById,
+    myPokemons,
   };
 }

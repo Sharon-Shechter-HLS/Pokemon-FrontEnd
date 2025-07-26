@@ -13,7 +13,7 @@ export default function VSComponent({
 }: VSComponentProps) {
   return (
     <div
-      className="w-full h-screen flex bg-cover bg-center relative"
+      className="w-full h-screen flex bg-cover bg-center relative "
       style={{ backgroundImage: `url(${VsBackground})` }}
     >
       <div className="w-1/2 h-full flex items-center justify-center relative">

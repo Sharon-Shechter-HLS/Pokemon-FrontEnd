@@ -68,12 +68,9 @@ export const PokemonTable = ({
       header: "Power Level",
       accessor: (pokemon: Pokemon) => pokemon.base.Attack,
     },
+    
     {
-      header: "Power Level",
-      accessor: (pokemon: Pokemon) => pokemon.base.Attack,
-    },
-    {
-      header: "HP Level",
+      header: "HP",
       accessor: (pokemon: Pokemon) => pokemon.base.HP,
     },
   ];

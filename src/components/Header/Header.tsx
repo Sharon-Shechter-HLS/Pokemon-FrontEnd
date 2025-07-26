@@ -6,7 +6,7 @@ import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
 import PokemonLogoSrc from "../../assets/headerLogo.svg";
 
 type HeaderMenuItem = {
-  name: string | React.ReactNode;
+  name: string;
   href: string;
   isActive?: boolean;
 };
@@ -51,7 +51,7 @@ export function Header({ items }: HeaderProps) {
           <ChoosePokemonModal
             onSelect={async (pokemon) => {
               setShowModal(false);
-              navigate(`/arena?userId=${pokemon.id}`);
+              navigate(`/arena?id=${pokemon.id}`); 
             }}
             onClose={() => setShowModal(false)}
           />
