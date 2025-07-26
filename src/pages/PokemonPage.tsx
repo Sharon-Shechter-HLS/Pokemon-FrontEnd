@@ -3,14 +3,14 @@ import { FilterBar } from "../components/FilterBar/FilterBar";
 import PokemonTable from "../components/Table/PokemonTable";
 
 type PokemonPageProps = {
-  isMyPokemons?: boolean; // Determines whether to show "My Pokémons" or "All Pokémons"
+  isMyPokemons?: boolean; 
 };
 
 export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) {
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
-  const [filterValue, setFilterValue] = useState<string | null>(null); // State for filter selection
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [filterValue, setFilterValue] = useState<string | null>(null); 
 
-  const title = isMyPokemons ? "My Pokémons" : "All Pokémons"; // Dynamic title
+  const title = isMyPokemons ? "My Pokémons" : "All Pokémons"; 
   const filterOptions = [
     { label: "Name", value: "name" },
     { label: "HP", value: "hp" },
@@ -22,16 +22,16 @@ export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) 
       <FilterBar
         title={title}
         searchValue={searchQuery}
-        onSearchChange={(value) => setSearchQuery(value)} // Update search query
+        onSearchChange={(value) => setSearchQuery(value)} 
         filterOptions={filterOptions}
-        filterValue={filterValue}
+        filterValue={filterValue} 
         filterLabel="Id"
-        onFilterChange={(value) => setFilterValue(value)} // Update filter value
+        onFilterChange={(value) => setFilterValue(value)} 
       />
       <PokemonTable
-        isMyPokemons={isMyPokemons} // Pass the prop to determine data source
-        searchQuery={searchQuery} // Pass search query to the table
-        sortOption={filterValue ?? undefined} // Pass filter value to the table
+        isMyPokemons={isMyPokemons}
+        searchQuery={searchQuery}
+        sortOption={filterValue || undefined} 
       />
     </div>
   );
