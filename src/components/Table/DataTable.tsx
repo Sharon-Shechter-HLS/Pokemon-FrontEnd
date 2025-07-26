@@ -14,20 +14,20 @@ type Column<T> = {
   accessor: (item: T) => React.ReactNode;
 };
 
-type DataTableProps<T> = {
+type DataTableProps<T extends { id: string | number }> = {
   data: T[];
   columns: Column<T>[];
   isLoading: boolean;
   page: number;
   pageSize: number;
   total: number;
-  rowRenderer?: (item: T) => React.ReactNode; 
+  rowRenderer?: (item: T) => React.ReactNode;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
   rowsPerPageOptions?: number[];
 };
 
-export function DataTable<T>({
+export function DataTable<T extends { id: string | number }>({
   data,
   columns,
   isLoading,
@@ -64,13 +64,15 @@ export function DataTable<T>({
             </TableCell>
           </TableRow>
         ) : rowRenderer ? (
-          data.map((item, index) => <React.Fragment key={index}>{rowRenderer(item)}</React.Fragment>)
+          data.map((item) => (
+            <React.Fragment key={item.id}>{rowRenderer(item)}</React.Fragment>
+          ))
         ) : (
-          data.map((item, rowIndex) => (
-            <TableRow key={rowIndex}>
+          data.map((item) => (
+            <TableRow key={item.id}>
               {columns.map((column, colIndex) => (
                 <TableCell key={colIndex} className="px-4">
-                  {column.accessor(item)}so 
+                  {column.accessor(item)}
                 </TableCell>
               ))}
             </TableRow>

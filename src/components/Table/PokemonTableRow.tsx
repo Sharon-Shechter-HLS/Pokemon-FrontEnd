@@ -3,7 +3,10 @@ import { type Pokemon } from "../../typs/Pokemon";
 import { TableCell, TableRow } from "../ui/table";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
 import PokemonInfoModal from "../Modals/InfoModal";
-import { Pokador } from "../../assets/catch-button";
+import { Pokador } from "../../assets/CatchButton";
+import DescriptionTooltip from "../ToolTip/ToolTip";
+import { formatPokemonId } from "../../utils/TableRowUtils"; 
+
 
 type PokemonTableRowProps = {
   pokemon: Pokemon;
@@ -28,12 +31,13 @@ export function PokemonTableRow({ pokemon }: PokemonTableRowProps) {
             </span>
           )}
         </TableCell>
-        <TableCell className="px-4 text-left">{pokemon.id}</TableCell>
-        <TableCell
-          className="px-4 max-w-[544px] truncate whitespace-nowrap overflow-hidden text-left"
-          title={pokemon.description}
-        >
-          {pokemon.description}
+        <TableCell className="px-4 text-left">
+          {formatPokemonId(pokemon.id)} 
+        </TableCell>
+        <TableCell className="px-4 max-w-[544px] truncate whitespace-nowrap overflow-hidden text-left">
+          <DescriptionTooltip content={pokemon.description || ""}>
+            <span>{pokemon.description}</span>
+          </DescriptionTooltip>
         </TableCell>
         <TableCell className="px-4 text-left">
           Power level {pokemon.base?.Attack ?? ""}
