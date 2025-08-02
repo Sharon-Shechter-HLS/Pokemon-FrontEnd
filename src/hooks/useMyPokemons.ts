@@ -1,110 +1,97 @@
 import { useQuery } from "@tanstack/react-query";
-import pokemonsData from "@/data/pokemonsData.json";
+import axios from "axios";
 import type { Pokemon } from "@/typs/Pokemon";
-import { normalizePokemon } from "@/components/utils/normalizePokemon";
 
-const DEFAULT_POKEMON_IDS = [1, 5, 7, 8];
+type FetchPokemonsParams = {
+  page: number;
+  rowsPerPage: number;
+  sortBy?: string;
+  search?: string;
+  fromMy?: boolean;
+  userId?: string;
+};
 
-async function fetchAllPokemons(): Promise<Pokemon[]> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const enrichedData = pokemonsData.map((pokemon: any) => {
-        const normalizedPokemon = normalizePokemon(pokemon);
-        return {
-          ...normalizedPokemon,
-          isMyPokemon: DEFAULT_POKEMON_IDS.includes(normalizedPokemon.id),
-        };
-      });
-      resolve(enrichedData);
-    }, 500); 
+type FetchPokemonsResponse = {
+  data: Pokemon[];
+  meta: {
+    start: number;
+    end: number;
+    total: { total: number }[]; 
+  };
+};
+
+async function fetchPokemons({
+  page,
+  rowsPerPage,
+  sortBy,
+  search,
+  fromMy,
+}: FetchPokemonsParams): Promise<FetchPokemonsResponse> {
+  const response = await axios.get("http://localhost:3000/pokemons", {
+    params: {
+      page,
+      rowsPerPage,
+      sortBy,
+      search,
+      fromMy,
+      userId: USER_ID, // Always include userId in the request
+    },
   });
+  return response.data;
 }
 
-async function fetchPokemonById(id: number): Promise<Pokemon | null> {
-  const allPokemons = await fetchAllPokemons();
-  return allPokemons.find((pokemon) => pokemon.id === id) || null;
-}
+const SORT_BY_OPTIONS = [
+  "name.english-asc",
+  "name.english-desc",
+  "base.Attack-asc",
+  "base.Attack-desc",
+  "base.HP-asc",
+  "base.HP-desc",
+] as const;
 
-async function fetchMyPokemons(): Promise<Pokemon[]> {
-  const allPokemons = await fetchAllPokemons();
-  return allPokemons.filter((pokemon) => pokemon.isMyPokemon);
-}
-
-async function fetchFilteredPokemons(
-  searchQuery: string,
-  sortOption?: string,
-  isMyPokemons: boolean = false
-): Promise<Pokemon[]> {
-  const allPokemons = isMyPokemons ? await fetchMyPokemons() : await fetchAllPokemons();
-
-  let filteredPokemons = allPokemons;
-
-  // Apply search filtering
-  if (searchQuery) {
-    filteredPokemons = filteredPokemons.filter((pokemon) =>
-      pokemon.name.english.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }
-
-  // Apply sorting
-  if (sortOption) {
-    filteredPokemons = [...filteredPokemons].sort((a, b) => {
-      const [key, order] = sortOption.split("-");
-      const isAscending = order === "asc";
-
-      if (key === "name") {
-        return isAscending
-          ? a.name.english.localeCompare(b.name.english)
-          : b.name.english.localeCompare(a.name.english);
-      } else if (key === "hp") {
-        return isAscending
-          ? (a.base?.HP ?? 0) - (b.base?.HP ?? 0)
-          : (b.base?.HP ?? 0) - (a.base?.HP ?? 0);
-      } else if (key === "attack" || key === "power") {
-        // Handle both "attack" and "power" as synonyms
-        return isAscending
-          ? (a.base?.Attack ?? 0) - (b.base?.Attack ?? 0)
-          : (b.base?.Attack ?? 0) - (a.base?.Attack ?? 0);
-      }
-      return 0;
-    });
-  }
-
-  return filteredPokemons;
-}
+const USER_ID = "687e5c1b22589cce30fa9765"; 
 
 export function useMyPokemons({
-  searchQuery = "",
+  page = 1,
+  rowsPerPage = 10,
   sortOption,
+  searchQuery = "",
   isMyPokemons = false,
-  fetchRandom = false,
 }: {
-  searchQuery?: string;
+  page?: number;
+  rowsPerPage?: number;
   sortOption?: string;
+  searchQuery?: string;
   isMyPokemons?: boolean;
-  fetchRandom?: boolean;
 } = {}) {
-  const { data: pokemons = [], isLoading } = useQuery<Pokemon[]>({
-    queryKey: ["pokemons", searchQuery, sortOption, isMyPokemons, fetchRandom],
-    queryFn: () => fetchFilteredPokemons(searchQuery, sortOption, isMyPokemons),
+  const validatedSortOption = SORT_BY_OPTIONS.includes(sortOption as typeof SORT_BY_OPTIONS[number])
+    ? sortOption
+    : undefined;
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["pokemons", { page, rowsPerPage, validatedSortOption, searchQuery, isMyPokemons }],
+    queryFn: () =>
+      fetchPokemons({
+        page,
+        rowsPerPage,
+        sortBy: validatedSortOption,
+        search: searchQuery,
+        fromMy: isMyPokemons,
+        userId: USER_ID,
+      }),
   });
 
-  const randomPokemon =
-    fetchRandom && pokemons.length > 0
-      ? pokemons[Math.floor(Math.random() * pokemons.length)]
-      : null;
-
-  const pokemonById = async (id: number) => {
-    return await fetchPokemonById(id);
+  const pokemons = data?.data || [];
+  const meta = {
+    start: data?.meta?.start || 0,
+    end: data?.meta?.end || 0,
+    total: Array.isArray(data?.meta?.total) ? data?.meta?.total[0]?.total || 0 : data?.meta?.total || 0, 
   };
-
-  const myPokemons = pokemons.filter((pokemon) => pokemon.isMyPokemon);
 
   return {
     pokemons,
     isLoading,
-    randomPokemon,
-    pokemonById,
-    myPokemons,
+    meta,
+    error,
   };
 }

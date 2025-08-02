@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
 import { DataTable } from "./DataTable";
 import { PokemonTableRow } from "./PokemonTableRow";
-import { DEFAULT_ROWS_PER_PAGE_OPTIONS } from "../../constants/pagination";
 import type { Pokemon } from "../../typs/Pokemon";
 
 type PokemonTableProps = {
@@ -26,29 +25,21 @@ export const PokemonTable = ({
     pageSize: 10,
   });
 
-  const { pokemons, isLoading } = useMyPokemons({
-    searchQuery,
-    sortOption,
-    isMyPokemons,
-    // TODO: Update useMyPokemons to handle pagination (page and pageSize)
+  const { pokemons, isLoading, meta, error } = useMyPokemons({
     page: pagination.page,
-    pageSize: pagination.pageSize,
+    rowsPerPage: pagination.pageSize,
+    sortOption,
+    searchQuery,
+    isMyPokemons,
   });
-
-  const total = pokemons.length;
 
   const handlePageChange = (newPage: number) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setPagination({ page: 1, pageSize: newPageSize }); 
+    setPagination({ page: 1, pageSize: newPageSize });
   };
-
-  const paginatedPokemons = pokemons.slice(
-    (pagination.page - 1) * pagination.pageSize,
-    pagination.page * pagination.pageSize
-  );
 
   const columns = [
     {
@@ -63,30 +54,32 @@ export const PokemonTable = ({
       header: "Description",
       accessor: (pokemon: Pokemon) => pokemon.description,
     },
-
     {
       header: "Power Level",
       accessor: (pokemon: Pokemon) => pokemon.base.Attack,
     },
-    
     {
       header: "HP",
       accessor: (pokemon: Pokemon) => pokemon.base.HP,
     },
   ];
 
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <DataTable
-      data={paginatedPokemons}
+      data={pokemons}
       columns={columns}
       isLoading={isLoading}
       page={pagination.page}
       pageSize={pagination.pageSize}
-      total={total}
+      total={meta.total} 
       rowRenderer={(pokemon) => <PokemonTableRow key={pokemon.id} pokemon={pokemon} />}
       onPageChange={handlePageChange}
       onPageSizeChange={handlePageSizeChange}
-      rowsPerPageOptions={DEFAULT_ROWS_PER_PAGE_OPTIONS}
+      rowsPerPageOptions={[5, 10, 20]}
     />
   );
 };
