@@ -34,7 +34,7 @@ async function fetchPokemons({
       sortBy,
       search,
       fromMy,
-      userId: USER_ID, // Always include userId in the request
+      userId: USER_ID, 
     },
   });
   return response.data;

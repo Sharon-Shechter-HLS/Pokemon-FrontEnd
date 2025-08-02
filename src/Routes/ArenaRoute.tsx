@@ -1,55 +1,54 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useMyPokemons } from "../hooks/useMyPokemons";
-import type { Pokemon } from "../typs/Pokemon";
+import axios from "axios";
 import ArenaPage from "@/pages/ArenaPage";
+import { UserId } from "@/consts";
 
 const ArenaRoute = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const pokemonId = queryParams.get("id"); // Get the 'id' parameter from the URL
+  const pokemonId = queryParams.get("pokemonId"); // Get the Pokémon `_id` from the URL
 
-  const [userPokemon, setUserPokemon] = useState<Pokemon | null>(null);
-  const [opponentPokemon, setOpponentPokemon] = useState<Pokemon | null>(null);
-
-  const { pokemonById, randomPokemon, isLoading } = useMyPokemons({
-    isMyPokemons: false,
-    fetchRandom: true,
-  });
+  const [battleData, setBattleData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPokemons = async () => {
+    const startGame = async () => {
+      console.log("Starting game with Pokémon ID:", pokemonId);
+      
       if (!pokemonId) {
-        // Redirect to a default page if no ID is provided
         navigate("/all-pokemons");
         return;
       }
 
-      const fetchedUserPokemon = await pokemonById(Number(pokemonId));
-      if (!fetchedUserPokemon) {
-        // Redirect if the Pokémon with the given ID doesn't exist
-        navigate("/all-pokemons");
-        return;
-      }
+      try {
 
-      setUserPokemon(fetchedUserPokemon);
-      setOpponentPokemon(randomPokemon || null);
+        const response = await axios.post("http://localhost:3000/arena/startGame", {
+          userId: UserId, // Use the default user ID from consts
+          pokemonId, // Pokémon `_id` from the URL
+        });
+        setBattleData(response.data); // Set the battle data from the response
+      } catch (error) {
+        console.error("Failed to start the game:", error);
+        navigate("/all-pokemons"); // Redirect to the Pokémon list if the request fails
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchPokemons();
-  }, [pokemonId, pokemonById, randomPokemon, navigate]);
+    startGame();
+  }, [pokemonId, navigate]);
 
-  if (isLoading || !userPokemon || !opponentPokemon) {
+  if (loading) {
     return <div className="p-8 text-center">Loading...</div>;
   }
 
-  return (
-    <ArenaPage
-      userPokemon={userPokemon}
-      opponentPokemon={opponentPokemon}
-    />
-  );
+  if (!battleData) {
+    return <div className="p-8 text-center">Failed to start the game.</div>;
+  }
+
+  return <ArenaPage battleData={battleData} />;
 };
 
 export default ArenaRoute;
