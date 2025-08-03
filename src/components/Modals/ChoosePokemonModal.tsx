@@ -13,9 +13,10 @@ import { FaTimes } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/seperator";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
-import {UserId} from "../../consts"; 
+import {UserId} from "../../consts";
 
 type ChoosePokemonModalProps = {
+  onSelect: (pokemon: Pokemon) => Promise<void>;
   onClose: () => void;
 };
 

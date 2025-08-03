@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Filter } from "../ui/filter";
 import type { Pokemon } from "../../typs/Pokemon";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
-import DescriptionTooltip from "../ToolTip/ToolTip"; // Import the tooltip component
+import DescriptionTooltip from "../ToolTip/ToolTip"; 
 
 type ArenaHeaderProps = {
   headline: string;

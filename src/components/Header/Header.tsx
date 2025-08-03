@@ -4,6 +4,7 @@ import HeaderMenu from "./NavMenu";
 import { Button } from "../ui/button";
 import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
 import PokemonLogoSrc from "../../assets/headerLogo.svg";
+import type { Pokemon } from "../../typs/Pokemon";
 
 type HeaderMenuItem = {
   name: string;
@@ -49,9 +50,9 @@ export function Header({ items }: HeaderProps) {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <ChoosePokemonModal
-            onSelect={async (pokemon) => {
+            onSelect={async (pokemon: Pokemon) => {
               setShowModal(false);
-              navigate(`/arena?id=${pokemon.id}`); 
+              navigate(`/arena?id=${pokemon.id}`);
             }}
             onClose={() => setShowModal(false)}
           />

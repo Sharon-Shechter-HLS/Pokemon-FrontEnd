@@ -1,44 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import type { Pokemon } from "@/typs/Pokemon";
-
-type FetchPokemonsParams = {
-  page: number;
-  rowsPerPage: number;
-  sortBy?: string;
-  search?: string;
-  fromMy?: boolean;
-  userId?: string;
-};
-
-type FetchPokemonsResponse = {
-  data: Pokemon[];
-  meta: {
-    start: number;
-    end: number;
-    total: { total: number }[]; 
-  };
-};
-
-async function fetchPokemons({
-  page,
-  rowsPerPage,
-  sortBy,
-  search,
-  fromMy,
-}: FetchPokemonsParams): Promise<FetchPokemonsResponse> {
-  const response = await axios.get("http://localhost:3000/pokemons", {
-    params: {
-      page,
-      rowsPerPage,
-      sortBy,
-      search,
-      fromMy,
-      userId: USER_ID, 
-    },
-  });
-  return response.data;
-}
+import { fetchPokemons } from "@/api/pokemonsAPI";
 
 const SORT_BY_OPTIONS = [
   "name.english-asc",
@@ -49,7 +10,7 @@ const SORT_BY_OPTIONS = [
   "base.HP-desc",
 ] as const;
 
-const USER_ID = "687e5c1b22589cce30fa9765"; 
+const USER_ID = "687e5c1b22589cce30fa9765";
 
 export function useMyPokemons({
   page = 1,
@@ -74,18 +35,16 @@ export function useMyPokemons({
       fetchPokemons({
         page,
         rowsPerPage,
-        sortBy: validatedSortOption,
+        sortBy: validatedSortOption || "id-asc", 
         search: searchQuery,
         fromMy: isMyPokemons,
         userId: USER_ID,
       }),
   });
 
-  const pokemons = data?.data || [];
+  const pokemons = data?.pokemons || [];
   const meta = {
-    start: data?.meta?.start || 0,
-    end: data?.meta?.end || 0,
-    total: Array.isArray(data?.meta?.total) ? data?.meta?.total[0]?.total || 0 : data?.meta?.total || 0, 
+    total: data?.total || 0,
   };
 
   return {
