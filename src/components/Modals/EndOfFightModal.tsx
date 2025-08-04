@@ -10,6 +10,7 @@ type EndOfFightModalProps = {
   winnerImageUrl: string;
   onPlayAgain: () => void;
   onReturnToMenu: () => void;
+  onSwitchPokemon?: () => void; 
   title?: string;
   description?: {
     title: string;
@@ -21,6 +22,7 @@ export const EndOfFightModal = ({
   winnerImageUrl,
   onPlayAgain,
   onReturnToMenu,
+  onSwitchPokemon,
   title,
   description,
 }: EndOfFightModalProps) => {
@@ -65,11 +67,17 @@ export const EndOfFightModal = ({
           )}
           <Separator className="mt-2 w-full" />
           <div className="flex gap-4 mt-5">
-            <Button onClick={onPlayAgain} className="px-6 py-2">
-              {description && title?.toLowerCase().includes("caught")
-                ? "Continue Battle"
-                : "Switch Pokemon"}
-            </Button>
+            {onSwitchPokemon ? (
+              <Button onClick={onSwitchPokemon} className="px-6 py-2">
+                Switch Pokémon
+              </Button>
+            ) : (
+              <Button onClick={onPlayAgain} className="px-6 py-2">
+                {title?.toLowerCase().includes("caught")
+                  ? "Continue Battle"
+                  : "Battle Another Pokémon"}
+              </Button>
+            )}
             <Button
               variant="secondary"
               onClick={onReturnToMenu}

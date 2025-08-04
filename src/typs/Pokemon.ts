@@ -1,11 +1,11 @@
-export interface Pokemon {
+export type Pokemon = {
+  _id: string; 
   id: number;
   name: {
     english: string;
     japanese: string;
     chinese: string;
     french: string;
-    [key: string]: string;
   };
   type: string[];
   base: {
@@ -16,24 +16,23 @@ export interface Pokemon {
     "Sp. Defense": number;
     Speed: number;
   };
-  species?: string;
-  description?: string;
+  species: string;
+  description: string;
   evolution?: {
-    next?: string[][];
-    prev?: string[][];
+    prev?: [string, string];
+    next?: [string, string][];
   };
-  profile?: {
-    height?: string;
-    weight?: string;
-    gender?: string;
-    ability?: string[][];
-    egg?: string[];
+  profile: {
+    height: string;
+    weight: string;
+    egg: string[];
+    ability: [string, string][];
+    gender: string;
   };
   image: {
     sprite: string;
     thumbnail: string;
     hires: string;
-    [key: string]: string;
   };
   isMyPokemon?: boolean;
-}
+};

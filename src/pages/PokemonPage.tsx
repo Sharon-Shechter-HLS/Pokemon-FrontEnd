@@ -12,12 +12,12 @@ export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) 
 
   const title = isMyPokemons ? "My Pokémons" : "All Pokémons";
   const filterOptions = [
-    { label: "Name (A-Z)", value: "name-asc" },
-          { label: "Name (Z-A)", value: "name-desc" },
-          { label: "Power (High-Low)", value: "power-desc" },
-          { label: "Power (Low-High)", value: "power-asc" },
-          { label: "HP (High-Low)", value: "hp-desc" },
-          { label: "HP (Low-High)", value: "hp-asc" },
+    { label: "Name (A-Z)", value: "name.english-asc" },
+    { label: "Name (Z-A)", value: "name.english-desc" },
+    { label: "Power (High-Low)", value: "base.Attack-desc" },
+    { label: "Power (Low-High)", value: "base.Attack-asc" },
+    { label: "HP (High-Low)", value: "base.HP-desc" },
+    { label: "HP (Low-High)", value: "base.HP-asc" },
   ];
 
   return (

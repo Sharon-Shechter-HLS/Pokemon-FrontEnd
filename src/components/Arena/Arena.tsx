@@ -1,79 +1,124 @@
+import { useEffect, useState } from "react";
 import { BUTTON_TITLES } from "../../constants/buttonTitles";
 import CompetitorPhoto from "./CompetitorPhoto";
 import CompetitorProgress from "./CompetitorProgress";
 import DialogueBox from "./Dialog";
 import FightButton from "./FightButtons";
+import EndOfFightModal from "../Modals/EndOfFightModal";
 import { GloveIcon } from "@/assets/GloveIcon";
 import { Pokador } from "../../assets/PokadorIcon";
 import attackButtonBackground from "../../assets/attackButoonBackground.png";
-import { useBattleState } from "../../hooks/useBattleHook";
-import EndOfFightModal from "../Modals/EndOfFightModal";
-import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
-import type { Pokemon } from "../../typs/Pokemon";
 import arenaBackground from "../../assets/arenaBackground.png";
-import { useState } from "react";
+import { useBattleContext } from "./BattleContext";
+import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
+import { startNewBattle } from "../../api/battelAPI";
+import type { BattleData } from "../../typs/BattleData";
 
-const Arena = ({
-  user,
-  opponent,
-}: {
-  user: Pokemon;
-  opponent: Pokemon;
-}) => {
-  const {
-    turn,
-    userLife,
-    opponentLife,
-    dialogue,
-    winner,
-    handleUserAttack,
-    handleCatch,
-    canCatch,
-  } = useBattleState({ userData: user, opponentData: opponent });
 
-  const [showChooseModal, setShowChooseModal] = useState(false);
-  const [showEndModal, setShowEndModal] = useState(true);
-  const opponentCaught = winner === user.name.english;
+type ArenaProps = {
+  onStartNewBattle: (newBattleData: BattleData, showVSComponent?: boolean) => void; 
+};
 
-  const modalTitle =
-    winner === user.name.english
-      ? `You caught ${opponent.name.english}!`
-      : `${user.name.english} lost the match`;
+const Arena = ({ onStartNewBattle }: ArenaProps) => {
+  const { battleData, setBattleData, handleAttack, handleCatch, processBattleOutcome } = useBattleContext();
+  const [dialogue, setDialogue] = useState(`${battleData.user.name.english} starts the fight!`);
+  const [showChoosePokemonModal, setShowChoosePokemonModal] = useState(false);
+  const [hasProcessedOutcome, setHasProcessedOutcome] = useState(false);
 
-  const winnerImageUrl =
-    winner === user.name.english
-      ? opponent.image?.hires || ""
-      : user.image?.hires || "";
+  useEffect(() => {
+    if (battleData.hasSwitch) {
+      setDialogue(`${battleData.user.name.english} has entered the battlefield`);
+    } else {
+      setDialogue(`${battleData.user.name.english} starts the fight!`);
+    }
+  }, [battleData.hasSwitch]);
 
-  const modalDescription = {
-    title: winner === user.name.english ? opponent.name.english : user.name.english,
-    attributes: [
-      {
-        label: "Speed",
-        value: String(
-          winner === user.name.english ? opponent.base.Speed : user.base.Speed
-        ),
-      },
-      {
-        label: "Category",
-        value:
-          winner === user.name.english
-            ? opponent.species || "Unknown"
-            : user.species || "Unknown",
-      },
-      {
-        label: "Abilities",
-        value:
-          winner === user.name.english
-            ? opponent.profile?.ability?.map((a) => a[0]).join(", ") || "None"
-            : user.profile?.ability?.map((a) => a[0]).join(", ") || "None",
-      },
-    ],
+  useEffect(() => {
+    const handleOpponentAttack = async () => {
+      if (battleData.isCatched) {
+        return;
+      }
+
+      if (battleData.turn === "opponent") {
+        try {
+          const fightStatus = await handleAttack();
+          setDialogue(fightStatus);
+        } catch (error) {
+          console.error("Error during opponent attack:", error);
+        }
+      }
+    };
+    handleOpponentAttack();
+  }, [battleData.turn]);
+
+  useEffect(() => {
+    const processOutcome = async () => {
+      console.log("Processing battle outcome:", battleData.winner, battleData.isCatched);
+      if (battleData.winner || battleData.isCatched) {
+        console.log("Processing battle outcome...");
+        await processBattleOutcome(battleData);
+        console.log("Battle outcome processed.");
+        setHasProcessedOutcome(true); 
+      }
+    };
+
+    processOutcome();
+  }, [battleData.winner, battleData.isCatched]);
+
+  const handleUserAction = async () => {
+    try {
+      const fightStatus = await handleAttack();
+      setDialogue(fightStatus);
+    } catch (error) {
+      console.error("Error during user action:", error);
+    }
+  };
+
+  const handleCatchAction = async () => {
+    try {
+      const catchStatus = await handleCatch();
+      setDialogue(catchStatus);
+      if (battleData.isCatched) {
+        setDialogue(`You caught ${battleData.opponent.name.english}!`);
+      }
+    } catch (error) {
+      console.error("Error during catch action:", error);
+    }
+  };
+
+  const handlePlayAgain = async () => {
+    try {
+      const response = await startNewBattle(battleData.user._id);
+      setBattleData(response);
+      setDialogue(`${response.user.name.english} starts the fight!`);
+      onStartNewBattle(response, false);
+    } catch (error) {
+      console.error("Error during play again:", error);
+    }
+  };
+
+  const handleSwitchPokemon = () => {
+    setShowChoosePokemonModal(true);
+  };
+
+  const handleChoosePokemon = async (newPokemon: { _id: string }) => {
+    try {
+      const response = await startNewBattle(newPokemon._id);
+      setBattleData(response);
+      setShowChoosePokemonModal(false);
+      window.location.href = `/arena?pokemonId=${newPokemon._id}&battleId=${response._id}`;
+    } catch (error) {
+      console.error("Error during choose Pokémon:", error);
+    }
+  };
+
+  const handleReturnToMenu = () => {
+    window.location.assign("/all-pokemons");
   };
 
   return (
     <div
-      className={`arena-background pb-0 mb-0 relative bg-cover bg-center w-full h-screen`}
+      className="arena-background pb-0 mb-0 relative bg-cover bg-center w-full h-screen"
       style={{
         backgroundImage: `url(${arenaBackground})`,
       }}
@@ -82,20 +127,20 @@ const Arena = ({
       <div className="min-w-[50%] h-[50%] absolute bottom-0 left-0 m-2">
         <div className="absolute bottom-0 left-0 m-3 w-[40%]">
           <CompetitorProgress
-            maxLife={user.base.HP}
-            currentLife={userLife}
+            maxLife={battleData.user.base.HP}
+            currentLife={battleData.userCurrentLife}
             pokemon={{
-              name: user.name.english,
-              speed: user.base.Speed,
+              name: battleData.user.name.english,
+              speed: battleData.user.base.Speed,
             }}
-            disabled={turn !== "user"}
+            disabled={battleData.turn !== "user"}
           />
         </div>
         <CompetitorPhoto
-          imageUrl={user.image?.hires || ""}
+          imageUrl={battleData.user.image?.hires || ""}
           className={`absolute top-1 right-20 scale-[0.6] ${
-            turn === "user" && userLife > 0 ? "animate-vibrate" : ""
-          } ${userLife <= 0 ? "animate-faint-left" : ""}`}
+            battleData.turn === "user" && battleData.userCurrentLife > 0 ? "animate-vibrate" : ""
+          } ${battleData.userCurrentLife <= 0 ? "animate-faint-left" : ""}`}
         />
       </div>
 
@@ -103,20 +148,22 @@ const Arena = ({
       <div className="min-w-[50%] h-[50%] absolute top-0 right-0 m-2">
         <div className="absolute top-0 right-0 m-3 w-[40%]">
           <CompetitorProgress
-            maxLife={opponent.base.HP}
-            currentLife={opponentLife}
+            maxLife={battleData.opponent.base.HP}
+            currentLife={battleData.opponentCurrentLife}
             pokemon={{
-              name: opponent.name.english,
-              speed: opponent.base.Speed,
+              name: battleData.opponent.name.english,
+              speed: battleData.opponent.base.Speed,
             }}
-            disabled={turn !== "opponent"}
+            disabled={battleData.turn !== "opponent"}
           />
         </div>
-        {opponentCaught ? (
+        {battleData.isCatched ? (
           <div
-            key={opponent.name.english}
-            className="fixed left-1/2 top-1/2 z-50 pointer-events-none"
+            key={battleData.opponent.name.english}
+            className="fixed z-50 pointer-events-none"
             style={{
+              left: "10%",
+              top: "10%",
               transform: "translate(-50%, -50%)",
               animation: `pokador-catch-move 1.2s cubic-bezier(0.4,0,0.2,1) forwards`,
             }}
@@ -125,18 +172,19 @@ const Arena = ({
           </div>
         ) : (
           <CompetitorPhoto
-            imageUrl={opponent.image?.hires || ""}
+            imageUrl={battleData.opponent.image?.hires || ""}
             className={`absolute bottom-1 left-40 transform scale-[0.5] ${
-              turn === "opponent" && opponentLife > 0 ? "animate-vibrate" : ""
-            } ${opponentLife <= 0 ? "animate-faint-right" : ""}`}
+              battleData.turn === "opponent" && battleData.opponentCurrentLife > 0 ? "animate-vibrate" : ""
+            } ${battleData.opponentCurrentLife <= 0 ? "animate-faint-right" : ""}`}
           />
         )}
       </div>
 
+      {/* Dialogue Box */}
       <DialogueBox
         className="w-[40%] h-[17%] relative top-30 justify-center"
         text={dialogue}
-      ></DialogueBox>
+      />
 
       {/* Fight Buttons */}
       <div className="absolute bottom-5 right-6 flex flex-row gap-6">
@@ -145,46 +193,60 @@ const Arena = ({
           title={BUTTON_TITLES.ATTACK}
           svg={<GloveIcon />}
           imageUrl={attackButtonBackground}
-          onClick={handleUserAttack}
-          disabled={turn !== "user"}
+          onClick={handleUserAction}
+          disabled={battleData.turn !== "user"}
         />
 
         {/* Catch Button */}
         <FightButton
           title={BUTTON_TITLES.CATCH}
           svg={<Pokador />}
-          onClick={handleCatch}
-          disabled={!canCatch || turn !== "user"}
-          
+          onClick={handleCatchAction}
+          disabled={!battleData.canCatch || battleData.turn !== "user"}
         />
       </div>
 
       {/* End of Fight Modal */}
-      {winner && showEndModal && (
+      {(battleData.winner || battleData.isCatched) && hasProcessedOutcome && !showChoosePokemonModal && (
         <EndOfFightModal
-          title={modalTitle}
-          winner={winner || ""}
-          winnerImageUrl={winnerImageUrl}
-          description={modalDescription}
-          onPlayAgain={() => {
-            setShowEndModal(false);
-            setShowChooseModal(true);
+          title={
+            battleData.isCatched
+              ? `You caught ${battleData.opponent.name.english}!`
+              : battleData.winner === battleData.user.name.english
+              ? `You won ${battleData.opponent.name.english}!`
+              : `${battleData.user.name.english} lost the match`
+          }
+          winner={battleData.winner || ""}
+          winnerImageUrl={
+            battleData.isCatched
+              ? battleData.opponent.image?.hires || ""
+              : battleData.winner === battleData.user.name.english
+              ? battleData.opponent.image?.hires || ""
+              : battleData.user.image?.hires || ""
+          }
+          description={{
+            title: battleData.opponent.name.english,
+            attributes: [
+              { label: "Speed", value: battleData.opponent.base.Speed.toString() },
+              { label: "Category", value: battleData.opponent.species || "Unknown" },
+              {
+                label: "Abilities",
+                value: battleData.opponent.profile?.ability?.map((a: string[]) => a[0]).join(", ") || "None",
+              },
+            ],
           }}
-          onReturnToMenu={() => window.location.assign("/")}
+          onPlayAgain={handlePlayAgain}
+          onReturnToMenu={handleReturnToMenu}
+          onSwitchPokemon={battleData.userCurrentLife <= 0 ? handleSwitchPokemon : undefined}
         />
       )}
 
       {/* Choose Pokémon Modal */}
-      {showChooseModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <ChoosePokemonModal
-            onSelect={async (pokemon) => {
-              setShowChooseModal(false);
-              window.location.href = `/arena?id=${pokemon.id}`;
-            }}
-            onClose={() => setShowChooseModal(false)}
-          />
-        </div>
+      {showChoosePokemonModal && (
+        <ChoosePokemonModal
+          onSelect={handleChoosePokemon}
+          onClose={() => setShowChoosePokemonModal(false)}
+        />
       )}
     </div>
   );

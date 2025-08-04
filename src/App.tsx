@@ -7,8 +7,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Header } from "./components/Header/Header";
-import AllPokemonsPage from "./pages/AllPokemonsPage";
-import MyPokemonsPage from "./pages/MyPokemonsPage";
+import AllPokemonsPage from "./pages/AllpokemonsPage";
+import MyPokemonsPage from "./pages/MypokemonsPage";
 import { ROUTES } from "./constants/routes";
 import "./App.css";
 import ArenaRoute from "./Routes/ArenaRoute";
