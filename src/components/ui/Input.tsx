@@ -33,7 +33,7 @@ function Input({
           "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
           customInputStyles,
           className,
-          "hover:border-[2px] hover:border-[var(--color-primary-400)] focus:border-[2px] focus:border-[var(--color-primary-400)]" // Added focus styles matching hover
+          "hover:border-[1px] hover:border-[var(--color-Neutrals-500)] focus:border-[1px] focus:border-[var(--color-Neutrals-500)]" 
         )}
         {...props}
       />

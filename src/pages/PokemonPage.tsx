@@ -28,7 +28,7 @@ export default function PokemonPage({ isMyPokemons = false }: PokemonPageProps) 
         onSearchChange={(value) => setSearchQuery(value)}
         filterOptions={filterOptions}
         filterValue={filterValue}
-        filterLabel="Sort By"
+        filterLabel="ID"
         onFilterChange={(value) => setFilterValue(value)}
       />
       <PokemonTable

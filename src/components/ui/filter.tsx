@@ -32,7 +32,7 @@ export function Filter({
   onChange,
   label = "Filter",
   icon,
-  disabled = false, // Default to false
+  disabled = false, 
   className,
 }: FilterProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -52,12 +52,12 @@ export function Filter({
           className={`${buttonClass} relative ${
             disabled ? "opacity-50 cursor-not-allowed" : ""
           } ${className}`}
-          disabled={disabled} // Disable the button
+          disabled={disabled} 
         >
           <span className="flex items-center pointer-events-none">
             {icon}
             {selected ? selected.label : label}
-            {isSelected && !disabled && ( // Only show clear button if not disabled
+            {isSelected && !disabled && ( 
               <span
                 className="ml-2 cursor-pointer pointer-events-auto"
                 onClick={(e) => {
@@ -70,7 +70,7 @@ export function Filter({
                 role="button"
                 aria-label="Clear filter"
               >
-                <FiX size={16} /> {/* Use the X icon */}
+                <FiX size={16} /> 
               </span>
             )}
             {isOpen ? (
