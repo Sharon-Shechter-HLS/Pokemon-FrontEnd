@@ -42,6 +42,8 @@ export function DataTable<T extends { id: string | number }>({
   onPageSizeChange,
   rowsPerPageOptions = [5, 10, 20],
 }: DataTableProps<T>) {
+  const isPaginationDisabled = data.length === 0 || total === 0;
+
   return (
     <Table className="rounded-md overflow-hidden border border-gray-200">
       <TableHeader>
@@ -65,7 +67,7 @@ export function DataTable<T extends { id: string | number }>({
           Array.from({ length: pageSize }).map((_, index) => (
             <TableRow key={index}>
               {/* Skeleton for Pokemon Name */}
-              <TableCell className="px-4 text-left text-lg flex items-center justify-begin gap-4" style={{ width: "200px" }}>
+              <TableCell className="px-4 text-left text-lg flex items-center justify-begin gap-4">
                 <Skeleton className="h-12 w-12 rounded-full" />
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-4 w-[150px]" />
@@ -74,7 +76,7 @@ export function DataTable<T extends { id: string | number }>({
               </TableCell>
 
               {/* Skeleton for ID */}
-              <TableCell className="px-4 text-left" style={{ width: "100px" }}>
+              <TableCell className="px-4 text-left">
                 <Skeleton className="h-4 w-[50px]" />
               </TableCell>
 
@@ -84,19 +86,30 @@ export function DataTable<T extends { id: string | number }>({
               </TableCell>
 
               {/* Skeleton for Power Level */}
-              <TableCell className="px-4 text-left" style={{ width: "150px" }}>
+              <TableCell className="px-4 text-left">
                 <Skeleton className="h-4 w-[100px]" />
               </TableCell>
 
               {/* Skeleton for HP */}
-              <TableCell className="px-4 text-left" style={{ width: "150px" }}>
+              <TableCell className="px-4 text-left">
                 <Skeleton className="h-4 w-[80px]" />
               </TableCell>
             </TableRow>
           ))
         ) : data.length === 0 ? (
-          <TableRow>
-            <TableCell colSpan={columns.length} className="text-center">
+          <TableRow
+            style={{
+              height: `calc(var(--row-height, 48px) * ${pageSize})`,
+              backgroundColor: "white",
+            }}
+          >
+            <TableCell
+              colSpan={columns.length}
+              className="text-center"
+              style={{
+                backgroundColor: "white",
+              }}
+            >
               <NoResults message="No Pokemons were found" />
             </TableCell>
           </TableRow>
@@ -111,7 +124,7 @@ export function DataTable<T extends { id: string | number }>({
                 <TableCell
                   key={colIndex}
                   className="px-4"
-                  style={{ width: column.width }} 
+                  style={{ width: column.width }}
                 >
                   {column.accessor(item)}
                 </TableCell>
@@ -121,11 +134,11 @@ export function DataTable<T extends { id: string | number }>({
         )}
       </TableBody>
       <TableFooter
-        page={page}
+        page={isPaginationDisabled ? 0 : page}
         pageSize={pageSize}
-        total={total}
-        onPageChange={onPageChange}
-        onPageSizeChange={onPageSizeChange}
+        total={isPaginationDisabled ? 0 : total}
+        onPageChange={isPaginationDisabled ? undefined : onPageChange}
+        onPageSizeChange={isPaginationDisabled ? undefined : onPageSizeChange}
         rowsPerPageOptions={rowsPerPageOptions}
       />
     </Table>
