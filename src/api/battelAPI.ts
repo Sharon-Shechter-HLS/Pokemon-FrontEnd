@@ -1,11 +1,11 @@
 import { UserId } from "../consts";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/arena";
+const BASE_URL = "http://localhost:3000";
 
 export const attack = async (gameId: string) => {
   try {
-    const response = await axios.post(`${BASE_URL}/attack`, { gameId });
+    const response = await axios.post(`${BASE_URL}/arena/attack`, { gameId });
     return response.data;
   } catch (error) {
     console.error("Failed to perform attack:", error);
@@ -15,7 +15,7 @@ export const attack = async (gameId: string) => {
 
 export const catchOpponent = async (gameId: string) => {
   try {
-    const response = await axios.post(`${BASE_URL}/catch`, { gameId });
+    const response = await axios.post(`${BASE_URL}/arena/catch`, { gameId });
     return response.data;
   } catch (error) {
     console.error("Failed to catch opponent:", error);
@@ -30,7 +30,7 @@ export const startNewBattle = async (pokemonId: string) => {
       pokemonId: String(pokemonId),
     };
 
-    const response = await axios.post(`${BASE_URL}/startGame`, payload);
+    const response = await axios.post(`${BASE_URL}/arena/startGame`, payload);
     return response.data;
   } catch (error) {
     console.error("Failed to start a new battle:", error);
@@ -46,10 +46,41 @@ export const switchPokemon = async (gameId: string, newPokemonId: string) => {
       newPokemonId,
     };
 
-    const response = await axios.post(`${BASE_URL}/switchPokemon`, payload);
+    const response = await axios.post(`${BASE_URL}/arena/switchPokemon`, payload);
     return response.data;
   } catch (error) {
     console.error("Failed to switch Pokémon:", error);
+    throw error;
+  }
+};
+
+export const addPokemon = async (userId: string, pokemonId: string) => {
+  console.log("add pokemon called with userId:", userId, "and pokemonId:", pokemonId);
+  try {
+    const payload = {
+      userId,
+      pokemonId,
+    };
+
+    const response = await axios.post(`${BASE_URL}/users/addPokemon`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to add Pokémon:", error);
+    throw error;
+  }
+};
+
+export const removePokemon = async (userId: string, pokemonId: string) => {
+  try {
+    const payload = {
+      userId,
+      pokemonId,
+    };
+
+    const response = await axios.delete(`${BASE_URL}/users/removePokemon`, { data: payload });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to remove Pokémon:", error);
     throw error;
   }
 };

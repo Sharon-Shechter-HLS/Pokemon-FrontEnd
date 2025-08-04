@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
 import { DataTable } from "./DataTable";
 import { PokemonTableRow } from "./PokemonTableRow";
@@ -24,6 +24,10 @@ export const PokemonTable = ({
     page: 1,
     pageSize: 10,
   });
+
+  useEffect(() => {
+    setPagination({ page: 1, pageSize: pagination.pageSize });
+  }, [searchQuery]);
 
   const { pokemons, isLoading, meta, error } = useMyPokemons({
     page: pagination.page,
@@ -75,7 +79,7 @@ export const PokemonTable = ({
       isLoading={isLoading}
       page={pagination.page}
       pageSize={pagination.pageSize}
-      total={meta.total} 
+      total={meta.total}
       rowRenderer={(pokemon) => <PokemonTableRow key={pokemon.id} pokemon={pokemon} />}
       onPageChange={handlePageChange}
       onPageSizeChange={handlePageSizeChange}

@@ -20,12 +20,13 @@ type ArenaProps = {
 };
 
 const Arena = ({ onStartNewBattle }: ArenaProps) => {
-  const { battleData, handleAttack, handleCatch, setBattleData } = useBattleContext();
+  const { battleData, setBattleData, handleAttack, handleCatch, processBattleOutcome } = useBattleContext();
   const [dialogue, setDialogue] = useState(`${battleData.user.name.english} starts the fight!`);
   const [showChoosePokemonModal, setShowChoosePokemonModal] = useState(false);
+  const [hasProcessedOutcome, setHasProcessedOutcome] = useState(false);
 
   useEffect(() => {
-    if (battleData.hasSwitch ) {
+    if (battleData.hasSwitch) {
       setDialogue(`${battleData.user.name.english} has entered the battlefield`);
     } else {
       setDialogue(`${battleData.user.name.english} starts the fight!`);
@@ -35,7 +36,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
   useEffect(() => {
     const handleOpponentAttack = async () => {
       if (battleData.isCatched) {
-        return; 
+        return;
       }
 
       if (battleData.turn === "opponent") {
@@ -50,6 +51,20 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
     handleOpponentAttack();
   }, [battleData.turn]);
 
+  useEffect(() => {
+    const processOutcome = async () => {
+      console.log("Processing battle outcome:", battleData.winner, battleData.isCatched);
+      if (battleData.winner || battleData.isCatched) {
+        console.log("Processing battle outcome...");
+        await processBattleOutcome(battleData);
+        console.log("Battle outcome processed.");
+        setHasProcessedOutcome(true); 
+      }
+    };
+
+    processOutcome();
+  }, [battleData.winner, battleData.isCatched]);
+
   const handleUserAction = async () => {
     try {
       const fightStatus = await handleAttack();
@@ -61,8 +76,8 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
 
   const handleCatchAction = async () => {
     try {
-      const catchStatus = await handleCatch(); 
-      setDialogue(catchStatus); 
+      const catchStatus = await handleCatch();
+      setDialogue(catchStatus);
       if (battleData.isCatched) {
         setDialogue(`You caught ${battleData.opponent.name.english}!`);
       }
@@ -148,7 +163,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
             className="fixed z-50 pointer-events-none"
             style={{
               left: "10%",
-              top: "10%", 
+              top: "10%",
               transform: "translate(-50%, -50%)",
               animation: `pokador-catch-move 1.2s cubic-bezier(0.4,0,0.2,1) forwards`,
             }}
@@ -192,7 +207,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
       </div>
 
       {/* End of Fight Modal */}
-      {(battleData.winner || battleData.isCatched) && !showChoosePokemonModal && (
+      {(battleData.winner || battleData.isCatched) && hasProcessedOutcome && !showChoosePokemonModal && (
         <EndOfFightModal
           title={
             battleData.isCatched

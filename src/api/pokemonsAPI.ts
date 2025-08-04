@@ -3,16 +3,16 @@ import type { Pokemon } from "../typs/Pokemon";
 
 const BASE_URL = "http://localhost:3000/pokemons";
 
-export interface FetchPokemonsParams {
+export type FetchPokemonsParams = {
   page: number;
   rowsPerPage: number;
   sortBy: string;
   search?: string;
   fromMy?: boolean;
   userId: string;
-}
+};
 
-export interface FetchPokemonsResponse {
+export type FetchPokemonsResponse = {
   pokemons: Pokemon[];
   total: number;
 }

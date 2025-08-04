@@ -1,14 +1,34 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { attack, catchOpponent } from "../../api/battelAPI";
+import { attack, catchOpponent, addPokemon, removePokemon } from "../../api/battelAPI";
+import type {BattleData} from "../../typs/BattleData";
 
 type BattleContextProps = {
-  battleData: any;
+  battleData: BattleData;
   setBattleData: React.Dispatch<React.SetStateAction<any>>;
   handleAttack: () => Promise<string>;
   handleCatch: () => Promise<string>;
+  processBattleOutcome: (battleData: BattleData) => Promise<void>;
 };
 
 const BattleContext = createContext<BattleContextProps | undefined>(undefined);
+
+const processBattleOutcome = async (battleData: BattleData) => {
+  console.log("Processing battle outcome:", battleData.winner, battleData.isCatched);
+  try {
+    console.log("the battleData is:", battleData);
+    console.log("the if condition is:", battleData.isCatched || battleData.winner === "User");
+    if (battleData.isCatched || battleData.winner === "User") {
+      console.log("calling addPokemon with userId:", battleData.user._id, "and pokemonId:", battleData.opponent._id);
+      await addPokemon(battleData.user._id, battleData.opponent._id);
+      console.log(`Added ${battleData.opponent.name.english} to user's collection.`);
+    } else if (battleData.winner === "Opponent") {
+      await removePokemon(battleData.user._id, battleData.user._id);
+      console.log(`Removed ${battleData.user.name.english} from user's collection.`);
+    }
+  } catch (error) {
+    console.error("Error processing battle outcome:", error);
+  }
+};
 
 export const BattleProvider = ({ children, initialBattleData }: { children: React.ReactNode; initialBattleData: any }) => {
   const [battleData, setBattleData] = useState(initialBattleData);
@@ -50,7 +70,7 @@ export const BattleProvider = ({ children, initialBattleData }: { children: Reac
   };
 
   return (
-    <BattleContext.Provider value={{ battleData, setBattleData, handleAttack, handleCatch }}>
+    <BattleContext.Provider value={{ battleData, setBattleData, handleAttack, handleCatch, processBattleOutcome }}>
       {children}
     </BattleContext.Provider>
   );
