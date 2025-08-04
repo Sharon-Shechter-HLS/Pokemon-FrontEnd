@@ -12,6 +12,7 @@ import MyPokemonsPage from "./pages/MypokemonsPage";
 import { ROUTES } from "./constants/routes";
 import "./App.css";
 import ArenaRoute from "./Routes/ArenaRoute";
+import { ContextRouteProvider } from "./Routes/contextRoute"; 
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,7 @@ const AppContent = () => {
     },
   ];
 
-  const backgroundClass ="bg-primary-50";
+  const backgroundClass = "bg-primary-50";
 
   return (
     <>
@@ -54,9 +55,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-       <div className="bg-primary-50"> 
-          <AppContent />
-        </div>
+        <ContextRouteProvider> {/* Wrap the app with ContextRouteProvider */}
+          <div className="bg-primary-50">
+            <AppContent />
+          </div>
+        </ContextRouteProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

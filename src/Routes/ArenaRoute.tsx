@@ -1,55 +1,45 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import ArenaPage from "@/pages/ArenaPage";
-import { UserId } from "@/consts";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useContextRoute } from "@/Routes/contextRoute"; 
+import { startNewBattle } from "@/api/battelAPI";
 
 const ArenaRoute = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const queryParams = new URLSearchParams(location.search);
-  const pokemonId = queryParams.get("pokemonId");
-
-  const [battleData, setBattleData] = useState(null);
+  const { pokemonId } = useContextRoute();
   const [loading, setLoading] = useState(true);
+  const [battleData, setBattleData] = useState(null);
 
   useEffect(() => {
-    const startGame = async () => {
-      console.log("Starting game with Pokémon ID:", pokemonId);
-
+    const initializeBattle = async () => {
       if (!pokemonId) {
+        console.error("Pokemon ID is missing. Redirecting...");
         navigate("/all-pokemons");
         return;
       }
 
       try {
-        const response = await axios.post("http://localhost:3000/arena/startGame", {
-          userId: UserId,
-          pokemonId,
-        });
-        setBattleData(response.data);
+        console.log("Starting new battle with Pokémon ID:", pokemonId);
+        const response = await startNewBattle(pokemonId); 
+        setBattleData(response);
+        window.history.pushState({}, "", `/arena?battleId=${response._id}`); 
       } catch (error) {
-        console.error("Failed to start the game:", error);
+        console.error("Failed to start a new battle:", error);
         navigate("/all-pokemons");
       } finally {
         setLoading(false);
       }
     };
 
-    startGame();
+    initializeBattle();
   }, [pokemonId, navigate]);
 
   if (loading) {
-    return (
-      <div className="p-8 flex justify-center items-center">
-        <LoadingSpinner className="text-blue-600 w-10 h-10" />
-      </div>
-    );
+    return <div className="p-8 text-center">Loading...</div>;
   }
 
   if (!battleData) {
-    return <div className="p-8 text-center">Failed to start the game.</div>;
+    return <div className="p-8 text-center">Failed to load battle data.</div>;
   }
 
   return <ArenaPage battleData={battleData} />;

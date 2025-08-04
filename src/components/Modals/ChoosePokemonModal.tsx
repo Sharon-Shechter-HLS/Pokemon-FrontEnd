@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import type { Pokemon } from "../../typs/Pokemon";
 import PokemonLogo from "../PokemonLogo/PokemonLogo";
 import {
@@ -13,39 +13,24 @@ import { FaTimes } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/seperator";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
-import { UserId } from "../../consts";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
+import { useContextRoute } from "@/Routes/contextRoute"; 
 
 type ChoosePokemonModalProps = {
-  onSelect: (pokemon: Pokemon) => Promise<void>;
   onClose: () => void;
 };
 
 const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
+  const { setPokemonId } = useContextRoute();
   const { pokemons, isLoading } = useMyPokemons({ isMyPokemons: true });
   const [selected, setSelected] = useState<Pokemon | null>(null);
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); 
 
-  const startGame = async () => {
+  const handleConfirmSelection = () => {
     if (!selected) return;
-
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/arena/startGame",
-        {
-          userId: UserId,
-          pokemonId: selected._id,
-        }
-      );
-
-      const battleData = response.data;
-      window.location.href = `/arena?pokemonId=${selected._id}&battleId=${battleData._id}`;
-    } catch (error) {
-      console.error("Failed to start the game:", error);
-    } finally {
-      setLoading(false);
-    }
+    setPokemonId(selected._id); 
+    onClose(); 
+    navigate("/arena"); 
   };
 
   if (isLoading)
@@ -106,14 +91,10 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
         <CardFooter className="flex justify-center">
           <Button
             className="w-26 h-10"
-            onClick={startGame}
-            disabled={!selected || loading}
+            onClick={handleConfirmSelection}
+            disabled={!selected}
           >
-            {loading ? (
-              <LoadingSpinner className="text-white w-5 h-5" />
-            ) : (
-              "Start Battle"
-            )}
+            Confirm Selection
           </Button>
         </CardFooter>
       </Card>

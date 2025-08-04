@@ -98,17 +98,6 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
     setShowChoosePokemonModal(true);
   };
 
-  const handleChoosePokemon = async (newPokemon: { _id: string }) => {
-    try {
-      const response = await startNewBattle(newPokemon._id);
-      setBattleData(response);
-      setShowChoosePokemonModal(false);
-      window.location.href = `/arena?pokemonId=${newPokemon._id}&battleId=${response._id}`;
-    } catch (error) {
-      console.error("Error during choose Pokémon:", error);
-    }
-  };
-
   const handleReturnToMenu = () => {
     window.location.assign("/all-pokemons");
   };
@@ -241,8 +230,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
       {/* Choose Pokémon Modal */}
       {showChoosePokemonModal && (
         <ChoosePokemonModal
-          onSelect={handleChoosePokemon}
-          onClose={() => setShowChoosePokemonModal(false)}
+          onClose={() => setShowChoosePokemonModal(false)} 
         />
       )}
     </div>
