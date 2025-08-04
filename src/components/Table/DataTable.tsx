@@ -8,6 +8,7 @@ import {
   TableRow,
   TableCell,
 } from "../ui/table";
+import { Skeleton } from "../ui/skeleton";
 
 type Column<T> = {
   header: string;
@@ -52,11 +53,24 @@ export function DataTable<T extends { id: string | number }>({
       </TableHeader>
       <TableBody>
         {isLoading ? (
-          <TableRow>
-            <TableCell colSpan={columns.length} className="text-center">
-              Loading...
-            </TableCell>
-          </TableRow>
+          Array.from({ length: pageSize }).map((_, index) => (
+            <TableRow key={index}>
+              <TableCell className="px-4">
+                <Skeleton className="h-12 w-12 rounded-full mx-auto" />
+              </TableCell>
+              <TableCell className="px-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[250px]" />
+                  <Skeleton className="h-4 w-[200px]" />
+                </div>
+              </TableCell>
+              {columns.slice(2).map((_, colIndex) => (
+                <TableCell key={colIndex} className="px-4">
+                  <Skeleton className="h-4 w-full rounded-md" />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
         ) : data.length === 0 ? (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">
