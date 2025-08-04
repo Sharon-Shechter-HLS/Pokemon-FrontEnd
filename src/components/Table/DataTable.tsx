@@ -14,6 +14,7 @@ import { NoResults } from "../../assets/NoResults";
 type Column<T> = {
   header: string;
   accessor: (item: T) => React.ReactNode;
+  width?: string; // Optional fixed width for the column
 };
 
 type DataTableProps<T extends { id: string | number }> = {
@@ -46,7 +47,14 @@ export function DataTable<T extends { id: string | number }>({
       <TableHeader>
         <TableRow>
           {columns.map((column, index) => (
-            <TableHead key={index} className="px-4 text-left">
+            <TableHead
+              key={index}
+              className="px-4 text-left font-bold"
+              style={{
+                width: column.width,
+                paddingLeft: column.header === "Pokemon Name" ? "80px" : undefined,
+              }}
+            >
               {column.header}
             </TableHead>
           ))}
@@ -86,7 +94,11 @@ export function DataTable<T extends { id: string | number }>({
           data.map((item) => (
             <TableRow key={item.id}>
               {columns.map((column, colIndex) => (
-                <TableCell key={colIndex} className="px-4">
+                <TableCell
+                  key={colIndex}
+                  className="px-4"
+                  style={{ width: column.width }} 
+                >
                   {column.accessor(item)}
                 </TableCell>
               ))}

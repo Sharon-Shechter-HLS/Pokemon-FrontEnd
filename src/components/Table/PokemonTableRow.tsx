@@ -26,7 +26,9 @@ export function PokemonTableRow({ pokemon }: PokemonTableRowProps) {
           <PokemonLogo imgSrc={pokemon.image?.hires || ""} />
           {pokemon.name.english}
           {pokemon.isMyPokemon && (
-            <span className="flex-shrink-0 flex-grow-0 min-w-[60px] min-h-[60px] max-w-[60px] max-h-[60px] flex items-center">
+            <span
+              className="flex-shrink-0 flex-grow-0 w-5 h-5 flex items-center justify-center"
+            >
               <Pokador size={20} />
             </span>
           )}
