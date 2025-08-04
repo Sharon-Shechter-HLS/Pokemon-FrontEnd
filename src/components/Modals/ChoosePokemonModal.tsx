@@ -28,9 +28,11 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
 
   const handleConfirmSelection = () => {
     if (!selected) return;
-    setPokemonId(selected._id); 
-    onClose(); 
-    navigate("/arena"); 
+
+    navigate("/arena");
+    setPokemonId(selected._id);
+
+    onClose();
   };
 
   if (isLoading)
