@@ -49,27 +49,27 @@ export const PokemonTable = ({
     {
       header: "Pokemon Name",
       accessor: (pokemon: Pokemon) => pokemon.name.english,
-      width: "200px", // Fixed width
+      width: "200px", 
     },
     {
       header: "ID",
       accessor: (pokemon: Pokemon) => pokemon.id,
-      width: "100px", // Fixed width
+      width: "100px", 
     },
     {
       header: "Description",
       accessor: (pokemon: Pokemon) => pokemon.description,
-      width: "300px", // Fixed width
+      width: "300px", 
     },
     {
       header: "Power Level",
       accessor: (pokemon: Pokemon) => pokemon.base.Attack,
-      width: "150px", // Fixed width
+      width: "150px", 
     },
     {
       header: "HP",
       accessor: (pokemon: Pokemon) => pokemon.base.HP,
-      width: "150px", // Fixed width
+      width: "150px", 
     },
   ];
 

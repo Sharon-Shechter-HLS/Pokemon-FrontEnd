@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchPokemons } from "@/api/pokemonsAPI";
+import type { FetchPokemonsResponse } from "@/api/pokemonsAPI";
 import {UserId} from '../consts'
 
 const SORT_BY_OPTIONS = [
@@ -29,22 +30,22 @@ export function useMyPokemons({
     ? sortOption
     : undefined;
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<FetchPokemonsResponse>({
     queryKey: ["pokemons", { page, rowsPerPage, validatedSortOption, searchQuery, isMyPokemons }],
     queryFn: () =>
       fetchPokemons({
         page,
         rowsPerPage,
-        sortBy: validatedSortOption || "id-asc", 
+        sortBy: validatedSortOption || "id-asc",
         search: searchQuery,
         fromMy: isMyPokemons,
         userId: UserId,
       }),
   });
 
-  const pokemons = data?.pokemons || [];
+  const pokemons = data?.data || [];
   const meta = {
-    total: data?.total || 0,
+    total: data?.meta?.total?.total || 0,
   };
 
   return {

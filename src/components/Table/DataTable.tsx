@@ -14,7 +14,7 @@ import { NoResults } from "../../assets/NoResults";
 type Column<T> = {
   header: string;
   accessor: (item: T) => React.ReactNode;
-  width?: string; // Optional fixed width for the column
+  width?: string; 
 };
 
 type DataTableProps<T extends { id: string | number }> = {
@@ -52,7 +52,7 @@ export function DataTable<T extends { id: string | number }>({
               className="px-4 text-left font-bold"
               style={{
                 width: column.width,
-                paddingLeft: column.header === "Pokemon Name" ? "80px" : undefined,
+                paddingLeft: column.header === "Pokemon Name" ? "75px" : undefined,
               }}
             >
               {column.header}
@@ -64,20 +64,34 @@ export function DataTable<T extends { id: string | number }>({
         {isLoading ? (
           Array.from({ length: pageSize }).map((_, index) => (
             <TableRow key={index}>
-              <TableCell className="px-4">
-                <Skeleton className="h-12 w-12 rounded-full mx-auto" />
-              </TableCell>
-              <TableCell className="px-4">
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-[250px]" />
-                  <Skeleton className="h-4 w-[200px]" />
+              {/* Skeleton for Pokemon Name */}
+              <TableCell className="px-4 text-left text-lg flex items-center justify-begin gap-4" style={{ width: "200px" }}>
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-4 w-[150px]" />
+                  <Skeleton className="h-5 w-5" />
                 </div>
               </TableCell>
-              {columns.slice(2).map((_, colIndex) => (
-                <TableCell key={colIndex} className="px-4">
-                  <Skeleton className="h-4 w-full rounded-md" />
-                </TableCell>
-              ))}
+
+              {/* Skeleton for ID */}
+              <TableCell className="px-4 text-left" style={{ width: "100px" }}>
+                <Skeleton className="h-4 w-[50px]" />
+              </TableCell>
+
+              {/* Skeleton for Description */}
+              <TableCell className="px-4 max-w-[544px] truncate whitespace-nowrap overflow-hidden text-left">
+                <Skeleton className="h-4 w-[300px]" />
+              </TableCell>
+
+              {/* Skeleton for Power Level */}
+              <TableCell className="px-4 text-left" style={{ width: "150px" }}>
+                <Skeleton className="h-4 w-[100px]" />
+              </TableCell>
+
+              {/* Skeleton for HP */}
+              <TableCell className="px-4 text-left" style={{ width: "150px" }}>
+                <Skeleton className="h-4 w-[80px]" />
+              </TableCell>
             </TableRow>
           ))
         ) : data.length === 0 ? (
