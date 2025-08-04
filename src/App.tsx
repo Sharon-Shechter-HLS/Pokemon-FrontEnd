@@ -13,6 +13,7 @@ import { ROUTES } from "./constants/routes";
 import "./App.css";
 import ArenaRoute from "./Routes/ArenaRoute";
 import { ContextRouteProvider } from "./Routes/contextRoute"; 
+import { BattleProvider } from "./components/Arena/BattleContext"; 
 
 const queryClient = new QueryClient();
 
@@ -52,13 +53,17 @@ const AppContent = () => {
 };
 
 function App() {
+  const initialBattleData = {}; // Provide initial battle data here
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <ContextRouteProvider> {/* Wrap the app with ContextRouteProvider */}
-          <div className="bg-primary-50">
-            <AppContent />
-          </div>
+          <BattleProvider initialBattleData={initialBattleData}> {/* Wrap with BattleProvider */}
+            <div className="bg-primary-50">
+              <AppContent />
+            </div>
+          </BattleProvider>
         </ContextRouteProvider>
       </BrowserRouter>
     </QueryClientProvider>

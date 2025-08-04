@@ -17,7 +17,7 @@ type EndOfFightModalProps = {
     title: string;
     attributes: { label: string; value: string }[];
   };
-  gameId: string; // Add gameId to props
+  gameId: string; 
 };
 
 export const EndOfFightModal = ({

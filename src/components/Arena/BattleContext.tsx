@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { attack, catchOpponent, addPokemon, removePokemon } from "../../api/battelAPI";
-import type {BattleData} from "../../typs/BattleData";
-import {UserId} from "../../consts";
+import type { BattleData } from "../../typs/BattleData";
+import { UserId } from "../../consts";
 
 type BattleContextProps = {
   battleData: BattleData;
@@ -9,17 +9,18 @@ type BattleContextProps = {
   handleAttack: () => Promise<string>;
   handleCatch: () => Promise<string>;
   processBattleOutcome: (battleData: BattleData) => Promise<void>;
+  lostPokemonId: string | null; 
+  setLostPokemonId: React.Dispatch<React.SetStateAction<string | null>>; 
 };
 
 const BattleContext = createContext<BattleContextProps | undefined>(undefined);
 
-const processBattleOutcome = async (battleData: BattleData) => {
+const processBattleOutcome = async (battleData: BattleData, setLostPokemonId: React.Dispatch<React.SetStateAction<string | null>>) => {
   try {
     if (battleData.isCatched || battleData.winner === "User") {
       await addPokemon(UserId, battleData.opponent._id);
-    } else if (battleData.winner === "Opponent") {
-      await removePokemon(UserId, battleData.user._id);
     }
+    else setLostPokemonId(battleData.user._id); 
   } catch (error) {
     console.error("Error processing battle outcome:", error);
   }
@@ -27,6 +28,7 @@ const processBattleOutcome = async (battleData: BattleData) => {
 
 export const BattleProvider = ({ children, initialBattleData }: { children: React.ReactNode; initialBattleData: any }) => {
   const [battleData, setBattleData] = useState(initialBattleData);
+  const [lostPokemonId, setLostPokemonId] = useState<string | null>(null); 
 
   useEffect(() => {
     setBattleData(initialBattleData);
@@ -64,8 +66,22 @@ export const BattleProvider = ({ children, initialBattleData }: { children: Reac
     }
   };
 
+  const processBattleOutcomeWrapper = async (battleData: BattleData) => {
+    await processBattleOutcome(battleData, setLostPokemonId);
+  };
+
   return (
-    <BattleContext.Provider value={{ battleData, setBattleData, handleAttack, handleCatch, processBattleOutcome }}>
+    <BattleContext.Provider
+      value={{
+        battleData,
+        setBattleData,
+        handleAttack,
+        handleCatch,
+        processBattleOutcome: processBattleOutcomeWrapper,
+        lostPokemonId,
+        setLostPokemonId,
+      }}
+    >
       {children}
     </BattleContext.Provider>
   );

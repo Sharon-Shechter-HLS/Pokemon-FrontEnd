@@ -15,6 +15,7 @@ import { Separator } from "../ui/seperator";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
 import { useContextRoute } from "@/Routes/contextRoute"; 
+import { useBattleContext } from "../Arena/BattleContext"; 
 
 type ChoosePokemonModalProps = {
   onClose: () => void;
@@ -23,6 +24,7 @@ type ChoosePokemonModalProps = {
 const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
   const { setPokemonId } = useContextRoute();
   const { pokemons, isLoading } = useMyPokemons({ isMyPokemons: true });
+  const { lostPokemonId } = useBattleContext(); 
   const [selected, setSelected] = useState<Pokemon | null>(null);
   const navigate = useNavigate(); 
 
@@ -66,15 +68,17 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
                     .slice(rowIdx * 3, rowIdx * 3 + 3)
                     .map((pokemon) => {
                       const isSelected = selected?._id === pokemon._id;
+                      const isDisabled = pokemon._id === lostPokemonId; 
                       return (
                         <button
                           key={pokemon._id}
-                          onClick={() => setSelected(pokemon)}
+                          onClick={() => !isDisabled && setSelected(pokemon)}
                           type="button"
                           className={`flex flex-row items-center rounded-full justify-center hover:border-blue-600 transition-transform border-2 ${
                             isSelected ? "border-blue-600" : "border-transparent"
-                          }`}
+                          } ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
                           style={{ padding: 0 }}
+                          disabled={isDisabled} 
                         >
                           <PokemonLogo
                             name={pokemon.name.english}
