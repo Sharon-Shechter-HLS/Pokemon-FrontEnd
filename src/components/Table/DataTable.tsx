@@ -54,7 +54,6 @@ export function DataTable<T extends { id: string | number }>({
               className="px-4 text-left font-bold"
               style={{
                 width: column.width,
-                paddingLeft: column.header === "Pokemon Name" ? "75px" : undefined,
               }}
             >
               {column.header}
@@ -65,35 +64,24 @@ export function DataTable<T extends { id: string | number }>({
       <TableBody>
         {isLoading ? (
           Array.from({ length: pageSize }).map((_, index) => (
-            <TableRow key={index}>
-              {/* Skeleton for Pokemon Name */}
-              <TableCell className="px-4 text-left text-lg flex items-center justify-begin gap-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-4 w-[150px]" />
-                  <Skeleton className="h-5 w-5" />
-                </div>
-              </TableCell>
-
-              {/* Skeleton for ID */}
-              <TableCell className="px-4 text-left">
-                <Skeleton className="h-4 w-[50px]" />
-              </TableCell>
-
-              {/* Skeleton for Description */}
-              <TableCell className="px-4 max-w-[544px] truncate whitespace-nowrap overflow-hidden text-left">
-                <Skeleton className="h-4 w-[300px]" />
-              </TableCell>
-
-              {/* Skeleton for Power Level */}
-              <TableCell className="px-4 text-left">
-                <Skeleton className="h-4 w-[100px]" />
-              </TableCell>
-
-              {/* Skeleton for HP */}
-              <TableCell className="px-4 text-left">
-                <Skeleton className="h-4 w-[80px]" />
-              </TableCell>
+            <TableRow key={index} style={{ height: "48px" }}>
+              {columns.map((column, colIndex) => (
+                <TableCell
+                  key={colIndex}
+                  className="px-4 text-left"
+                  style={{ width: column.width }}
+                >
+                  <Skeleton
+                    className={
+                      colIndex === 0
+                        ? "h-12 w-12 rounded-full flex items-center gap-4"
+                        : colIndex === 2
+                        ? "h-4 w-[300px] truncate whitespace-nowrap overflow-hidden"
+                        : "h-4 w-full"
+                    }
+                  />
+                </TableCell>
+              ))}
             </TableRow>
           ))
         ) : data.length === 0 ? (

@@ -22,7 +22,13 @@ export function PokemonTableRow({ pokemon }: PokemonTableRowProps) {
         key={pokemon.id}
         onClick={() => setOpen(true)}
       >
-        <TableCell className="px-4 text-left text-lg flex items-center justify-begin gap-4" style={{ width: "200px" }}>
+        <TableCell
+          className="px-4 text-left text-lg flex items-center gap-4"
+          style={{
+            width: "250px", 
+            textAlign: "left", 
+          }}
+        >
           <PokemonLogo imgSrc={pokemon.image?.hires || ""} />
           <div className="flex items-center gap-2">
             <span>{pokemon.name.english}</span>
