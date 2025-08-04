@@ -84,3 +84,13 @@ export const removePokemon = async (userId: string, pokemonId: string) => {
     throw error;
   }
 };
+
+export const getAnotherOpponent = async (gameId: string) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/arena/getAnotherOpponent`, { gameId });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to get another opponent:", error);
+    throw error;
+  }
+};

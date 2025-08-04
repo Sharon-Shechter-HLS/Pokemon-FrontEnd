@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import ArenaPage from "@/pages/ArenaPage";
 import { useContextRoute } from "@/Routes/contextRoute"; 
 import { startNewBattle } from "@/api/battelAPI";
-import type { BattleData } from "@/typs/BattleData"; // Import the BattleData type
+import type { BattleData } from "@/typs/BattleData"; 
 
 const ArenaRoute = () => {
   const navigate = useNavigate();
   const { pokemonId } = useContextRoute();
   const [loading, setLoading] = useState(true);
-  const [battleData, setBattleData] = useState<BattleData | null>(null); // Explicitly define the type
+  const [battleData, setBattleData] = useState<BattleData | null>(null); 
 
   useEffect(() => {
     const initializeBattle = async () => {
@@ -22,7 +22,6 @@ const ArenaRoute = () => {
       try {
         console.log("Starting new battle with Pokémon ID:", pokemonId);
         const response = await startNewBattle(pokemonId);
-        console.log("New battle data:", response); // Debug log
         setBattleData(response);
         window.history.pushState({}, "", `/arena?battleId=${response._id}`);
       } catch (error) {

@@ -11,15 +11,12 @@ import attackButtonBackground from "../../assets/attackButoonBackground.png";
 import arenaBackground from "../../assets/arenaBackground.png";
 import { useBattleContext } from "./BattleContext";
 import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
-import { startNewBattle } from "../../api/battelAPI";
 import type { BattleData } from "../../typs/BattleData";
 
 
-type ArenaProps = {
-  onStartNewBattle: (newBattleData: BattleData, showVSComponent?: boolean) => void; 
-};
 
-const Arena = ({ onStartNewBattle }: ArenaProps) => {
+
+const Arena = () => {
   const { battleData, setBattleData, handleAttack, handleCatch, processBattleOutcome } = useBattleContext();
   const [dialogue, setDialogue] = useState(`${battleData.user.name.english} starts the fight!`);
   const [showChoosePokemonModal, setShowChoosePokemonModal] = useState(false);
@@ -83,15 +80,9 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
     }
   };
 
-  const handlePlayAgain = async () => {
-    try {
-      const response = await startNewBattle(battleData.user._id);
-      setBattleData(response);
-      setDialogue(`${response.user.name.english} starts the fight!`);
-      onStartNewBattle(response, false);
-    } catch (error) {
-      console.error("Error during play again:", error);
-    }
+  const handlePlayAgain = (updatedBattleData: BattleData) => {
+    setBattleData(updatedBattleData); 
+    setDialogue(`${updatedBattleData.user.name.english} starts the fight!`);
   };
 
   const handleSwitchPokemon = () => {
@@ -198,7 +189,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
           title={
             battleData.isCatched
               ? `You caught ${battleData.opponent.name.english}!`
-              : battleData.winner === battleData.user.name.english
+              : battleData.winner === "user"
               ? `You won ${battleData.opponent.name.english}!`
               : `${battleData.user.name.english} lost the match`
           }
@@ -206,7 +197,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
           winnerImageUrl={
             battleData.isCatched
               ? battleData.opponent.image?.hires || ""
-              : battleData.winner === battleData.user.name.english
+              : battleData.winner === "user"
               ? battleData.opponent.image?.hires || ""
               : battleData.user.image?.hires || ""
           }
@@ -221,6 +212,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
               },
             ],
           }}
+          gameId={battleData._id} 
           onPlayAgain={handlePlayAgain}
           onReturnToMenu={handleReturnToMenu}
           onSwitchPokemon={battleData.userCurrentLife <= 0 ? handleSwitchPokemon : undefined}
