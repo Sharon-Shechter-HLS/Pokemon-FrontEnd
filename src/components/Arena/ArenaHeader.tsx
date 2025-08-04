@@ -34,7 +34,7 @@ export const ArenaHeader = ({
   filterOptions,
   onPokemonChange,
   hasSwitch,
-  selectedPokemonName, 
+  selectedPokemonName,
 }: ArenaHeaderProps & { hasSwitch: boolean; selectedPokemonName?: string }) => {
   const handleFilterChange = (value: string | null) => {
     if (hasSwitch || !value) return;
@@ -48,10 +48,18 @@ export const ArenaHeader = ({
   };
 
   const filterOptionsFormatted = useMemo(
-    () =>
-      filterOptions.map((pokemon) => ({
+    () => [
+      {
         label: (
-          <div className="flex items-center justify-between w-full min-w-[256px]">
+          <div className="text-gray-600 text-sm font-medium px-4 py-2 bg-primary-50 pointer-events-none">
+            Pokémon’s can be switched <span className="font-bold">once</span> in battle.
+          </div>
+        ),
+        value: "info-row", 
+      },
+      ...filterOptions.map((pokemon) => ({
+        label: (
+          <div className="flex items-center justify-between w-full min-w-[256px] px-4 py-2">
             <div className="flex items-center gap-3">
               <PokemonLogo size={36} imgSrc={pokemon.image?.thumbnail} />
               <div className="flex flex-col">
@@ -72,6 +80,7 @@ export const ArenaHeader = ({
         ),
         value: pokemon.id.toString(),
       })),
+    ],
     [filterOptions]
   );
 
@@ -99,7 +108,11 @@ export const ArenaHeader = ({
             <Filter
               options={filterOptionsFormatted}
               value={null}
-              onChange={handleFilterChange}
+              onChange={(value) => {
+                if (value !== "info-row") {
+                  handleFilterChange(value);
+                }
+              }}
               label={filterTitle}
             />
           </div>

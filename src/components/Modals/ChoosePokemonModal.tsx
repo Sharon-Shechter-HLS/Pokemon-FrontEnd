@@ -13,7 +13,8 @@ import { FaTimes } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/seperator";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
-import {UserId} from "../../consts";
+import { UserId } from "../../consts";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 type ChoosePokemonModalProps = {
   onSelect: (pokemon: Pokemon) => Promise<void>;
@@ -30,10 +31,13 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/arena/startGame", {
-        userId: UserId,
-        pokemonId: selected._id, 
-      });
+      const response = await axios.post(
+        "http://localhost:3000/arena/startGame",
+        {
+          userId: UserId,
+          pokemonId: selected._id,
+        }
+      );
 
       const battleData = response.data;
       window.location.href = `/arena?pokemonId=${selected._id}&battleId=${battleData._id}`;
@@ -44,7 +48,12 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
     }
   };
 
-  if (isLoading) return <div className="p-8 text-center">Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="p-8 flex justify-center items-center">
+        <LoadingSpinner className="text-blue-600 w-10 h-10" />
+      </div>
+    );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -100,7 +109,11 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
             onClick={startGame}
             disabled={!selected || loading}
           >
-            {loading ? "Starting..." : "Start Battle"}
+            {loading ? (
+              <LoadingSpinner className="text-white w-5 h-5" />
+            ) : (
+              "Start Battle"
+            )}
           </Button>
         </CardFooter>
       </Card>

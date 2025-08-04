@@ -67,8 +67,8 @@ const ArenaPage = ({ battleData }: ArenaPageProps) => {
       <div className="arena-page px-5">
         {/* Arena Header */}
         <ArenaHeader
-          headline="Battle Arena"
-          description="Choose your Pokémon wisely!"
+          headline="Fighting arena"
+          description="Start fighting against your opponent to win the battle"
           filterTitle="Switch Pokémon"
           filterOptions={pokemons}
           onPokemonChange={handlePokemonSwitch}

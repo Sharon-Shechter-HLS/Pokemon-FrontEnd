@@ -81,7 +81,7 @@ export function Filter({
           </span>
         </Button>
       </DropdownMenuTrigger>
-      {!disabled && ( // Prevent dropdown from rendering if disabled
+      {!disabled && ( 
         <DropdownMenuContent>
           <DropdownMenuLabel>{label}</DropdownMenuLabel>
           <DropdownMenuSeparator />

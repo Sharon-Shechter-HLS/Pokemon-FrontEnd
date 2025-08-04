@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ArenaPage from "@/pages/ArenaPage";
 import { UserId } from "@/consts";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 const ArenaRoute = () => {
   const location = useLocation();
@@ -16,22 +17,21 @@ const ArenaRoute = () => {
   useEffect(() => {
     const startGame = async () => {
       console.log("Starting game with Pokémon ID:", pokemonId);
-      
+
       if (!pokemonId) {
         navigate("/all-pokemons");
         return;
       }
 
       try {
-
         const response = await axios.post("http://localhost:3000/arena/startGame", {
-          userId: UserId, 
-          pokemonId, 
+          userId: UserId,
+          pokemonId,
         });
-        setBattleData(response.data); 
+        setBattleData(response.data);
       } catch (error) {
         console.error("Failed to start the game:", error);
-        navigate("/all-pokemons"); 
+        navigate("/all-pokemons");
       } finally {
         setLoading(false);
       }
@@ -41,7 +41,11 @@ const ArenaRoute = () => {
   }, [pokemonId, navigate]);
 
   if (loading) {
-    return <div className="p-8 text-center">Loading...</div>;
+    return (
+      <div className="p-8 flex justify-center items-center">
+        <LoadingSpinner className="text-blue-600 w-10 h-10" />
+      </div>
+    );
   }
 
   if (!battleData) {

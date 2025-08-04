@@ -1,9 +1,9 @@
 import React from "react";
 
 export type CircularLoaderProps = {
-  size?: number; // px
+  size?: number; 
   color?: string;
-  thickness?: number; // px
+  thickness?: number; 
   className?: string;
 };
 

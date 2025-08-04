@@ -53,11 +53,8 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
 
   useEffect(() => {
     const processOutcome = async () => {
-      console.log("Processing battle outcome:", battleData.winner, battleData.isCatched);
       if (battleData.winner || battleData.isCatched) {
-        console.log("Processing battle outcome...");
         await processBattleOutcome(battleData);
-        console.log("Battle outcome processed.");
         setHasProcessedOutcome(true); 
       }
     };
@@ -138,7 +135,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
         </div>
         <CompetitorPhoto
           imageUrl={battleData.user.image?.hires || ""}
-          className={`absolute top-1 right-20 scale-[0.6] ${
+          className={`absolute top-20 right-50 scale-[1] ${
             battleData.turn === "user" && battleData.userCurrentLife > 0 ? "animate-vibrate" : ""
           } ${battleData.userCurrentLife <= 0 ? "animate-faint-left" : ""}`}
         />
@@ -173,7 +170,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
         ) : (
           <CompetitorPhoto
             imageUrl={battleData.opponent.image?.hires || ""}
-            className={`absolute bottom-1 left-40 transform scale-[0.5] ${
+            className={`absolute top-20 left-50 scale-[1] ${
               battleData.turn === "opponent" && battleData.opponentCurrentLife > 0 ? "animate-vibrate" : ""
             } ${battleData.opponentCurrentLife <= 0 ? "animate-faint-right" : ""}`}
           />

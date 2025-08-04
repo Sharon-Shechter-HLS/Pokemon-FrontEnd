@@ -9,6 +9,7 @@ import {
   TableCell,
 } from "../ui/table";
 import { Skeleton } from "../ui/skeleton";
+import { NoResults } from "../../assets/NoResults";
 
 type Column<T> = {
   header: string;
@@ -74,7 +75,7 @@ export function DataTable<T extends { id: string | number }>({
         ) : data.length === 0 ? (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">
-              No results
+              <NoResults message="No Pokemons were found" />
             </TableCell>
           </TableRow>
         ) : rowRenderer ? (
