@@ -8,7 +8,7 @@ const ArenaRoute = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const pokemonId = queryParams.get("pokemonId"); // Get the Pokémon `_id` from the URL
+  const pokemonId = queryParams.get("pokemonId");
 
   const [battleData, setBattleData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,13 +25,13 @@ const ArenaRoute = () => {
       try {
 
         const response = await axios.post("http://localhost:3000/arena/startGame", {
-          userId: UserId, // Use the default user ID from consts
-          pokemonId, // Pokémon `_id` from the URL
+          userId: UserId, 
+          pokemonId, 
         });
-        setBattleData(response.data); // Set the battle data from the response
+        setBattleData(response.data); 
       } catch (error) {
         console.error("Failed to start the game:", error);
-        navigate("/all-pokemons"); // Redirect to the Pokémon list if the request fails
+        navigate("/all-pokemons"); 
       } finally {
         setLoading(false);
       }

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchPokemons } from "@/api/pokemonsAPI";
+import {UserId} from '../consts'
 
 const SORT_BY_OPTIONS = [
   "name.english-asc",
@@ -10,7 +11,6 @@ const SORT_BY_OPTIONS = [
   "base.HP-desc",
 ] as const;
 
-const USER_ID = "687e5c1b22589cce30fa9765";
 
 export function useMyPokemons({
   page = 1,
@@ -38,7 +38,7 @@ export function useMyPokemons({
         sortBy: validatedSortOption || "id-asc", 
         search: searchQuery,
         fromMy: isMyPokemons,
-        userId: USER_ID,
+        userId: UserId,
       }),
   });
 
