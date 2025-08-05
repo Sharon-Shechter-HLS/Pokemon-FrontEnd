@@ -3,6 +3,7 @@ import { Filter } from "../ui/filter";
 import type { Pokemon } from "../../typs/Pokemon";
 import { PokemonLogo } from "../PokemonLogo/PokemonLogo";
 import DescriptionTooltip from "../ToolTip/ToolTip";
+import { useBattleContext } from "./BattleContext";
 
 type ArenaHeaderProps = {
   headline: string;
@@ -36,6 +37,8 @@ export const ArenaHeader = ({
   hasSwitch,
   selectedPokemonName,
 }: ArenaHeaderProps & { hasSwitch: boolean; selectedPokemonName?: string }) => {
+  const { battleData } = useBattleContext();
+
   const handleFilterChange = (value: string | null) => {
     if (hasSwitch || !value) return;
 
@@ -57,31 +60,33 @@ export const ArenaHeader = ({
         ),
         value: "info-row", 
       },
-      ...filterOptions.map((pokemon) => ({
-        label: (
-          <div className="flex items-center justify-between w-full min-w-[256px] px-4 py-2">
-            <div className="flex items-center gap-3">
-              <PokemonLogo size={36} imgSrc={pokemon.image?.thumbnail} />
-              <div className="flex flex-col">
-                <span className="font-medium text-base leading-tight">
-                  {typeof pokemon.name === "string"
-                    ? pokemon.name
-                    : pokemon.name.english}
-                </span>
-                <span className="text-xs text-blue-700">
-                  Speed: {pokemon.base?.Speed ?? 0}
-                </span>
+      ...filterOptions
+        .filter((pokemon) => pokemon._id !== battleData.user._id) 
+        .map((pokemon) => ({
+          label: (
+            <div className="flex items-center justify-between w-full min-w-[256px] px-4 py-2">
+              <div className="flex items-center gap-3">
+                <PokemonLogo size={36} imgSrc={pokemon.image?.thumbnail} />
+                <div className="flex flex-col">
+                  <span className="font-medium text-base leading-tight">
+                    {typeof pokemon.name === "string"
+                      ? pokemon.name
+                      : pokemon.name.english}
+                  </span>
+                  <span className="text-xs text-blue-700">
+                    Speed: {pokemon.base?.Speed ?? 0}
+                  </span>
+                </div>
               </div>
+              <span className="font-semibold text-base">
+                Pwr. {pokemon.base?.Attack ?? 0}
+              </span>
             </div>
-            <span className="font-semibold text-base">
-              Pwr. {pokemon.base?.Attack ?? 0}
-            </span>
-          </div>
-        ),
-        value: pokemon.id.toString(),
-      })),
+          ),
+          value: pokemon.id.toString(),
+        })),
     ],
-    [filterOptions]
+    [filterOptions, battleData.user._id]
   );
 
   return (
