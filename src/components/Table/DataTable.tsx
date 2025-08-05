@@ -49,7 +49,9 @@ export function DataTable<T extends { id: string | number }>({
           {columns.map((column, index) => (
             <TableHead
               key={index}
-              className="px-4 text-left font-bold"
+              className={`text-left font-bold ${
+                column.header === "Pokemon Name" ? "px-25" : "px-4"
+              }`} 
               style={{
                 width: column.width,
               }}
@@ -122,7 +124,7 @@ export function DataTable<T extends { id: string | number }>({
       <TableFooter
         page={page}
         pageSize={pageSize}
-        total={total} 
+        total={total}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
         rowsPerPageOptions={rowsPerPageOptions}

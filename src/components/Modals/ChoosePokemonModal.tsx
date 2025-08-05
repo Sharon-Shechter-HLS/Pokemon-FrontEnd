@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
 import type { Pokemon } from "../../typs/Pokemon";
 import PokemonLogo from "../PokemonLogo/PokemonLogo";
 import {
@@ -14,26 +13,21 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/seperator";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
-import { useContextRoute } from "@/Routes/contextRoute"; 
 import { useBattleContext } from "../Arena/BattleContext"; 
 
 type ChoosePokemonModalProps = {
   onClose: () => void;
+  onChoose?: (pokemon: Pokemon) => void;
 };
 
-const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
-  const { setPokemonId } = useContextRoute();
+const ChoosePokemonModal = ({ onClose, onChoose }: ChoosePokemonModalProps) => {
   const { pokemons, isLoading } = useMyPokemons({ isMyPokemons: true });
   const { lostPokemonId } = useBattleContext(); 
   const [selected, setSelected] = useState<Pokemon | null>(null);
-  const navigate = useNavigate(); 
 
   const handleConfirmSelection = () => {
     if (!selected) return;
-
-    navigate("/arena");
-    setPokemonId(selected._id);
-
+    onChoose?.(selected);
     onClose();
   };
 
@@ -57,9 +51,7 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
           <CardTitle>Choose Your Pokémon</CardTitle>
         </CardHeader>
         <CardContent>
-          <div
-            className="flex flex-col gap-15 items-center overflow-y-auto max-h-[400px]" 
-          >
+          <div className="flex flex-col gap-15 items-center overflow-y-auto max-h-[400px]">
             {Array.from({ length: Math.ceil(pokemons.length / 3) }).map(
               (_, rowIdx) => (
                 <div
@@ -102,7 +94,7 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
             onClick={handleConfirmSelection}
             disabled={!selected}
           >
-          Start battle         
+            Confirm Selection
           </Button>
         </CardFooter>
       </Card>

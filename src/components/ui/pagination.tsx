@@ -45,7 +45,7 @@ export function PaginationInfo({
           aria-disabled={page === 1}
           tabIndex={page === 1 ? -1 : 0}
           className={cn(
-            "bg-transparent active:bg-muted shadow-none text-inherit transition-colors",
+            "bg-transparent hover:bg-primary-50 active:bg-muted shadow-none text-inherit transition-colors",
             page === 1 && "pointer-events-none opacity-50"
           )}
         />
@@ -55,7 +55,7 @@ export function PaginationInfo({
           aria-disabled={total > 0 && end === total}
           tabIndex={total > 0 && end === total ? -1 : 0}
           className={cn(
-            "bg-transparent active:bg-muted shadow-none text-inherit transition-colors",
+            "bg-transparent hover:bg-primary-50 active:bg-muted shadow-none text-inherit transition-colors",
             total > 0 && end === total && "pointer-events-none opacity-50"
           )}
         />

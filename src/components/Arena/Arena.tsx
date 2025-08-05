@@ -12,7 +12,8 @@ import arenaBackground from "../../assets/arenaBackground.png";
 import { useBattleContext } from "./BattleContext";
 import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
 import type { BattleData } from "../../typs/BattleData";
-
+import { switchPokemon } from "../../api/battelAPI";
+import type { Pokemon } from "../../typs/Pokemon";
 
 
 
@@ -87,6 +88,20 @@ const Arena = () => {
 
   const handleSwitchPokemon = () => {
     setShowChoosePokemonModal(true);
+  };
+
+  const handleSwitchConfirm = async (newPokemon: Pokemon) => {
+    try {
+      setHasProcessedOutcome(false);
+      const updatedBattleData = await switchPokemon(battleData._id, newPokemon._id);
+      setBattleData(updatedBattleData);
+      setDialogue(`${updatedBattleData.user.name.english} has entered the battlefield`);
+    } catch (error) {
+      console.error("Error switching Pokémon:", error);
+    } finally {
+      setShowChoosePokemonModal(false);
+      setHasProcessedOutcome(true);
+    }
   };
 
   const handleReturnToMenu = () => {
@@ -223,6 +238,7 @@ const Arena = () => {
       {showChoosePokemonModal && (
         <ChoosePokemonModal
           onClose={() => setShowChoosePokemonModal(false)} 
+          onChoose={handleSwitchConfirm} 
         />
       )}
     </div>

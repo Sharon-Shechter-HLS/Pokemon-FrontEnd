@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import HeaderMenu from "./NavMenu";
 import { Button } from "../ui/button";
 import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
 import PokemonLogoSrc from "../../assets/headerLogo.svg";
+import { useContextRoute } from "@/Routes/contextRoute"; 
+import type { Pokemon } from "../../typs/Pokemon";
 
 type HeaderMenuItem = {
   name: string;
@@ -22,7 +25,8 @@ type HeaderLogoProps = {
 
 export function Header({ items }: HeaderProps) {
   const [showModal, setShowModal] = useState(false);
-
+  const navigate = useNavigate();
+  const { setPokemonId } = useContextRoute(); 
   const HeaderLogo = ({
     src,
     alt,
@@ -32,6 +36,11 @@ export function Header({ items }: HeaderProps) {
       <img src={src} alt={alt} className={className} />
     </div>
   );
+
+  const handleChoosePokemon = (pokemon: Pokemon) => {
+    navigate(`/arena`); 
+    setPokemonId(pokemon._id); 
+  };
 
   return (
     <>
@@ -46,7 +55,10 @@ export function Header({ items }: HeaderProps) {
       </header>
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <ChoosePokemonModal onClose={() => setShowModal(false)} />
+          <ChoosePokemonModal
+            onClose={() => setShowModal(false)}
+            onChoose={handleChoosePokemon} 
+          />
         </div>
       )}
     </>
