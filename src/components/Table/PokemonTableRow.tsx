@@ -46,7 +46,7 @@ export function PokemonTableRow({ pokemon }: PokemonTableRowProps) {
           {formatPokemonId(pokemon.id)} 
         </TableCell>
         <TableCell className="px-4 max-w-[544px] truncate whitespace-nowrap overflow-hidden text-left">
-          {pokemon.description && pokemon.description.length > MAX_DESCRIPTION_LENGTH ? (
+          {pokemon.description && pokemon.description.length >=  MAX_DESCRIPTION_LENGTH ? (
             <DescriptionTooltip content={pokemon.description}>
               <span>{pokemon.description}</span>
             </DescriptionTooltip>

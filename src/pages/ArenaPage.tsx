@@ -43,10 +43,6 @@ const ArenaPage = ({ battleData }: ArenaPageProps) => {
     );
   };
 
-  const handleStartNewBattle = (newBattleData: BattleData, showVSComponent: boolean = true) => {
-    setBattleDataState(newBattleData);
-    setShowVS(showVSComponent); 
-  };
 
   const handlePokemonSwitch = async (newPokemon: Pokemon) => {
     if (battleDataState.hasSwitch) return;
@@ -82,9 +78,8 @@ const ArenaPage = ({ battleData }: ArenaPageProps) => {
           <VSComponentWrapper />
         ) : (
           <div className="w-[100%] px-4 pb-10">
-            <Arena
-              onStartNewBattle={handleStartNewBattle}
-            />
+            <Arena></Arena>
+            
           </div>
         )}
       </div>

@@ -102,7 +102,7 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
             onClick={handleConfirmSelection}
             disabled={!selected}
           >
-            Confirm Selection
+          Start battle         
           </Button>
         </CardFooter>
       </Card>
