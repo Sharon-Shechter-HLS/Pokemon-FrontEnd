@@ -203,31 +203,35 @@ const Arena = () => {
         <EndOfFightModal
           title={
             battleData.isCatched
-              ? `You caught ${battleData.opponent.name.english}!`
-              : battleData.winner === "user"
-              ? `You won ${battleData.opponent.name.english}!`
-              : `${battleData.user.name.english} lost the match`
+              ? `You caught ${battleData.opponent.name.english}!` 
+              : battleData.winner === "User"
+              ? `You won ${battleData.opponent.name.english}!` 
+              : `${battleData.user.name.english} lost the match` 
           }
           winner={battleData.winner || ""}
           winnerImageUrl={
             battleData.isCatched
-              ? battleData.opponent.image?.hires || ""
-              : battleData.winner === "user"
-              ? battleData.opponent.image?.hires || ""
-              : battleData.user.image?.hires || ""
+              ? battleData.opponent.image?.hires || "" 
+              : battleData.winner === "User"
+              ? battleData.opponent.image?.hires || "" 
+              : battleData.user.image?.hires || "" 
           }
-          description={{
-            title: battleData.opponent.name.english,
-            attributes: [
-              { label: "Speed", value: battleData.opponent.base.Speed.toString() },
-              { label: "Category", value: battleData.opponent.species || "Unknown" },
-              {
-                label: "Abilities",
-                value: battleData.opponent.profile?.ability?.map((a: string[]) => a[0]).join(", ") || "None",
-              },
-            ],
-          }}
-          gameId={battleData._id} 
+          description={
+            battleData.isCatched
+              ? {
+                  title: battleData.opponent.name.english,
+                  attributes: [
+                    { label: "Speed", value: battleData.opponent.base.Speed.toString() },
+                    { label: "Category", value: battleData.opponent.species || "Unknown" },
+                    {
+                      label: "Abilities",
+                      value: battleData.opponent.profile?.ability?.map((a: string[]) => a[0]).join(", ") || "None",
+                    },
+                  ],
+                } 
+              : undefined 
+          }
+          gameId={battleData._id}
           onPlayAgain={handlePlayAgain}
           onReturnToMenu={handleReturnToMenu}
           onSwitchPokemon={battleData.userCurrentLife <= 0 ? handleSwitchPokemon : undefined}
