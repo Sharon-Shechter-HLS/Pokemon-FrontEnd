@@ -94,7 +94,7 @@ export const EndOfFightModal = ({
               variant="secondary"
               onClick={onReturnToMenu}
               className="px-6 py-2"
-            >
+              data-slot="game-button" > 
               End Match
             </Button>
           </div>

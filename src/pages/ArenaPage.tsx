@@ -49,7 +49,6 @@ const ArenaPage = ({ battleData }: ArenaPageProps) => {
 
     try {
       const updatedBattleData = await switchPokemon(battleDataState._id, newPokemon._id);
-      console.log("Switched Pokémon:", updatedBattleData);
 
       setBattleDataState(updatedBattleData);
       setSelectedPokemonName(newPokemon.name.english); 
@@ -78,8 +77,7 @@ const ArenaPage = ({ battleData }: ArenaPageProps) => {
           <VSComponentWrapper />
         ) : (
           <div className="w-[100%] px-4 pb-10">
-            <Arena></Arena>
-            
+            <Arena />
           </div>
         )}
       </div>
