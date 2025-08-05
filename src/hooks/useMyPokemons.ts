@@ -53,7 +53,9 @@ export function useMyPokemons({
   // Update total state if the meta total changes
   useEffect(() => {
     console.log("Meta total:", meta.total, "Current total:", total);
-    if (meta.total !== undefined && meta.total !== total) {
+    if (Array.isArray(meta.total) && meta.total.length === 0) {
+      setTotal(0);
+    } else if (meta.total !== undefined && meta.total !== total) {
       setTotal(meta.total);
     }
   }, [meta.total, total]);

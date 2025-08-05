@@ -72,7 +72,7 @@ export function DataTable<T extends { id: string | number }>({
                   <Skeleton
                     className={
                       colIndex === 0
-                        ? "h-12 w-12 rounded-full flex items-center gap-4"
+                        ? "h-15 w-15 rounded-full flex items-center gap-4"
                         : colIndex === 2
                         ? "h-4 w-[300px] truncate whitespace-nowrap overflow-hidden"
                         : "h-4 w-full"

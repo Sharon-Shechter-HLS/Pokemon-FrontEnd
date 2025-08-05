@@ -23,6 +23,15 @@ export function PaginationInfo({
 }: PaginationInfoProps) {
   const start = (page - 1) * pageSize + 1 ;
   const end = total > 0 ? Math.min(page * pageSize + 1, total) : ((page * pageSize) + 1);
+  if (total === 0) {
+    return (
+      <div className={cn("flex items-center w-full", className)}>
+        <span className="text-xs text-muted-foreground">
+          No items to display
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("flex items-center w-full", className)}>
