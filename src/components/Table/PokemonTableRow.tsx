@@ -6,6 +6,7 @@ import PokemonInfoModal from "../Modals/InfoModal";
 import { Pokador } from "../../assets/PokadorIcon";
 import DescriptionTooltip from "../ToolTip/ToolTip";
 import { formatPokemonId } from "./utils";
+import { MAX_DESCRIPTION_LENGTH } from "../../consts"; // Import the constant
 
 
 type PokemonTableRowProps = {
@@ -45,9 +46,13 @@ export function PokemonTableRow({ pokemon }: PokemonTableRowProps) {
           {formatPokemonId(pokemon.id)} 
         </TableCell>
         <TableCell className="px-4 max-w-[544px] truncate whitespace-nowrap overflow-hidden text-left">
-          <DescriptionTooltip content={pokemon.description || ""}>
+          {pokemon.description && pokemon.description.length > MAX_DESCRIPTION_LENGTH ? (
+            <DescriptionTooltip content={pokemon.description}>
+              <span>{pokemon.description}</span>
+            </DescriptionTooltip>
+          ) : (
             <span>{pokemon.description}</span>
-          </DescriptionTooltip>
+          )}
         </TableCell>
         <TableCell className="px-4 text-left" style={{ width: "150px" }}>
           Level {pokemon.base?.Attack ?? ""}
