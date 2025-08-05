@@ -29,7 +29,7 @@ export const PokemonTable = ({
     setPagination({ page: 1, pageSize: pagination.pageSize });
   }, [searchQuery]);
 
-  const { pokemons, isLoading, meta, error } = useMyPokemons({
+  const { pokemons, isLoading, error, total } = useMyPokemons({
     page: pagination.page,
     rowsPerPage: pagination.pageSize,
     sortOption,
@@ -84,7 +84,7 @@ export const PokemonTable = ({
       isLoading={isLoading}
       page={pagination.page}
       pageSize={pagination.pageSize}
-      total={meta.total}
+      total={total}
       rowRenderer={(pokemon) => <PokemonTableRow key={pokemon.id} pokemon={pokemon} />}
       onPageChange={handlePageChange}
       onPageSizeChange={handlePageSizeChange}

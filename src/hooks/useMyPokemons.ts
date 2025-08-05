@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { fetchPokemons } from "@/api/pokemonsAPI";
 import type { FetchPokemonsResponse } from "@/api/pokemonsAPI";
-import {UserId} from '../consts'
+import { UserId } from "../consts";
 
 const SORT_BY_OPTIONS = [
   "name.english-asc",
@@ -11,7 +12,6 @@ const SORT_BY_OPTIONS = [
   "base.HP-asc",
   "base.HP-desc",
 ] as const;
-
 
 export function useMyPokemons({
   page = 1,
@@ -26,6 +26,8 @@ export function useMyPokemons({
   searchQuery?: string;
   isMyPokemons?: boolean;
 } = {}) {
+  const [total, setTotal] = useState(0);
+
   const validatedSortOption = SORT_BY_OPTIONS.includes(sortOption as typeof SORT_BY_OPTIONS[number])
     ? sortOption
     : undefined;
@@ -45,13 +47,22 @@ export function useMyPokemons({
 
   const pokemons = data?.data || [];
   const meta = {
-    total: data?.meta?.total?.total || 0,
+    total: data?.meta?.total?.total ,
   };
+
+  // Update total state if the meta total changes
+  useEffect(() => {
+    console.log("Meta total:", meta.total, "Current total:", total);
+    if (meta.total !== undefined && meta.total !== total) {
+      setTotal(meta.total);
+    }
+  }, [meta.total, total]);
 
   return {
     pokemons,
     isLoading,
     meta,
     error,
+    total, // Expose the total state
   };
 }

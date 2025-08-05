@@ -14,7 +14,7 @@ import { NoResults } from "../../assets/NoResults";
 type Column<T> = {
   header: string;
   accessor: (item: T) => React.ReactNode;
-  width?: string; 
+  width?: string;
 };
 
 type DataTableProps<T extends { id: string | number }> = {
@@ -42,8 +42,6 @@ export function DataTable<T extends { id: string | number }>({
   onPageSizeChange,
   rowsPerPageOptions = [5, 10, 20],
 }: DataTableProps<T>) {
-  const isPaginationDisabled = data.length === 0 || total === 0;
-
   return (
     <Table className="rounded-md overflow-hidden border border-gray-200">
       <TableHeader>
@@ -122,11 +120,11 @@ export function DataTable<T extends { id: string | number }>({
         )}
       </TableBody>
       <TableFooter
-        page={isPaginationDisabled ? 0 : page}
+        page={page}
         pageSize={pageSize}
-        total={isPaginationDisabled ? 0 : total}
-        onPageChange={isPaginationDisabled ? undefined : onPageChange}
-        onPageSizeChange={isPaginationDisabled ? undefined : onPageSizeChange}
+        total={total} 
+        onPageChange={onPageChange}
+        onPageSizeChange={onPageSizeChange}
         rowsPerPageOptions={rowsPerPageOptions}
       />
     </Table>

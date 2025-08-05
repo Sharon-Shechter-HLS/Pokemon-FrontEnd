@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { attack, catchOpponent, addPokemon, removePokemon } from "../../api/battelAPI";
+import { attack, catchOpponent, addPokemon } from "../../api/battelAPI";
 import type { BattleData } from "../../typs/BattleData";
 import { UserId } from "../../consts";
 

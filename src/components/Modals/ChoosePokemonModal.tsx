@@ -57,7 +57,9 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
           <CardTitle>Choose Your Pokémon</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col gap-15 items-center">
+          <div
+            className="flex flex-col gap-15 items-center overflow-y-auto max-h-[400px]" 
+          >
             {Array.from({ length: Math.ceil(pokemons.length / 3) }).map(
               (_, rowIdx) => (
                 <div
