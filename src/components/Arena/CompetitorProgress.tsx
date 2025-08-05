@@ -26,7 +26,7 @@ export const CompetitorProgress = ({
       } min-w-[286px] max-h-[108px] m-0 p-2 text-white rounded-sm`}
     >
       {disabled && (
-        <div className="absolute inset-0 bg-gray-200 opacity-18 rounded-sm pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-gray-200 opacity-40 rounded-sm pointer-events-none z-10" />
       )}
       <h2 className="text-2xl font-semibold mb-4">{pokemon.name}</h2>
       <Progress

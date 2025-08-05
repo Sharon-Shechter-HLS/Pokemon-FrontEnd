@@ -11,15 +11,13 @@ import attackButtonBackground from "../../assets/attackButoonBackground.png";
 import arenaBackground from "../../assets/arenaBackground.png";
 import { useBattleContext } from "./BattleContext";
 import ChoosePokemonModal from "../Modals/ChoosePokemonModal";
-import { startNewBattle } from "../../api/battelAPI";
 import type { BattleData } from "../../typs/BattleData";
+import { switchPokemon } from "../../api/battelAPI";
+import type { Pokemon } from "../../typs/Pokemon";
 
 
-type ArenaProps = {
-  onStartNewBattle: (newBattleData: BattleData, showVSComponent?: boolean) => void; 
-};
 
-const Arena = ({ onStartNewBattle }: ArenaProps) => {
+const Arena = () => {
   const { battleData, setBattleData, handleAttack, handleCatch, processBattleOutcome } = useBattleContext();
   const [dialogue, setDialogue] = useState(`${battleData.user.name.english} starts the fight!`);
   const [showChoosePokemonModal, setShowChoosePokemonModal] = useState(false);
@@ -53,11 +51,8 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
 
   useEffect(() => {
     const processOutcome = async () => {
-      console.log("Processing battle outcome:", battleData.winner, battleData.isCatched);
       if (battleData.winner || battleData.isCatched) {
-        console.log("Processing battle outcome...");
         await processBattleOutcome(battleData);
-        console.log("Battle outcome processed.");
         setHasProcessedOutcome(true); 
       }
     };
@@ -86,29 +81,26 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
     }
   };
 
-  const handlePlayAgain = async () => {
-    try {
-      const response = await startNewBattle(battleData.user._id);
-      setBattleData(response);
-      setDialogue(`${response.user.name.english} starts the fight!`);
-      onStartNewBattle(response, false);
-    } catch (error) {
-      console.error("Error during play again:", error);
-    }
+  const handlePlayAgain = (updatedBattleData: BattleData) => {
+    setBattleData(updatedBattleData); 
+    setDialogue(`${updatedBattleData.user.name.english} starts the fight!`);
   };
 
   const handleSwitchPokemon = () => {
     setShowChoosePokemonModal(true);
   };
 
-  const handleChoosePokemon = async (newPokemon: { _id: string }) => {
+  const handleSwitchConfirm = async (newPokemon: Pokemon) => {
     try {
-      const response = await startNewBattle(newPokemon._id);
-      setBattleData(response);
-      setShowChoosePokemonModal(false);
-      window.location.href = `/arena?pokemonId=${newPokemon._id}&battleId=${response._id}`;
+      setHasProcessedOutcome(false);
+      const updatedBattleData = await switchPokemon(battleData._id, newPokemon._id);
+      setBattleData(updatedBattleData);
+      setDialogue(`${updatedBattleData.user.name.english} has entered the battlefield`);
     } catch (error) {
-      console.error("Error during choose Pokémon:", error);
+      console.error("Error switching Pokémon:", error);
+    } finally {
+      setShowChoosePokemonModal(false);
+      setHasProcessedOutcome(true);
     }
   };
 
@@ -138,7 +130,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
         </div>
         <CompetitorPhoto
           imageUrl={battleData.user.image?.hires || ""}
-          className={`absolute top-1 right-20 scale-[0.6] ${
+          className={`absolute top-20 right-50 scale-[1] ${
             battleData.turn === "user" && battleData.userCurrentLife > 0 ? "animate-vibrate" : ""
           } ${battleData.userCurrentLife <= 0 ? "animate-faint-left" : ""}`}
         />
@@ -173,7 +165,7 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
         ) : (
           <CompetitorPhoto
             imageUrl={battleData.opponent.image?.hires || ""}
-            className={`absolute bottom-1 left-40 transform scale-[0.5] ${
+            className={`absolute top-20 left-50 scale-[1] ${
               battleData.turn === "opponent" && battleData.opponentCurrentLife > 0 ? "animate-vibrate" : ""
             } ${battleData.opponentCurrentLife <= 0 ? "animate-faint-right" : ""}`}
           />
@@ -211,30 +203,35 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
         <EndOfFightModal
           title={
             battleData.isCatched
-              ? `You caught ${battleData.opponent.name.english}!`
-              : battleData.winner === battleData.user.name.english
-              ? `You won ${battleData.opponent.name.english}!`
-              : `${battleData.user.name.english} lost the match`
+              ? `You caught ${battleData.opponent.name.english}!` 
+              : battleData.winner === "User"
+              ? `You won ${battleData.opponent.name.english}!` 
+              : `${battleData.user.name.english} lost the match` 
           }
           winner={battleData.winner || ""}
           winnerImageUrl={
             battleData.isCatched
-              ? battleData.opponent.image?.hires || ""
-              : battleData.winner === battleData.user.name.english
-              ? battleData.opponent.image?.hires || ""
-              : battleData.user.image?.hires || ""
+              ? battleData.opponent.image?.hires || "" 
+              : battleData.winner === "User"
+              ? battleData.opponent.image?.hires || "" 
+              : battleData.user.image?.hires || "" 
           }
-          description={{
-            title: battleData.opponent.name.english,
-            attributes: [
-              { label: "Speed", value: battleData.opponent.base.Speed.toString() },
-              { label: "Category", value: battleData.opponent.species || "Unknown" },
-              {
-                label: "Abilities",
-                value: battleData.opponent.profile?.ability?.map((a: string[]) => a[0]).join(", ") || "None",
-              },
-            ],
-          }}
+          description={
+            battleData.isCatched
+              ? {
+                  title: battleData.opponent.name.english,
+                  attributes: [
+                    { label: "Speed", value: battleData.opponent.base.Speed.toString() },
+                    { label: "Category", value: battleData.opponent.species || "Unknown" },
+                    {
+                      label: "Abilities",
+                      value: battleData.opponent.profile?.ability?.map((a: string[]) => a[0]).join(", ") || "None",
+                    },
+                  ],
+                } 
+              : undefined 
+          }
+          gameId={battleData._id}
           onPlayAgain={handlePlayAgain}
           onReturnToMenu={handleReturnToMenu}
           onSwitchPokemon={battleData.userCurrentLife <= 0 ? handleSwitchPokemon : undefined}
@@ -244,8 +241,8 @@ const Arena = ({ onStartNewBattle }: ArenaProps) => {
       {/* Choose Pokémon Modal */}
       {showChoosePokemonModal && (
         <ChoosePokemonModal
-          onSelect={handleChoosePokemon}
-          onClose={() => setShowChoosePokemonModal(false)}
+          onClose={() => setShowChoosePokemonModal(false)} 
+          onChoose={handleSwitchConfirm} 
         />
       )}
     </div>

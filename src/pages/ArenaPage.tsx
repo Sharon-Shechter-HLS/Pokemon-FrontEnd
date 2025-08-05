@@ -43,17 +43,12 @@ const ArenaPage = ({ battleData }: ArenaPageProps) => {
     );
   };
 
-  const handleStartNewBattle = (newBattleData: BattleData, showVSComponent: boolean = true) => {
-    setBattleDataState(newBattleData);
-    setShowVS(showVSComponent); 
-  };
 
   const handlePokemonSwitch = async (newPokemon: Pokemon) => {
     if (battleDataState.hasSwitch) return;
 
     try {
       const updatedBattleData = await switchPokemon(battleDataState._id, newPokemon._id);
-      console.log("Switched Pokémon:", updatedBattleData);
 
       setBattleDataState(updatedBattleData);
       setSelectedPokemonName(newPokemon.name.english); 
@@ -67,8 +62,8 @@ const ArenaPage = ({ battleData }: ArenaPageProps) => {
       <div className="arena-page px-5">
         {/* Arena Header */}
         <ArenaHeader
-          headline="Battle Arena"
-          description="Choose your Pokémon wisely!"
+          headline="Fighting arena"
+          description="Start fighting against your opponent to win the battle"
           filterTitle="Switch Pokémon"
           filterOptions={pokemons}
           onPokemonChange={handlePokemonSwitch}
@@ -82,9 +77,7 @@ const ArenaPage = ({ battleData }: ArenaPageProps) => {
           <VSComponentWrapper />
         ) : (
           <div className="w-[100%] px-4 pb-10">
-            <Arena
-              onStartNewBattle={handleStartNewBattle}
-            />
+            <Arena />
           </div>
         )}
       </div>

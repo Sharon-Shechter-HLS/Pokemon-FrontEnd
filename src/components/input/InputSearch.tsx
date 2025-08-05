@@ -30,7 +30,7 @@ export const InputSearch = ({
       onChange={(e) => onChange(e.target.value)}
       startIcon={<Search size={16} />}
       placeholder={placeholder}
-      className={`pr-8 w-full ${sizeClassMap[size]}`}
+      className={`pr-8 w-full ${sizeClassMap[size]} font-[var(--font-family-mulish)] focus:border-[2px] focus:border-[var(--color-primary-400)] hover:border-[2px] hover:border-[var(--color-primary-400)] custom-input active:shadow-none`}
     />
     {value && (
       <button

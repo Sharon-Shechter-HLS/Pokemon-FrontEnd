@@ -13,7 +13,7 @@ export const PokemonLogo = ({
 }: PokemonLogoProps) => (
   <div
     className="flex items-center justify-center rounded-full bg-primary-50"
-    style={{ width: size, height: size }}
+    style={{ width: size +15, height: size + 15 }}
   >
     {imgSrc ? (
       <img
@@ -24,7 +24,7 @@ export const PokemonLogo = ({
         className="object-contain"
       />
     ) : (
-      <PokemonLogoSVG width={size * 0.75} height={size * 0.75} {...props} />
+      <PokemonLogoSVG width={size * 0.78} height={size * 0.75} {...props} />
     )}
   </div>
 );

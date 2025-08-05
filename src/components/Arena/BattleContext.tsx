@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { attack, catchOpponent, addPokemon, removePokemon } from "../../api/battelAPI";
-import type {BattleData} from "../../typs/BattleData";
+import { attack, catchOpponent, addPokemon } from "../../api/battelAPI";
+import type { BattleData } from "../../typs/BattleData";
+import { UserId } from "../../consts";
 
 type BattleContextProps = {
   battleData: BattleData;
@@ -8,23 +9,18 @@ type BattleContextProps = {
   handleAttack: () => Promise<string>;
   handleCatch: () => Promise<string>;
   processBattleOutcome: (battleData: BattleData) => Promise<void>;
+  lostPokemonId: string | null; 
+  setLostPokemonId: React.Dispatch<React.SetStateAction<string | null>>; 
 };
 
 const BattleContext = createContext<BattleContextProps | undefined>(undefined);
 
-const processBattleOutcome = async (battleData: BattleData) => {
-  console.log("Processing battle outcome:", battleData.winner, battleData.isCatched);
+const processBattleOutcome = async (battleData: BattleData, setLostPokemonId: React.Dispatch<React.SetStateAction<string | null>>) => {
   try {
-    console.log("the battleData is:", battleData);
-    console.log("the if condition is:", battleData.isCatched || battleData.winner === "User");
     if (battleData.isCatched || battleData.winner === "User") {
-      console.log("calling addPokemon with userId:", battleData.user._id, "and pokemonId:", battleData.opponent._id);
-      await addPokemon(battleData.user._id, battleData.opponent._id);
-      console.log(`Added ${battleData.opponent.name.english} to user's collection.`);
-    } else if (battleData.winner === "Opponent") {
-      await removePokemon(battleData.user._id, battleData.user._id);
-      console.log(`Removed ${battleData.user.name.english} from user's collection.`);
+      await addPokemon(UserId, battleData.opponent._id);
     }
+    else setLostPokemonId(battleData.user._id); 
   } catch (error) {
     console.error("Error processing battle outcome:", error);
   }
@@ -32,6 +28,7 @@ const processBattleOutcome = async (battleData: BattleData) => {
 
 export const BattleProvider = ({ children, initialBattleData }: { children: React.ReactNode; initialBattleData: any }) => {
   const [battleData, setBattleData] = useState(initialBattleData);
+  const [lostPokemonId, setLostPokemonId] = useState<string | null>(null); 
 
   useEffect(() => {
     setBattleData(initialBattleData);
@@ -69,8 +66,22 @@ export const BattleProvider = ({ children, initialBattleData }: { children: Reac
     }
   };
 
+  const processBattleOutcomeWrapper = async (battleData: BattleData) => {
+    await processBattleOutcome(battleData, setLostPokemonId);
+  };
+
   return (
-    <BattleContext.Provider value={{ battleData, setBattleData, handleAttack, handleCatch, processBattleOutcome }}>
+    <BattleContext.Provider
+      value={{
+        battleData,
+        setBattleData,
+        handleAttack,
+        handleCatch,
+        processBattleOutcome: processBattleOutcomeWrapper,
+        lostPokemonId,
+        setLostPokemonId,
+      }}
+    >
       {children}
     </BattleContext.Provider>
   );

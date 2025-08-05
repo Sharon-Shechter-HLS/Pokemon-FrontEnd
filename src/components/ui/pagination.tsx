@@ -21,8 +21,17 @@ export function PaginationInfo({
   onNext,
   className = "",
 }: PaginationInfoProps) {
-  const start = total === 0 ? 0 : (page - 1) * pageSize + 1;
-  const end = Math.min(page * pageSize, total);
+  const start = (page - 1) * pageSize + 1 ;
+  const end = total > 0 ? Math.min(page * pageSize + 1, total) : ((page * pageSize) + 1);
+  if (total === 0) {
+    return (
+      <div className={cn("flex items-center w-full", className)}>
+        <span className="text-xs text-muted-foreground">
+          No items to display
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("flex items-center w-full", className)}>
@@ -36,19 +45,18 @@ export function PaginationInfo({
           aria-disabled={page === 1}
           tabIndex={page === 1 ? -1 : 0}
           className={cn(
-            // Remove hover/focus, keep only active (pressed) effect
-            "bg-transparent active:bg-muted shadow-none text-inherit transition-colors",
+            "bg-transparent hover:bg-primary-50 active:bg-muted shadow-none text-inherit transition-colors",
             page === 1 && "pointer-events-none opacity-50"
           )}
         />
         <PaginationNext
           aria-label="Go to next page"
-          onClick={end === total ? undefined : onNext}
-          aria-disabled={end === total}
-          tabIndex={end === total ? -1 : 0}
+          onClick={total > 0 && end === total ? undefined : onNext}
+          aria-disabled={total > 0 && end === total}
+          tabIndex={total > 0 && end === total ? -1 : 0}
           className={cn(
-            "bg-transparent active:bg-muted shadow-none text-inherit transition-colors",
-            end === total && "pointer-events-none opacity-50"
+            "bg-transparent hover:bg-primary-50 active:bg-muted shadow-none text-inherit transition-colors",
+            total > 0 && end === total && "pointer-events-none opacity-50"
           )}
         />
       </div>

@@ -13,9 +13,15 @@ export type FetchPokemonsParams = {
 };
 
 export type FetchPokemonsResponse = {
-  pokemons: Pokemon[];
-  total: number;
-}
+  data: Pokemon[];
+  meta: {
+    start: number;
+    end: number;
+    total: {
+      total: number;
+    };
+  };
+};
 
 export async function fetchPokemons({
   page,
@@ -39,8 +45,8 @@ export async function fetchPokemons({
 
     const { data, meta } = response.data; 
     return {
-      pokemons: data,
-      total: meta?.total?.[0]?.total 
+      data,
+      meta
     };
   } catch (error) {
     console.error("Failed to fetch pokemons:", error);

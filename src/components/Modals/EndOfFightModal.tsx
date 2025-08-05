@@ -4,18 +4,20 @@ import { Button } from "../ui/button";
 import Champion from "../Arena/CompetitorPhoto";
 import { Pokador } from "../../assets/PokadorIcon";
 import ClearIcon from "@mui/icons-material/Clear";
+import { getAnotherOpponent } from "../../api/battelAPI";
 
 type EndOfFightModalProps = {
   winner: string;
   winnerImageUrl: string;
-  onPlayAgain: () => void;
+  onPlayAgain: (updatedBattleData: any) => void; 
   onReturnToMenu: () => void;
-  onSwitchPokemon?: () => void; 
+  onSwitchPokemon?: () => void;
   title?: string;
   description?: {
     title: string;
     attributes: { label: string; value: string }[];
   };
+  gameId: string; 
 };
 
 export const EndOfFightModal = ({
@@ -25,7 +27,17 @@ export const EndOfFightModal = ({
   onSwitchPokemon,
   title,
   description,
+  gameId,
 }: EndOfFightModalProps) => {
+  const handleBattleAnotherPokemon = async () => {
+    try {
+      const updatedBattleData = await getAnotherOpponent(gameId); 
+      onPlayAgain(updatedBattleData); 
+    } catch (error) {
+      console.error("Error fetching another opponent:", error);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <Card className="w-[502px] h-wrap p-6 relative">
@@ -72,7 +84,7 @@ export const EndOfFightModal = ({
                 Switch Pokémon
               </Button>
             ) : (
-              <Button onClick={onPlayAgain} className="px-6 py-2">
+              <Button onClick={handleBattleAnotherPokemon} className="px-6 py-2">
                 {title?.toLowerCase().includes("caught")
                   ? "Continue Battle"
                   : "Battle Another Pokémon"}
@@ -82,7 +94,7 @@ export const EndOfFightModal = ({
               variant="secondary"
               onClick={onReturnToMenu}
               className="px-6 py-2"
-            >
+              data-slot="game-button" > 
               End Match
             </Button>
           </div>

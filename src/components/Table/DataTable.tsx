@@ -8,10 +8,13 @@ import {
   TableRow,
   TableCell,
 } from "../ui/table";
+import { Skeleton } from "../ui/skeleton";
+import { NoResults } from "../../assets/NoResults";
 
 type Column<T> = {
   header: string;
   accessor: (item: T) => React.ReactNode;
+  width?: string;
 };
 
 type DataTableProps<T extends { id: string | number }> = {
@@ -44,7 +47,15 @@ export function DataTable<T extends { id: string | number }>({
       <TableHeader>
         <TableRow>
           {columns.map((column, index) => (
-            <TableHead key={index} className="px-4 text-left">
+            <TableHead
+              key={index}
+              className={`text-left font-bold ${
+                column.header === "Pokemon Name" ? "px-25" : "px-4"
+              }`} 
+              style={{
+                width: column.width,
+              }}
+            >
               {column.header}
             </TableHead>
           ))}
@@ -52,15 +63,42 @@ export function DataTable<T extends { id: string | number }>({
       </TableHeader>
       <TableBody>
         {isLoading ? (
-          <TableRow>
-            <TableCell colSpan={columns.length} className="text-center">
-              Loading...
-            </TableCell>
-          </TableRow>
+          Array.from({ length: pageSize }).map((_, index) => (
+            <TableRow key={index} style={{ height: "48px" }}>
+              {columns.map((column, colIndex) => (
+                <TableCell
+                  key={colIndex}
+                  className="px-4 text-left"
+                  style={{ width: column.width }}
+                >
+                  <Skeleton
+                    className={
+                      colIndex === 0
+                        ? "h-15 w-15 rounded-full flex items-center gap-4"
+                        : colIndex === 2
+                        ? "h-4 w-[300px] truncate whitespace-nowrap overflow-hidden"
+                        : "h-4 w-full"
+                    }
+                  />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
         ) : data.length === 0 ? (
-          <TableRow>
-            <TableCell colSpan={columns.length} className="text-center">
-              No results
+          <TableRow
+            style={{
+              height: `calc(var(--row-height, 48px) * ${pageSize})`,
+              backgroundColor: "white",
+            }}
+          >
+            <TableCell
+              colSpan={columns.length}
+              className="text-center"
+              style={{
+                backgroundColor: "white",
+              }}
+            >
+              <NoResults message="No Pokemons were found" />
             </TableCell>
           </TableRow>
         ) : rowRenderer ? (
@@ -71,7 +109,11 @@ export function DataTable<T extends { id: string | number }>({
           data.map((item) => (
             <TableRow key={item.id}>
               {columns.map((column, colIndex) => (
-                <TableCell key={colIndex} className="px-4">
+                <TableCell
+                  key={colIndex}
+                  className="px-4"
+                  style={{ width: column.width }}
+                >
                   {column.accessor(item)}
                 </TableCell>
               ))}

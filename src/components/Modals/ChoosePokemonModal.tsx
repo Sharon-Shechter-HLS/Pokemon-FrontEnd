@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import type { Pokemon } from "../../typs/Pokemon";
 import PokemonLogo from "../PokemonLogo/PokemonLogo";
@@ -13,38 +12,31 @@ import { FaTimes } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/seperator";
 import { useMyPokemons } from "../../hooks/useMyPokemons";
-import {UserId} from "../../consts";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
+import { useBattleContext } from "../Arena/BattleContext"; 
 
 type ChoosePokemonModalProps = {
-  onSelect: (pokemon: Pokemon) => Promise<void>;
   onClose: () => void;
+  onChoose?: (pokemon: Pokemon) => void;
 };
 
-const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
+const ChoosePokemonModal = ({ onClose, onChoose }: ChoosePokemonModalProps) => {
   const { pokemons, isLoading } = useMyPokemons({ isMyPokemons: true });
+  const { lostPokemonId } = useBattleContext(); 
   const [selected, setSelected] = useState<Pokemon | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  const startGame = async () => {
+  const handleConfirmSelection = () => {
     if (!selected) return;
-
-    setLoading(true);
-    try {
-      const response = await axios.post("http://localhost:3000/arena/startGame", {
-        userId: UserId,
-        pokemonId: selected._id, 
-      });
-
-      const battleData = response.data;
-      window.location.href = `/arena?pokemonId=${selected._id}&battleId=${battleData._id}`;
-    } catch (error) {
-      console.error("Failed to start the game:", error);
-    } finally {
-      setLoading(false);
-    }
+    onChoose?.(selected);
+    onClose();
   };
 
-  if (isLoading) return <div className="p-8 text-center">Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="p-8 flex justify-center items-center">
+        <LoadingSpinner className="text-blue-600 w-10 h-10" />
+      </div>
+    );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -59,7 +51,7 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
           <CardTitle>Choose Your Pokémon</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col gap-15 items-center">
+          <div className="flex flex-col gap-15 items-center overflow-y-auto max-h-[400px]">
             {Array.from({ length: Math.ceil(pokemons.length / 3) }).map(
               (_, rowIdx) => (
                 <div
@@ -70,15 +62,17 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
                     .slice(rowIdx * 3, rowIdx * 3 + 3)
                     .map((pokemon) => {
                       const isSelected = selected?._id === pokemon._id;
+                      const isDisabled = pokemon._id === lostPokemonId; 
                       return (
                         <button
                           key={pokemon._id}
-                          onClick={() => setSelected(pokemon)}
+                          onClick={() => !isDisabled && setSelected(pokemon)}
                           type="button"
                           className={`flex flex-row items-center rounded-full justify-center hover:border-blue-600 transition-transform border-2 ${
                             isSelected ? "border-blue-600" : "border-transparent"
-                          }`}
+                          } ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
                           style={{ padding: 0 }}
+                          disabled={isDisabled} 
                         >
                           <PokemonLogo
                             name={pokemon.name.english}
@@ -97,10 +91,10 @@ const ChoosePokemonModal = ({ onClose }: ChoosePokemonModalProps) => {
         <CardFooter className="flex justify-center">
           <Button
             className="w-26 h-10"
-            onClick={startGame}
-            disabled={!selected || loading}
+            onClick={handleConfirmSelection}
+            disabled={!selected}
           >
-            {loading ? "Starting..." : "Start Battle"}
+            Confirm Selection
           </Button>
         </CardFooter>
       </Card>
